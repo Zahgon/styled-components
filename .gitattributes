@@ -28,3 +28,5 @@ test-results.json binary
 *.ttf       binary
 *.otf       binary
 *.pdf       binary
+
+spec.pdf.bz2 -text
