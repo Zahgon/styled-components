@@ -80,39 +80,5 @@ const Counter = styled.Text`
 `;
 
 export function InteractivityBoard() {
-  const [outer, setOuter] = useState(0);
-  const [inner, setInner] = useState(0);
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Tap each button. The outer counter advances; the button inside the inert wrapper is non-interactive and never advances its counter.`}
-      </InlineMarkdown>
-      <SplitWrap>
-        <Row>
-          <Tag>interactivity: auto · default</Tag>
-          <Wrapper>
-            <Btn onPress={() => setOuter(c => c + 1)} accessibilityRole="button">
-              <BtnLabel>tap me · outer</BtnLabel>
-            </Btn>
-            <Counter>{`taps: ${outer}`}</Counter>
-          </Wrapper>
-        </Row>
-        <Row>
-          <Tag>interactivity: inert</Tag>
-          <InertWrapper>
-            <Btn
-              onPress={() => {
-                setInner(c => c + 1);
-                Alert.alert('inner pressed', 'this should never appear under inert');
-              }}
-              accessibilityRole="button"
-            >
-              <BtnLabel>tap me · inner</BtnLabel>
-            </Btn>
-            <Counter>{`taps: ${inner}`}</Counter>
-          </InertWrapper>
-        </Row>
-      </SplitWrap>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

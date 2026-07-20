@@ -60,37 +60,5 @@ const DoubledBar = styled.View`
 `;
 
 export function AttrDrivenSizing() {
-  return (
-    <Stack>
-      <Section>
-        <SectionTitle>Typed props as lengths</SectionTitle>
-        <Caption>width: attr(data-size px, 48px)</Caption>
-        <Rows>
-          <SizedBar data-size={64} />
-          <SizedBar data-size={128} />
-          <SizedBar data-size={224} />
-          {/* No prop: the 48px fallback IS the short bar. */}
-          <SizedBar />
-        </Rows>
-      </Section>
-      <Section>
-        <SectionTitle>Typed props as colors</SectionTitle>
-        <Caption>{'background-color: attr(data-tint type(<color>), …)'}</Caption>
-        <Rows>
-          <TintedBar data-tint="#d4763c" />
-          <TintedBar data-tint="#3c7bd4" />
-          {/* A length is not a <color>: falls back to the muted tint. */}
-          <TintedBar data-tint="12px" />
-        </Rows>
-      </Section>
-      <Section>
-        <SectionTitle>Composes in calc()</SectionTitle>
-        <Caption>width: calc(attr(data-size px, 40px) * 2)</Caption>
-        <Rows>
-          <DoubledBar data-size={60} />
-          <DoubledBar />
-        </Rows>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

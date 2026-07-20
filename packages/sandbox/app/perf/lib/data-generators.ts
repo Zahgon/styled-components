@@ -17,10 +17,7 @@ const priorities: Priority[] = ['low', 'medium', 'high'];
 export function mulberry32(seed: number): () => number {
   let s = seed | 0;
   return () => {
-    s = (s + 0x6d2b79f5) | 0;
-    let t = Math.imul(s ^ (s >>> 15), 1 | s);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      throw new Error("STUB");
   };
 }
 
@@ -39,16 +36,7 @@ export function randomCell(id: string, rand = Math.random): GridCellData {
 }
 
 export function generateGrid(rows: number, cols: number, seed?: number): GridCellData[][] {
-  const rand = seed !== undefined ? mulberry32(seed) : Math.random;
-  const grid: GridCellData[][] = [];
-  for (let r = 0; r < rows; r++) {
-    const row: GridCellData[] = [];
-    for (let c = 0; c < cols; c++) {
-      row.push(randomCell(`cell-${r}-${c}`, rand));
-    }
-    grid.push(row);
-  }
-  return grid;
+    throw new Error("STUB");
 }
 
 export function generateCells(count: number, seed?: number): GridCellData[] {

@@ -32,8 +32,8 @@ const Field = styled.View`
 const SaveButton = styled.View<{ $shift: boolean }>`
   anchor-name: --save;
   position: absolute;
-  top: ${p => (p.$shift ? 120 : 24)}px;
-  left: ${p => (p.$shift ? 140 : 24)}px;
+  top: ${p => { throw new Error("STUB"); }}px;
+  left: ${p => { throw new Error("STUB"); }}px;
   padding: ${t.space.xs}px ${t.space.md}px;
   border-radius: ${t.radius.sm}px;
   background-color: light-dark(#3451b2, #8da2f0);
@@ -64,21 +64,5 @@ const TipLabel = styled.Text`
 `;
 
 export function AnchoredTooltip() {
-  const [shift, setShift] = useState(false);
-
-  return (
-    <Stack>
-      <Caption>top: calc(anchor(--save bottom) + 6px); left: anchor(--save left)</Caption>
-      <Field>
-        <Pressable onPress={() => setShift(s => !s)}>
-          <SaveButton $shift={shift}>
-            <SaveLabel>Save (tap me)</SaveLabel>
-          </SaveButton>
-        </Pressable>
-        <Tip>
-          <TipLabel>anchored</TipLabel>
-        </Tip>
-      </Field>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

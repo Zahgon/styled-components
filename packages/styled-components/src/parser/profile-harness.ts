@@ -78,27 +78,7 @@ transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 
 `;
 
 const CSS_HUGE = (() => {
-  const blocks: string[] = [];
-  for (let i = 0; i < 4; i++) {
-    blocks.push(CSS_LARGE);
-    blocks.push(`
-      @keyframes anim${i} {
-        0% { opacity: 0; transform: scale(0.95) translateY(16px); }
-        40% { opacity: 0.7; transform: scale(1.02) translateY(-2px); }
-        70% { opacity: 0.9; }
-        100% { opacity: 1; transform: scale(1) translateY(0); }
-      }
-    `);
-    blocks.push(`
-      &[data-variant="v${i}"] {
-        color: hsl(${i * 90}, 70%, 50%);
-        border-color: hsl(${i * 90}, 70%, 40%);
-        &:hover { color: hsl(${i * 90}, 80%, 60%); }
-        &:focus-visible { outline: 2px solid hsl(${i * 90}, 70%, 50%); }
-      }
-    `);
-  }
-  return blocks.join('\n');
+    throw new Error("STUB");
 })();
 
 function run(css: string, iterations: number): void {

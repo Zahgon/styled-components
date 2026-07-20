@@ -126,31 +126,5 @@ const RatioLabel = styled.Text`
 `;
 
 export function AspectRatioGallery() {
-  return (
-    <>
-      <Grid>
-        {TILES.map(n => (
-          <Tile key={n}>
-            <Tag>Tile {n}</Tag>
-            <Label>·</Label>
-          </Tile>
-        ))}
-      </Grid>
-      <RatioStack>
-        <RatioTag>aspect-ratio · §4.1</RatioTag>
-        <RatioLandscape>
-          <RatioLabel>16 / 9</RatioLabel>
-        </RatioLandscape>
-        <RatioSquare>
-          <RatioLabel>1</RatioLabel>
-        </RatioSquare>
-        <RatioPortrait>
-          <RatioLabel>1 / 2</RatioLabel>
-        </RatioPortrait>
-        <RatioAutoExplicit>
-          <RatioLabel>auto 3 / 1</RatioLabel>
-        </RatioAutoExplicit>
-      </RatioStack>
-    </>
-  );
+    throw new Error("STUB");
 }

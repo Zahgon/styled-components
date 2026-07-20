@@ -11,5 +11,5 @@ export function setDebugEnabled(on: boolean): void {
 }
 
 export function isDebugEnabled(): boolean {
-  return enabled;
+    throw new Error("STUB");
 }

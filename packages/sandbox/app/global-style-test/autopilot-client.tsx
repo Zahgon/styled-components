@@ -30,137 +30,7 @@ interface CheckResult {
 }
 
 export default function AutopilotClient() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [stepIndex, setStepIndex] = useState(0);
-  const [showLock, setShowLock] = useState(false);
-  const [results, setResults] = useState<CheckResult[]>([]);
-  const [done, setDone] = useState(false);
-  const [currentStep, setCurrentStep] = useState<Step>({
-    label: 'Starting navigation test...',
-    color: '#6b7280',
-  });
-
-  useEffect(() => {
-    if (done) return;
-
-    const r = [...results];
-
-    // Steps 0-3: Navigate through routes, check gradient on each
-    if (stepIndex < ROUTES.length) {
-      const route = ROUTES[stepIndex];
-      const routeName = route === '/global-style-test' ? 'Home' : route.split('/').pop() || '';
-
-      if (pathname !== route) {
-        setCurrentStep({
-          label: 'Navigating to ' + routeName + '...',
-          color: '#0070f3',
-        });
-        router.push(route);
-        return;
-      }
-
-      // We're on the right route - check gradient
-      const tid = setTimeout(() => {
-        const bg = getComputedStyle(document.body).backgroundImage;
-        r.push({
-          label: 'Gradient persists on ' + routeName,
-          pass: bg.includes('linear-gradient'),
-        });
-        setResults(r);
-        setStepIndex(stepIndex + 1);
-      }, 400);
-
-      setCurrentStep({
-        label: 'Checking gradient on ' + routeName + '...',
-        color: '#7c3aed',
-      });
-
-      return () => clearTimeout(tid);
-    }
-
-    // Step 4: Mount conditional style
-    if (stepIndex === ROUTES.length) {
-      setCurrentStep({ label: 'Mounting conditional global style...', color: '#d97706' });
-      setShowLock(true);
-
-      const tid = setTimeout(() => {
-        const outline = getComputedStyle(document.body).outlineStyle;
-        r.push({ label: 'Outline applied (mounted)', pass: outline === 'solid' });
-
-        const overflow = getComputedStyle(document.body).overflow;
-        r.push({ label: 'Scroll locked (mounted)', pass: overflow === 'hidden' });
-
-        const bg = getComputedStyle(document.body).backgroundImage;
-        r.push({ label: 'Gradient persists (mounted)', pass: bg.includes('linear-gradient') });
-
-        setResults(r);
-        setStepIndex(stepIndex + 1);
-      }, 800);
-
-      setCurrentStep({ label: 'Verifying mounted state...', color: '#dc2626' });
-
-      return () => clearTimeout(tid);
-    }
-
-    // Step 5: Unmount conditional style
-    if (stepIndex === ROUTES.length + 1) {
-      setCurrentStep({ label: 'Unmounting conditional global style...', color: '#d97706' });
-      setShowLock(false);
-
-      const tid = setTimeout(() => {
-        const outline = getComputedStyle(document.body).outlineStyle;
-        r.push({
-          label: 'Outline removed (unmounted)',
-          pass: outline === 'none' || outline === '',
-        });
-
-        const overflow = getComputedStyle(document.body).overflow;
-        r.push({ label: 'Scroll restored (unmounted)', pass: overflow !== 'hidden' });
-
-        setResults(r);
-        setDone(true);
-        setCurrentStep({ label: 'Complete', color: '#16a34a' });
-
-        // Report results to composite summary
-        const passed = r.filter(c => c.pass).length;
-        window.dispatchEvent(
-          new CustomEvent('sc-test-result', { detail: { passed, total: r.length } })
-        );
-      }, 800);
-
-      return () => clearTimeout(tid);
-    }
-  }, [stepIndex, pathname, done]);
-
-  const passed = results.filter(r => r.pass).length;
-
-  return (
-    <Card>
-      <Heading>Autopilot: Navigation + Mount/Unmount</Heading>
-
-      <PhaseBar $color={currentStep.color}>
-        <PhaseDot $color={currentStep.color} $animate={!done} />
-        {currentStep.label}
-      </PhaseBar>
-
-      {showLock && <BodyLockStyles />}
-
-      {done && (
-        <ResultsBox $allPass={passed === results.length}>
-          <ResultTitle>
-            {passed}/{results.length} passing
-          </ResultTitle>
-          {results.map((r, i) => (
-            <ResultRow key={i}>
-              <ResultIcon $pass={r.pass}>{r.pass ? '\u2713' : '\u2717'}</ResultIcon>
-              {r.label}
-            </ResultRow>
-          ))}
-        </ResultsBox>
-      )}
-    </Card>
-  );
+    throw new Error("STUB");
 }
 
 const Card = styled.div`
@@ -189,9 +59,9 @@ const PhaseBar = styled.div<{ $color: string }>`
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: ${p => p.$color};
-  background: ${p => p.$color}12;
-  border: 1px solid ${p => p.$color}30;
+  color: ${p => { throw new Error("STUB"); }};
+  background: ${p => { throw new Error("STUB"); }}12;
+  border: 1px solid ${p => { throw new Error("STUB"); }}30;
   margin-bottom: 16px;
   transition:
     color 0.2s,
@@ -203,9 +73,9 @@ const PhaseDot = styled.span<{ $color: string; $animate: boolean }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${p => p.$color};
+  background: ${p => { throw new Error("STUB"); }};
   flex-shrink: 0;
-  animation: ${p => (p.$animate ? pulse : 'none')} 0.8s ease-in-out infinite;
+  animation: ${p => { throw new Error("STUB"); }} 0.8s ease-in-out infinite;
 `;
 
 const fadeIn = keyframes`
@@ -218,9 +88,9 @@ const ResultsBox = styled.div<{ $allPass: boolean }>`
   border-radius: 8px;
   border: 1px solid
     ${p =>
-      p.$allPass ? 'var(--sc-colors-success, #16a34a)' : 'var(--sc-colors-danger, #dc2626)'}40;
+      { throw new Error("STUB"); }}40;
   background: ${p =>
-    p.$allPass ? 'var(--sc-colors-success, #16a34a)' : 'var(--sc-colors-danger, #dc2626)'}08;
+    { throw new Error("STUB"); }}08;
   animation: ${fadeIn} 0.3s ease-in;
 `;
 
@@ -242,6 +112,6 @@ const ResultRow = styled.div`
 
 const ResultIcon = styled.span<{ $pass: boolean }>`
   color: ${p =>
-    p.$pass ? 'var(--sc-colors-success, #16a34a)' : 'var(--sc-colors-danger, #dc2626)'};
+    { throw new Error("STUB"); }};
   font-weight: 700;
 `;

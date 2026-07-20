@@ -25,12 +25,7 @@ export const checkDynamicCreation = (displayName: string, componentId?: string |
   try {
     let didNotCallInvalidHook = true;
     console.error = (consoleErrorMessage, ...consoleErrorArgs) => {
-      if (invalidHookCallRe.test(consoleErrorMessage)) {
-        didNotCallInvalidHook = false;
-        seen.delete(key);
-      } else {
-        originalConsoleError(consoleErrorMessage, ...consoleErrorArgs);
-      }
+        throw new Error("STUB");
     };
     if (typeof React.useState === 'function') {
       React.useState(null);

@@ -21,20 +21,11 @@ const Field = styled(TextInput)<{ $align: 'top' | 'middle' | 'bottom' }>`
   color: ${t.colors.fg};
   font-size: 20px;
   padding: ${t.space.sm}px;
-  vertical-align: ${p => p.$align};
+  vertical-align: ${p => { throw new Error("STUB"); }};
 `;
 
 const ROWS: ReadonlyArray<'top' | 'middle' | 'bottom'> = ['top', 'middle', 'bottom'];
 
 export function TextInputAlignment() {
-  return (
-    <Stack>
-      {ROWS.map(align => (
-        <React.Fragment key={align}>
-          <Tag>multiline TextInput · {align}</Tag>
-          <Field $align={align} multiline defaultValue="Type here" />
-        </React.Fragment>
-      ))}
-    </Stack>
-  );
+    throw new Error("STUB");
 }

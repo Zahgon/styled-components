@@ -10,14 +10,5 @@ const reactPropsRegex =
 const cache: Record<string, boolean> = Object.create(null);
 
 export default function isPropValid(prop: string): boolean {
-  if (cache[prop] !== undefined) return cache[prop];
-  // Event-handler tail: `onX...` where X is < `Z+1` (uppercase A-Z); covers
-  // every standard React DOM handler without enumerating each one.
-  const valid =
-    reactPropsRegex.test(prop) ||
-    (prop.charCodeAt(0) === 111 /* o */ &&
-      prop.charCodeAt(1) === 110 /* n */ &&
-      prop.charCodeAt(2) < 91); /* Z+1 */
-  cache[prop] = valid;
-  return valid;
+    throw new Error("STUB");
 }

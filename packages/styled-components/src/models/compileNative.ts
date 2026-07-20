@@ -1141,7 +1141,7 @@ function describeCondition(entry: ConditionalStyle): string {
   if (entry.type === 'attr') {
     if (!entry.attrs) return '[?]';
     return entry.attrs
-      .map(a => (a.value !== undefined ? `[${a.name}="${a.value}"]` : `[${a.name}]`))
+      .map(a => { throw new Error("STUB"); })
       .join('');
   }
   // media / container / supports: type + prelude
@@ -1509,32 +1509,7 @@ function walkRoot(
       keyframes.push({
         name: node.prelude,
         frames: node.frames.map(frame => {
-          // Mirror the base/conditional pipeline: decls → transformDecl
-          // → split static base / resolvers in one pass. Lets
-          // `${t.colors.x}` and `env()` inside a keyframe's declarations
-          // resolve at render time when the animation adapter applies
-          // them.
-          const decls = frame.children;
-          // `!important` inside a keyframe body is invalid; processDecls
-          // strips the marker and routes to `important`, which we then
-          // discard so the frame ignores the marker entirely.
-          const { base, resolvers } =
-            decls.length > 0 ? processDecls(decls) : { base: {}, resolvers: [] };
-          const out: {
-            stops: string[];
-            decls: Dict<any>;
-            resolvers?: Array<[string, Resolver]>;
-            easing?: EasingDescriptor;
-          } = { stops: frame.stops, decls: base };
-          if (resolvers.length > 0) out.resolvers = resolvers;
-          if ('animationTimingFunction' in base) {
-            const atf = base.animationTimingFunction;
-            delete base.animationTimingFunction;
-            if (!isEndOnlyKeyframeStops(frame.stops)) {
-              out.easing = Array.isArray(atf) ? atf[0] : atf;
-            }
-          }
-          return out;
+            throw new Error("STUB");
         }),
       });
     }
@@ -1815,7 +1790,7 @@ function pushBucket(
     entry = {
       type: 'attr',
       condition: attrSel.attrs
-        .map(a => (a.value !== undefined ? `${a.name}=${a.value}` : a.name))
+        .map(a => { throw new Error("STUB"); })
         .join('+'),
       attrs: attrSel.attrs,
       styles: base,
@@ -2160,12 +2135,5 @@ export function cssToStyleObject(flatCSS: string, styleSheet: StyleSheet): Dict<
  * comments stripped, malformed blocks skipped, RN_UNSUPPORTED_VALUES warn+drop.
  */
 export function extractBaseDeclPairs(rawCSS: string): Array<[string, string]> {
-  const preprocessed = normalize(rawCSS);
-  const ast = parse(preprocessed, { keepCommaSpaces: true });
-  const pairs: Array<[string, string]> = [];
-  for (let i = 0; i < ast.length; i++) {
-    const node = ast[i];
-    if (node.kind === NodeKind.Decl) pairs.push([node.prop, node.value]);
-  }
-  return pairs;
+    throw new Error("STUB");
 }

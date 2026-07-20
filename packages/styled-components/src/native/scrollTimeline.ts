@@ -112,31 +112,18 @@ interface VersionedRegistry {
 }
 
 function notifyRegistry(registry: VersionedRegistry): void {
-  registry.version++;
-  registry.listeners.forEach(l => l());
+    throw new Error("STUB");
 }
 
-const noopUnsubscribe = () => {};
+const noopUnsubscribe = () => {
+    throw new Error("STUB");
+};
 
 /** Re-render the caller whenever the registry's version bumps. Both
  *  callbacks are memoized on the registry so React reuses the
  *  subscription instead of scheduling a passive effect per render. */
 function useRegistryVersion(registry: VersionedRegistry | null): void {
-  const subscribe = React.useCallback(
-    (cb: () => void) => {
-      if (registry === null) return noopUnsubscribe;
-      registry.listeners.add(cb);
-      return () => {
-        registry.listeners.delete(cb);
-      };
-    },
-    [registry]
-  );
-  const getVersion = React.useCallback(
-    () => (registry === null ? 0 : registry.version),
-    [registry]
-  );
-  React.useSyncExternalStore(subscribe, getVersion, getVersion);
+    throw new Error("STUB");
 }
 
 export type { ViewSubjectLayout };
@@ -159,27 +146,7 @@ export const ScrollTimelineContext =
   React.createContext<ScrollTimelineContextValue>(DEFAULT_SCROLL_TIMELINES);
 
 export function createScrollTimelineEntry(axis: TimelineAxis): ScrollTimelineEntry | null {
-  const Animated = getRN().Animated;
-  if (!Animated) return null;
-  const offsetX = new Animated.Value(0);
-  const offsetY = new Animated.Value(0);
-  const nativeDriven = !isWebPlatform() && typeof Animated.attachNativeEvent === 'function';
-  return {
-    offsetX,
-    offsetY,
-    offsetXNative: nativeDriven ? new Animated.Value(0) : offsetX,
-    offsetYNative: nativeDriven ? new Animated.Value(0) : offsetY,
-    nativeDriven,
-    nativeAttached: false,
-    extentX: 0,
-    extentY: 0,
-    viewportW: 0,
-    viewportH: 0,
-    axis,
-    stickyClones: { clones: new Map(), listeners: new Set(), version: 0 },
-    snapTargets: { listeners: new Set(), targets: new Map(), version: 0 },
-    host: null,
-  };
+    throw new Error("STUB");
 }
 
 /** block → y, inline → x; horizontal-tb is Yoga's only writing mode. */
@@ -385,7 +352,7 @@ const SCROLLABLE_TARGETS = new Set([
 ]);
 
 export function isScrollableTargetName(name: string | undefined): boolean {
-  return name !== undefined && SCROLLABLE_TARGETS.has(name);
+    throw new Error("STUB");
 }
 
 /** Parent-relative rectangle of a scroller, used to position the overlay host. */
@@ -420,251 +387,16 @@ export function useScrollTimelinePublisher(
   (inner: React.ReactElement) => React.ReactElement,
   ScrollTimelineEntry | null,
 ] {
-  const parent = React.useContext(ScrollTimelineContext);
-  const stateRef = React.useRef<PublisherState | null>(null);
-  const [version, setVersion] = React.useState(0);
-
-  if (active && stateRef.current === null) {
-    stateRef.current = {
-      entry: createScrollTimelineEntry(namedDecl?.axis ?? 'block'),
-      contentW: 0,
-      contentH: 0,
-      frame: null,
-      viewportW: 0,
-      viewportH: 0,
-    };
-  }
-  const hostRef = React.useRef<any>(null);
-  const activeEntry = active ? (stateRef.current?.entry ?? null) : null;
-  // Drive the entry's offsets from the UI thread as well: native-driver
-  // interpolations (opacity / transform keyframes) then keep pace with
-  // the finger instead of trailing the JS thread. The JS onScroll below
-  // still runs for extent bookkeeping, layout-prop interpolations, and
-  // anything reading the values from JS; its setValue echo writes the
-  // value the native mapping already applied for that event, so it is a
-  // steady-state no-op (under JS jank it can momentarily rewind one
-  // frame, corrected by the next UI-thread event - strictly better than
-  // the pure-JS path that lagged continuously).
-  React.useEffect(() => {
-    const trace = __DEV__ && isDebugEnabled();
-    if (activeEntry === null || !activeEntry.nativeDriven) {
-      if (trace && activeEntry !== null)
-        dbg('scroll-timeline attach: skipped, entry is not native-driven');
-      return;
-    }
-    const rn = getRN();
-    const Animated = rn.Animated;
-    if (!Animated || typeof Animated.attachNativeEvent !== 'function') {
-      if (trace) dbg('scroll-timeline attach: skipped, Animated.attachNativeEvent unavailable');
-      return;
-    }
-    const inst = hostRef.current;
-    if (inst == null) {
-      if (trace) dbg('scroll-timeline attach: skipped, host ref is empty');
-      return;
-    }
-    // Prefer the host component ref like RN's own sticky-header attach;
-    // attachNativeEvent resolves the tag via findNodeHandle internally
-    // and SILENTLY no-ops when it can't, so pre-resolve in dev to make
-    // a failed attachment loud instead of a quiet JS-paced fallback.
-    const node =
-      typeof inst.getNativeScrollRef === 'function'
-        ? inst.getNativeScrollRef()
-        : typeof inst.getScrollableNode === 'function'
-          ? inst.getScrollableNode()
-          : inst;
-    if (node == null) {
-      if (trace) dbg('scroll-timeline attach: skipped, scrollable node is empty');
-      return;
-    }
-    // Pre-resolve the tag: attachNativeEvent silently no-ops on a null
-    // tag (after native-tagging the values), which would leave the echo
-    // disabled with nothing driving the native pair. Test renderers
-    // resolve no tags, so they keep the echo and stay observable.
-    // `getRN()` deliberately exposes no `findNodeHandle` (Fabric public
-    // instances carry the tag directly), so the field reads do the work.
-    const tag = resolveNativeViewTag(node, (rn as any).findNodeHandle ?? null);
-    if (tag === null) {
-      if (trace) dbg('scroll-timeline attach: no native view tag on the scroll host');
-      if (__DEV__ && !isJestLikeHost()) {
-        warnOnce(
-          'native-scroll-timeline-attach-failed',
-          'Could not resolve a native view tag for a styled scroll container, so its scroll timeline (and any position: sticky children) fall back to JavaScript-paced updates and may visibly trail fast scrolling. This usually means the scroll component does not expose its host ref.',
-          'attach'
-        );
-      }
-      return;
-    }
-    try {
-      const sub = Animated.attachNativeEvent(node, 'onScroll', [
-        {
-          nativeEvent: {
-            contentOffset: { x: activeEntry.offsetXNative, y: activeEntry.offsetYNative },
-          },
-        },
-      ]);
-      activeEntry.nativeAttached = true;
-      if (trace) dbg('scroll-timeline attach: ok, native scroll event attached to tag', tag);
-      return () => {
-        activeEntry.nativeAttached = false;
-        if (__DEV__ && isDebugEnabled()) dbg('scroll-timeline attach: detached from tag', tag);
-        sub.detach();
-      };
-    } catch (e) {
-      if (trace) dbg('scroll-timeline attach: attachNativeEvent threw', e);
-      // Hosts without native animated support (test renderers, exotic
-      // scrollables) keep the JS-driven path.
-      if (__DEV__) {
-        warnOnce(
-          'native-scroll-timeline-attach-failed',
-          'Attaching the native scroll event for a styled scroll container threw' +
-            (e instanceof Error ? ` (${e.message})` : '') +
-            '; its scroll timeline and position: sticky children fall back to JavaScript-paced updates.',
-          'threw'
-        );
-      }
-      return;
-    }
-  }, [activeEntry]);
-  const state = stateRef.current;
-  const entry = active ? (state?.entry ?? null) : null;
-  const name = namedDecl?.name;
-  // Identity changes only when extents bump `version` (or scope inputs
-  // move), so descendants' context subscriptions and render caches stay
-  // stable across unrelated scroller re-renders.
-  const contextValue = React.useMemo<ScrollTimelineContextValue | null>(
-    () =>
-      entry === null
-        ? null
-        : {
-            nearest: entry,
-            named: name !== undefined ? { ...parent.named, [name]: entry } : parent.named,
-          },
-    [entry, name, parent, version]
-  );
-
-  if (!active || state === null || entry === null || contextValue === null) {
-    return [elementProps, identityWrap, null];
-  }
-
-  const refreshExtents = () => {
-    const extentX = Math.max(0, state.contentW - state.viewportW);
-    const extentY = Math.max(0, state.contentH - state.viewportH);
-    if (
-      extentX !== entry.extentX ||
-      extentY !== entry.extentY ||
-      state.viewportW !== entry.viewportW ||
-      state.viewportH !== entry.viewportH
-    ) {
-      entry.extentX = extentX;
-      entry.extentY = extentY;
-      entry.viewportW = state.viewportW;
-      entry.viewportH = state.viewportH;
-      setVersion(v => v + 1);
-    }
-  };
-
-  const userOnScroll = elementProps.onScroll;
-  const userOnLayout = elementProps.onLayout;
-  const userOnContentSizeChange = elementProps.onContentSizeChange;
-
-  const onScroll = (e: any) => {
-    const ne = e?.nativeEvent;
-    if (ne) {
-      if (ne.contentOffset) {
-        const x = ne.contentOffset.x ?? 0;
-        const y = ne.contentOffset.y ?? 0;
-        entry.offsetX.setValue(x);
-        entry.offsetY.setValue(y);
-        // Echo into the native pair ONLY until the native event attaches;
-        // see the nativeAttached field note.
-        if (entry.nativeDriven && !entry.nativeAttached) {
-          entry.offsetXNative.setValue(x);
-          entry.offsetYNative.setValue(y);
-        }
-      }
-      if (ne.contentSize && ne.layoutMeasurement) {
-        state.contentW = ne.contentSize.width ?? state.contentW;
-        state.contentH = ne.contentSize.height ?? state.contentH;
-        state.viewportW = ne.layoutMeasurement.width ?? state.viewportW;
-        state.viewportH = ne.layoutMeasurement.height ?? state.viewportH;
-        refreshExtents();
-      }
-    }
-    if (typeof userOnScroll === 'function') userOnScroll(e);
-  };
-  const onLayout = (e: any) => {
-    const l = e?.nativeEvent?.layout;
-    if (l) {
-      state.viewportW = l.width;
-      state.viewportH = l.height;
-      const f = state.frame;
-      if (f === null || f.x !== l.x || f.y !== l.y || f.w !== l.width || f.h !== l.height) {
-        state.frame = { h: l.height, w: l.width, x: l.x, y: l.y };
-        setVersion(v => v + 1);
-      }
-      refreshExtents();
-    }
-    if (typeof userOnLayout === 'function') userOnLayout(e);
-  };
-  const onContentSizeChange = (w: number, h: number) => {
-    state.contentW = w;
-    state.contentH = h;
-    refreshExtents();
-    if (typeof userOnContentSizeChange === 'function') userOnContentSizeChange(w, h);
-  };
-
-  const userRef = elementProps.ref;
-  const augmented: Record<string, any> = {
-    ...elementProps,
-    onScroll,
-    onLayout,
-    onContentSizeChange,
-    ref: (inst: any) => {
-      hostRef.current = inst;
-      entry.host = inst;
-      if (typeof userRef === 'function') userRef(inst);
-      else if (userRef != null && typeof userRef === 'object') userRef.current = inst;
-    },
-  };
-  if (augmented.scrollEventThrottle === undefined) augmented.scrollEventThrottle = 16;
-
-  // The browser implements position: sticky itself on rn-web (the
-  // declaration passes through at compile time), so the overlay host
-  // tree-shakes out of that bundle.
-  const wrap = (inner: React.ReactElement): React.ReactElement =>
-    React.createElement(
-      ScrollTimelineContext.Provider,
-      { value: contextValue },
-      __NATIVE_WEB__
-        ? inner
-        : React.createElement(
-            React.Fragment,
-            null,
-            inner,
-            React.createElement(StickyOverlayHost, {
-              frame: state.frame,
-              registry: entry.stickyClones,
-            })
-          )
-    );
-  return [augmented, wrap, entry];
+    throw new Error("STUB");
 }
 
 function identityWrap(inner: React.ReactElement): React.ReactElement {
-  return inner;
+    throw new Error("STUB");
 }
 
 let viewComponentCache: any = null;
 function getViewComponent(): any {
-  if (viewComponentCache === null) {
-    try {
-      viewComponentCache = require('react-native').View ?? 'View';
-    } catch {
-      viewComponentCache = 'View';
-    }
-  }
-  return viewComponentCache;
+    throw new Error("STUB");
 }
 
 /**
@@ -679,24 +411,7 @@ function StickyOverlayHost(props: {
   frame: PublisherFrame | null;
   registry: StickyCloneRegistry;
 }): React.ReactElement | null {
-  const { frame, registry } = props;
-  useRegistryVersion(registry);
-  if (frame === null || registry.clones.size === 0) return null;
-  return React.createElement(
-    getViewComponent(),
-    {
-      pointerEvents: 'box-none',
-      style: {
-        height: frame.h,
-        left: frame.x,
-        position: 'absolute',
-        top: frame.y,
-        width: frame.w,
-        zIndex: 10,
-      },
-    },
-    ...registry.clones.values()
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -747,33 +462,7 @@ export function scrollTimelineKey(
 export function useViewTimelineSubject(
   active: boolean
 ): [ViewSubjectLayout | null, (props: Record<string, any>) => Record<string, any>] {
-  const [layout, setLayout] = React.useState<ViewSubjectLayout | null>(null);
-  const layoutRef = React.useRef<ViewSubjectLayout | null>(null);
-  layoutRef.current = layout;
-
-  if (!active) return [null, identityProps];
-
-  const compose = (props: Record<string, any>): Record<string, any> => {
-    const userOnLayout = props.onLayout;
-    const onLayout = (e: any) => {
-      const l = e?.nativeEvent?.layout;
-      if (l) {
-        const prev = layoutRef.current;
-        if (
-          prev === null ||
-          prev.x !== l.x ||
-          prev.y !== l.y ||
-          prev.width !== l.width ||
-          prev.height !== l.height
-        ) {
-          setLayout({ x: l.x, y: l.y, width: l.width, height: l.height });
-        }
-      }
-      if (typeof userOnLayout === 'function') userOnLayout(e);
-    };
-    return { ...props, onLayout };
-  };
-  return [layout, compose];
+    throw new Error("STUB");
 }
 
 /**
@@ -787,59 +476,13 @@ export function useSnapTargetRegistration(
   target: { align: string; stop: boolean } | undefined,
   elementProps: Record<string, any>
 ): Record<string, any> {
-  const parent = React.useContext(ScrollTimelineContext);
-  const keyRef = React.useRef<{ reg: SnapTargetRegistry | null } | null>(null);
-  if (keyRef.current === null) keyRef.current = { reg: null };
-  const key = keyRef.current;
-  React.useEffect(
-    () => () => {
-      if (key.reg !== null && key.reg.targets.delete(key)) notifyRegistry(key.reg);
-      key.reg = null;
-    },
-    [key]
-  );
-  if (target === undefined || __NATIVE_WEB__) return elementProps;
-  const entry = parent.nearest;
-  if (entry === null) return elementProps;
-  const registry = entry.snapTargets;
-  key.reg = registry;
-
-  const userOnLayout = elementProps.onLayout;
-  const onLayout = (e: any) => {
-    const l = e?.nativeEvent?.layout;
-    if (l !== undefined) {
-      const prev = registry.targets.get(key);
-      if (
-        prev === undefined ||
-        prev.x !== l.x ||
-        prev.y !== l.y ||
-        prev.w !== l.width ||
-        prev.h !== l.height ||
-        prev.align !== target.align ||
-        prev.stop !== target.stop
-      ) {
-        registry.targets.set(key, {
-          align: target.align,
-          h: l.height,
-          stop: target.stop,
-          w: l.width,
-          x: l.x,
-          y: l.y,
-        });
-        notifyRegistry(registry);
-      }
-    }
-    if (typeof userOnLayout === 'function') userOnLayout(e);
-  };
-  return { ...elementProps, onLayout };
+    throw new Error("STUB");
 }
 
 /** Pick the axis keyword from a 1-2 keyword scroll-snap-align value:
  *  one keyword applies to both axes; two are [block, inline]. */
 function alignForAxis(align: string, horizontal: boolean): string {
-  const space = align.indexOf(' ');
-  if (space === -1) return align;
-  return horizontal ? align.slice(space + 1) : align.slice(0, space);
+    throw new Error("STUB");
 }
 
 /**
@@ -855,70 +498,16 @@ export function useSnapOffsets(
   entry: ScrollTimelineEntry | null,
   elementProps: Record<string, any>
 ): Record<string, any> {
-  useRegistryVersion(entry !== null ? entry.snapTargets : null);
-  // The derived array keeps its identity while the inputs hold so the
-  // host's snapToOffsets prop compares equal across unrelated re-renders
-  // (Paper deep-diffs it per commit; Fabric re-serializes on change).
-  const cache = React.useRef<{ key: string; offsets: number[]; stop: boolean } | null>(null);
-
-  if (!active || __NATIVE_WEB__ || entry === null) return elementProps;
-  const registry = entry.snapTargets;
-  if (registry.targets.size === 0) return elementProps;
-  if (elementProps.snapToOffsets !== undefined || elementProps.snapToInterval !== undefined) {
-    return elementProps;
-  }
-
-  const horizontal = elementProps.horizontal === true;
-  const viewport = horizontal ? entry.viewportW : entry.viewportH;
-  if (viewport <= 0) return elementProps;
-  // Extent is exactly the maximum scroll offset (content minus viewport,
-  // clamped to >= 0 by the publisher).
-  const maxOff = horizontal ? entry.extentX : entry.extentY;
-
-  const cacheKey =
-    registry.version + ':' + viewport + ':' + maxOff + ':' + (horizontal ? 'x' : 'y');
-  let deduped: number[];
-  let stop: boolean;
-  if (cache.current !== null && cache.current.key === cacheKey) {
-    deduped = cache.current.offsets;
-    stop = cache.current.stop;
-  } else {
-    const offsets: number[] = [];
-    stop = false;
-    registry.targets.forEach(t => {
-      if (t.stop) stop = true;
-      const align = alignForAxis(t.align, horizontal);
-      if (align === 'none') return;
-      const pos = horizontal ? t.x : t.y;
-      const size = horizontal ? t.w : t.h;
-      let off: number;
-      if (align === 'center') off = pos + size / 2 - viewport / 2;
-      else if (align === 'end') off = pos + size - viewport;
-      else off = pos;
-      if (off < 0) off = 0;
-      if (off > maxOff) off = maxOff;
-      offsets.push(off);
-    });
-    offsets.sort((a, b) => a - b);
-    deduped = offsets.length === 0 ? offsets : [offsets[0]];
-    for (let i = 1; i < offsets.length; i++) {
-      if (offsets[i] - deduped[deduped.length - 1] > 0.5) deduped.push(offsets[i]);
-    }
-    cache.current = { key: cacheKey, offsets: deduped, stop };
-  }
-  if (deduped.length === 0) return elementProps;
-  const out: Record<string, any> = { ...elementProps, snapToOffsets: deduped };
-  if (stop && out.disableIntervalMomentum === undefined) out.disableIntervalMomentum = true;
-  return out;
+    throw new Error("STUB");
 }
 
 /** True under test renderers, where view tags never resolve by design. */
 function isJestLikeHost(): boolean {
-  return typeof process !== 'undefined' && !!(process as any).env?.JEST_WORKER_ID;
+    throw new Error("STUB");
 }
 
 function identityProps(props: Record<string, any>): Record<string, any> {
-  return props;
+    throw new Error("STUB");
 }
 
 /**
@@ -932,13 +521,7 @@ export function resolveNativeViewTag(
   node: any,
   findNodeHandle: ((node: any) => number | null) | null
 ): number | null {
-  if (typeof node.__nativeTag === 'number') return node.__nativeTag;
-  if (typeof node._nativeTag === 'number') return node._nativeTag;
-  if (typeof findNodeHandle === 'function') {
-    const tag = findNodeHandle(node);
-    return typeof tag === 'number' ? tag : null;
-  }
-  return null;
+    throw new Error("STUB");
 }
 
 const ANIMATED_WRAPPER_CACHE = new WeakMap<object, any>();
@@ -950,14 +533,7 @@ const ANIMATED_WRAPPER_CACHE = new WeakMap<object, any>();
  * UI-thread opacity nodes.
  */
 export function getAnimatedComponentCached(target: any): any | null {
-  const Animated = getRN().Animated;
-  if (!Animated || typeof Animated.createAnimatedComponent !== 'function') return null;
-  if (typeof target !== 'function' && (typeof target !== 'object' || target === null)) return null;
-  const cached = ANIMATED_WRAPPER_CACHE.get(target);
-  if (cached !== undefined) return cached;
-  const wrapped = Animated.createAnimatedComponent(target);
-  ANIMATED_WRAPPER_CACHE.set(target, wrapped);
-  return wrapped;
+    throw new Error("STUB");
 }
 
 interface StickyLayout {
@@ -982,7 +558,9 @@ export interface StickyPosition {
   register: (type: any, props: Record<string, any>, style: any) => void;
 }
 
-function noopRegister(): void {}
+function noopRegister(): void {
+    throw new Error("STUB");
+}
 
 const INACTIVE_STICKY: StickyPosition = {
   changed: false,
@@ -1013,136 +591,5 @@ let stickyIdCounter = 0;
  * `active` only gates the work.
  */
 export function useStickyPosition(active: boolean): StickyPosition {
-  const timelines = React.useContext(ScrollTimelineContext);
-  const [layout, setLayout] = React.useState<StickyLayout | null>(null);
-  const [stuck, setStuck] = React.useState(false);
-  const layoutRef = React.useRef<StickyLayout | null>(null);
-  layoutRef.current = layout;
-  const prevLayerRef = React.useRef<StickyPosition['layer']>(null);
-  const idRef = React.useRef(0);
-  if (idRef.current === 0) idRef.current = ++stickyIdCounter;
-  const cloneRef = React.useRef<React.ReactElement | null>(null);
-
-  const entry = active ? timelines.nearest : null;
-  const layoutY = layout === null ? null : layout.y;
-
-  const fades = React.useMemo(() => {
-    if (entry === null || layoutY === null) {
-      if (__DEV__ && isDebugEnabled() && active) {
-        dbg(
-          'sticky: twin not built,',
-          entry === null ? 'no styled scroll container in scope' : 'awaiting onLayout'
-        );
-      }
-      return null;
-    }
-    if (__DEV__ && isDebugEnabled()) {
-      dbg('sticky: overlay twin pinned, layoutY =', layoutY);
-    }
-    const offset = axisOffsetNode(entry, 'block', true);
-    // Half a pixel of scroll swaps the twins; both opacities read the
-    // same UI-thread value, so they are complementary every frame.
-    const inputRange = [layoutY - 0.5, layoutY];
-    return {
-      cloneOpacity: offset.interpolate({ extrapolate: 'clamp', inputRange, outputRange: [0, 1] }),
-      inFlowOpacity: offset.interpolate({ extrapolate: 'clamp', inputRange, outputRange: [1, 0] }),
-    };
-  }, [entry, layoutY]);
-
-  const layer = React.useMemo(
-    () => (fades === null ? null : { opacity: fades.inFlowOpacity }),
-    [fades]
-  );
-  const changed = layer !== prevLayerRef.current;
-  prevLayerRef.current = layer;
-
-  // Stuck flag for touch routing and accessibility. JS-paced on
-  // purpose: it changes only at the crossover, and pointerEvents /
-  // accessibility props cannot be driven natively anyway.
-  React.useEffect(() => {
-    if (entry === null || layoutY === null) return;
-    const read = () => {
-      const v = typeof entry.offsetY.__getValue === 'function' ? entry.offsetY.__getValue() : 0;
-      setStuck(v >= layoutY);
-    };
-    read();
-    const sub = entry.offsetY.addListener(({ value }: { value: number }) =>
-      setStuck(value >= layoutY)
-    );
-    return () => entry.offsetY.removeListener(sub);
-  }, [entry, layoutY]);
-
-  // Publish the twin built by register() below. Runs every render: the
-  // element captures this render's props/style, and sticky elements
-  // re-render rarely (mount, layout change, crossover).
-  React.useEffect(() => {
-    if (entry === null) return;
-    const registry = entry.stickyClones;
-    const clone = cloneRef.current;
-    if (clone !== null) {
-      registry.clones.set(idRef.current, clone);
-      notifyRegistry(registry);
-    }
-  });
-
-  React.useEffect(() => {
-    if (entry === null) return;
-    const registry = entry.stickyClones;
-    return () => {
-      if (registry.clones.delete(idRef.current)) notifyRegistry(registry);
-    };
-  }, [entry]);
-
-  if (!active) {
-    cloneRef.current = null;
-    return INACTIVE_STICKY;
-  }
-
-  const compose = (props: Record<string, any>): Record<string, any> => {
-    const userOnLayout = props.onLayout;
-    const onLayout = (e: any) => {
-      const l = e?.nativeEvent?.layout;
-      if (l && typeof l.y === 'number') {
-        const prev = layoutRef.current;
-        if (prev === null || prev.x !== l.x || prev.y !== l.y || prev.width !== l.width) {
-          setLayout({ width: l.width, x: l.x, y: l.y });
-        }
-      }
-      if (typeof userOnLayout === 'function') userOnLayout(e);
-    };
-    const out: Record<string, any> = { ...props, onLayout };
-    if (stuck) {
-      // The pinned twin is the visible, interactive one now.
-      out.accessibilityElementsHidden = true;
-      out.importantForAccessibility = 'no-hide-descendants';
-    }
-    return out;
-  };
-
-  const register = (type: any, props: Record<string, any>, style: any): void => {
-    if (entry === null || layout === null || fades === null) {
-      cloneRef.current = null;
-      return;
-    }
-    const { onLayout: _onLayout, ref: _ref, style: _style, ...rest } = props;
-    cloneRef.current = React.createElement(type, {
-      ...rest,
-      accessibilityElementsHidden: !stuck,
-      importantForAccessibility: stuck ? 'auto' : 'no-hide-descendants',
-      key: 'sc-sticky-' + idRef.current,
-      pointerEvents: stuck ? 'auto' : 'none',
-      style: [
-        style,
-        {
-          left: layout.x,
-          opacity: fades.cloneOpacity,
-          position: 'absolute',
-          top: 0,
-          width: layout.width,
-        },
-      ],
-    });
-  };
-
-  return { changed, compose, layer, register };
+    throw new Error("STUB");
 }

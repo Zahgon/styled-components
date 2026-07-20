@@ -20,18 +20,7 @@ export default function withTheme<T extends AnyComponent>(
   Component: T
 ): React.FC<WithThemeOuterProps<T>> & NonReactStatics<T> {
   const WithTheme: React.FC<WithThemeOuterProps<T>> = props => {
-    const theme = !IS_RSC ? React.useContext(ThemeContext) : undefined;
-    const themeProp = determineTheme(props, theme);
-
-    if (__DEV__ && themeProp === undefined) {
-      const name = getComponentName(Component);
-      warnOnce('withTheme', `no ThemeProvider or theme prop in scope for "${name}"`, name);
-    }
-
-    return React.createElement(Component, {
-      ...props,
-      theme: themeProp,
-    } as React.ComponentPropsWithRef<T>);
+      throw new Error("STUB");
   };
 
   WithTheme.displayName = `WithTheme(${getComponentName(Component)})`;

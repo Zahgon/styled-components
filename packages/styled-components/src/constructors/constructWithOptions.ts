@@ -117,11 +117,7 @@ export default function constructWithOptions<
     initialStyles: Styles<Substitute<OuterProps, Props>>,
     ...interpolations: Interpolation<Substitute<OuterProps, Props>>[]
   ) =>
-    componentConstructor<Substitute<OuterProps, Props>, Statics>(
-      tag,
-      options as StyledOptions<R, Substitute<OuterProps, Props>>,
-      cssWithInterpolations<Substitute<OuterProps, Props>>(initialStyles, interpolations)
-    );
+    { throw new Error("STUB"); };
 
   /**
    * Attrs allows for accomplishing two goals:
@@ -137,35 +133,14 @@ export default function constructWithOptions<
   >(
     attrs: PrivateAttrsArg
   ) =>
-    constructWithOptions<
-      R,
-      PrivateResolvedTarget,
-      PrivateResolvedTarget extends KnownTarget
-        ? Substitute<
-            Substitute<OuterProps, React.ComponentPropsWithRef<PrivateResolvedTarget>>,
-            Props
-          >
-        : PrivateMergedProps,
-      OuterStatics,
-      AttrsKeys | keyof AttrsResult<PrivateAttrsArg>
-    >(componentConstructor, tag, {
-      ...options,
-      attrs: Array.prototype.concat(options.attrs, attrs).filter(Boolean),
-    });
+    { throw new Error("STUB"); };
 
   /**
    * If config methods are called, wrap up a new template function
    * and merge options.
    */
   templateFunction.withConfig = (config: StyledOptions<R, OuterProps>) =>
-    constructWithOptions<R, Target, OuterProps, OuterStatics, AttrsKeys>(
-      componentConstructor,
-      tag,
-      {
-        ...options,
-        ...config,
-      }
-    );
+    { throw new Error("STUB"); };
 
   return templateFunction;
 }

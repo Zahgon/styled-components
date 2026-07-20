@@ -11,55 +11,7 @@ import { TokenStream } from '../tokenStream';
  */
 
 function caretColorShorthand(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const first = stream.peek();
-  if (first === undefined) return null;
-  const firstIsAuto = first.kind === TokenKind.Ident && first.name === 'auto';
-  if (firstIsAuto) {
-    stream.consume();
-  } else if (consumeColor(stream) === null) {
-    return null;
-  }
-
-  if (!stream.eof()) {
-    const second = stream.peek();
-    if (second === undefined) return null;
-    const secondIsAuto = second.kind === TokenKind.Ident && second.name === 'auto';
-    if (secondIsAuto) {
-      stream.consume();
-    } else if (consumeColor(stream) === null) {
-      return null;
-    }
-    if (!stream.eof()) return null;
-    // The block-caret note is a native limitation; the browser handles the
-    // second value itself, so the drop stays silent on rn-web.
-    if (__DEV__ && !__NATIVE_WEB__) {
-      warnOnce(
-        'native-caret-color-block',
-        "`caret-color`'s second value only affects block carets, which React Native does not render on iOS or Android. The first value still applies."
-      );
-    }
-  }
-
-  if (firstIsAuto) return { caretColor: 'auto' };
-
-  // Browser ships caret-color; emit the authored color text only (rn-web
-  // does not run caretColor through its color normalizer, so system
-  // keywords survive as CSS strings). The TextInput prop lifts are
-  // native-only.
-  if (__NATIVE_WEB__) return { caretColor: first.raw };
-
-  const v = colorTokenToRnStyleValue(first);
-  if (getReactNativePlatformOS() === 'ios') {
-    if (__DEV__) {
-      warnOnce(
-        'native-caret-color-ios',
-        '`caret-color` also tints the text-selection highlight on iOS because iOS exposes a single `selectionColor` for both surfaces. Android keeps the spec semantics where only the caret is colored.'
-      );
-    }
-    return { caretColor: v, cursorColor: v, selectionColor: v };
-  }
-  return { caretColor: v, cursorColor: v };
+    throw new Error("STUB");
 }
 
 register('caretColor', caretColorShorthand);

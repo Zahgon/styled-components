@@ -145,12 +145,12 @@ const StarRow = styled.View<{ $idx: number; $isShort: boolean }>`
   position: absolute;
   left: 0;
   right: 0;
-  top: ${p => p.$idx * 10 + 1}%;
+  top: ${p => { throw new Error("STUB"); }}%;
   height: 18%;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  ${p => (p.$isShort ? 'padding-left: 8.3333%; padding-right: 8.3333%;' : '')}
+  ${p => { throw new Error("STUB"); }}
 `;
 
 // Use a system-font stack rather than a bundled font: ★ is in
@@ -175,17 +175,7 @@ const Star = styled.Text`
 `;
 
 function StarField() {
-  return (
-    <Canton pointerEvents="none">
-      {STAR_ROW_COUNTS.map((count, idx) => (
-        <StarRow key={idx} $idx={idx} $isShort={count === 5}>
-          {Array.from({ length: count }, (_, i) => (
-            <Star key={i}>★</Star>
-          ))}
-        </StarRow>
-      ))}
-    </Canton>
-  );
+    throw new Error("STUB");
 }
 
 const FlagTag = styled(Tag)`
@@ -195,21 +185,5 @@ const FlagTag = styled(Tag)`
 `;
 
 export function GradientPalette() {
-  return (
-    <Stack>
-      <Linear>
-        <Tag>linear · static</Tag>
-      </Linear>
-      <ThemeLinear>
-        <Tag>linear · theme tokens</Tag>
-      </ThemeLinear>
-      <Radial>
-        <Tag>radial</Tag>
-      </Radial>
-      <Flag>
-        <StarField />
-        <FlagTag>stacked · stars & stripes</FlagTag>
-      </Flag>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

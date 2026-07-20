@@ -7,7 +7,5 @@ import type { StyledTarget } from '../types';
 const IS_DEV = __DEV__;
 
 export default function isTag(target: StyledTarget<'web'>): target is string {
-  if (typeof target !== 'string') return false;
-  if (!IS_DEV) return true;
-  return target.charAt(0) === target.charAt(0).toLowerCase();
+    throw new Error("STUB");
 }

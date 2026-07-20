@@ -64,26 +64,5 @@ const ToggleLabel = styled.Text`
 `;
 
 export function PressInteractive() {
-  const [disabled, setDisabled] = useState(false);
-  return (
-    <>
-      <Button disabled={disabled} accessibilityRole="button">
-        {({ pressed }) => (
-          <Label data-pressed={String(pressed)} data-disabled={String(disabled)}>
-            Press me
-          </Label>
-        )}
-      </Button>
-      <Toggle
-        aria-pressed={disabled}
-        onPress={() => setDisabled(d => !d)}
-        accessibilityRole="button"
-        accessibilityState={{ selected: disabled }}
-      >
-        <ToggleLabel aria-pressed={disabled}>
-          {disabled ? 'Tap to enable' : 'Tap to disable'}
-        </ToggleLabel>
-      </Toggle>
-    </>
-  );
+    throw new Error("STUB");
 }

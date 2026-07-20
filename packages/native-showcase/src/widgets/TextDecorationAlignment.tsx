@@ -21,23 +21,11 @@ const Hello = styled.Text<{ $align: 'top' | 'middle' | 'bottom' }>`
   color: ${t.colors.fg};
   font-size: 24px;
   text-decoration: underline ${t.colors.fail};
-  vertical-align: ${p => p.$align};
+  vertical-align: ${p => { throw new Error("STUB"); }};
 `;
 
 const ROWS: ReadonlyArray<'top' | 'middle' | 'bottom'> = ['top', 'middle', 'bottom'];
 
 export function TextDecorationAlignment() {
-  return (
-    <Stack>
-      <Markdown variant="hint">
-        {`iOS has no platform API for vertical alignment of \`<Text>\` content in RN 0.85, so all three rows render at the top. Android and rn-web honor the keyword. The library emits a one-time development warning on iOS. The underline color skews the other way: Android paints decorations in the text color (no per-decoration color in RN 0.85, dev warning), while iOS and rn-web show the authored pink.`}
-      </Markdown>
-      {ROWS.map(align => (
-        <React.Fragment key={align}>
-          <Tag>vertical-align · {align}</Tag>
-          <Hello $align={align}>Hello</Hello>
-        </React.Fragment>
-      ))}
-    </Stack>
-  );
+    throw new Error("STUB");
 }

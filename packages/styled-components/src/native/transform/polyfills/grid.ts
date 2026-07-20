@@ -35,65 +35,19 @@ const GRID_TEMPLATE_SUPPORTED =
  * unequal fr factors).
  */
 function countEqualFrColumns(tokens: Token[]): number | null {
-  if (tokens.length === 1 && tokens[0].kind === TokenKind.Function && tokens[0].name === 'repeat') {
-    const args = tokenizeFunctionArgs(tokens[0]);
-    // repeat(<count>, 1fr): Number, Comma, Length(1fr).
-    if (
-      args.length === 3 &&
-      args[0].kind === TokenKind.Number &&
-      args[1].kind === TokenKind.Comma &&
-      isOneFr(args[2])
-    ) {
-      const n = args[0].value!;
-      if (Number.isInteger(n) && n >= 1) return n;
-    }
-    return null;
-  }
-  // Explicit track list: every token must be a `1fr` length.
-  for (let i = 0; i < tokens.length; i++) {
-    if (!isOneFr(tokens[i])) return null;
-  }
-  return tokens.length >= 1 ? tokens.length : null;
+    throw new Error("STUB");
 }
 
 function isOneFr(tok: Token): boolean {
-  return tok.kind === TokenKind.Length && tok.unit === 'fr' && tok.value === 1;
+    throw new Error("STUB");
 }
 
 function gridTemplateColumnsHandler(tokens: Token[], rawValue: string): Dict<any> | null {
-  if (__NATIVE_WEB__) return { gridTemplateColumns: rawValue };
-  const columns = countEqualFrColumns(tokens);
-  if (columns !== null) return { __scGridColumns: columns };
-  if (__DEV__) {
-    warnOnce(
-      'native-grid-template-unsupported',
-      `the \`grid-template-columns\` value "${rawValue}" is not in scope of React Native's grid subset, which supports ${GRID_TEMPLATE_SUPPORTED} The declaration was ignored and the container falls back to a wrapping flex row.`,
-      rawValue
-    );
-  }
-  return {};
+    throw new Error("STUB");
 }
 
 function gridColumnHandler(tokens: Token[], rawValue: string): Dict<any> | null {
-  if (__NATIVE_WEB__) return { gridColumn: rawValue };
-  // `span N`: Ident('span') followed by an integer.
-  if (
-    tokens.length === 2 &&
-    tokens[0].kind === TokenKind.Ident &&
-    tokens[0].name === 'span' &&
-    tokens[1].kind === TokenKind.Number
-  ) {
-    const n = tokens[1].value!;
-    if (Number.isInteger(n) && n >= 1) return { __scGridSpan: n };
-  }
-  if (__DEV__) {
-    warnOnce(
-      'native-grid-placement-unsupported',
-      `the \`grid-column\` value "${rawValue}" is not supported on React Native. Only \`grid-column: span N\` (integer N >= 1) is implemented; line numbers, named lines, \`grid-row\`, and \`grid-area\` are not. The declaration was ignored.`,
-      `grid-column:${rawValue}`
-    );
-  }
-  return {};
+    throw new Error("STUB");
 }
 
 function gridPlacementUnsupportedHandler(
@@ -113,19 +67,7 @@ function gridPlacementUnsupportedHandler(
 }
 
 function gridAutoFlowHandler(tokens: Token[], rawValue: string): Dict<any> | null {
-  if (__NATIVE_WEB__) return { gridAutoFlow: rawValue };
-  // `row` is the initial value and the only flow the subset implements.
-  if (tokens.length === 1 && tokens[0].kind === TokenKind.Ident && tokens[0].name === 'row') {
-    return {};
-  }
-  if (__DEV__) {
-    warnOnce(
-      'native-grid-auto-flow-unsupported',
-      `the \`grid-auto-flow\` value "${rawValue}" is not supported on React Native, which auto-places items in row order only. Remove the declaration or set \`grid-auto-flow: row\`. The declaration was ignored.`,
-      rawValue
-    );
-  }
-  return {};
+    throw new Error("STUB");
 }
 
 // `grid-row` and `grid-area` share the placement-unsupported handler;
@@ -134,9 +76,9 @@ function gridAutoFlowHandler(tokens: Token[], rawValue: string): Dict<any> | nul
 register('gridTemplateColumns', gridTemplateColumnsHandler);
 register('gridColumn', gridColumnHandler);
 register('gridRow', (_tokens, rawValue) =>
-  gridPlacementUnsupportedHandler(rawValue, 'gridRow', 'grid-row')
+  { throw new Error("STUB"); }
 );
 register('gridArea', (_tokens, rawValue) =>
-  gridPlacementUnsupportedHandler(rawValue, 'gridArea', 'grid-area')
+  { throw new Error("STUB"); }
 );
 register('gridAutoFlow', gridAutoFlowHandler);

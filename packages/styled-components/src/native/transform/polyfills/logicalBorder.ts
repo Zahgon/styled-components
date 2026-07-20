@@ -65,7 +65,7 @@ function warnNoPerEdgeStyle(edge: string, value: string): void {
 function camelEdge(edge: string): string {
   return edge
     .split('-')
-    .map(p => p[0].toUpperCase() + p.slice(1))
+    .map(p => { throw new Error("STUB"); })
     .join('');
 }
 
@@ -280,80 +280,44 @@ const RN_OUTLINE_STYLES = new Set(['solid', 'dotted', 'dashed']);
 const WEB_ONLY_OUTLINE_STYLES = new Set(['auto', 'double', 'groove', 'ridge', 'inset', 'outset']);
 
 function outlineStyleHandler(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(withoutSlashes(tokens));
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const name = t.name;
-  if (name === undefined) return null;
-
-  // `outline-style: hidden` is invalid (the `hidden` keyword only
-  // applies to `border-style`, not outline).
-  if (name === 'hidden') {
-    if (__DEV__) {
-      warnOnce(
-        'native-outline-style-hidden-invalid',
-        '`outline-style: hidden` is not a valid outline value. Use `outline: none` to suppress the outline.',
-        name
-      );
-    }
-    return {};
-  }
-
-  if (RN_OUTLINE_STYLES.has(name)) return { outlineStyle: name };
-
-  if (WEB_ONLY_OUTLINE_STYLES.has(name)) {
-    if (__DEV__) {
-      warnOnce(
-        'native-outline-style',
-        '`outline-style: ' +
-          name +
-          "` is ignored on React Native. iOS and Android render only 'solid', 'dotted', or 'dashed'.",
-        name
-      );
-    }
-    return { outlineStyle: name };
-  }
-
-  if (name === 'none') return { outlineStyle: 'solid', outlineWidth: 0 };
-
-  return null;
+    throw new Error("STUB");
 }
 
 /* ─────────── Registration ─────────── */
 
 // 12 longhands
-register('borderInlineStartColor', tokens => singleColor(tokens, 'borderStartColor'));
-register('borderInlineEndColor', tokens => singleColor(tokens, 'borderEndColor'));
-register('borderBlockStartColor', tokens => singleColor(tokens, 'borderTopColor'));
-register('borderBlockEndColor', tokens => singleColor(tokens, 'borderBottomColor'));
+register('borderInlineStartColor', tokens => { throw new Error("STUB"); });
+register('borderInlineEndColor', tokens => { throw new Error("STUB"); });
+register('borderBlockStartColor', tokens => { throw new Error("STUB"); });
+register('borderBlockEndColor', tokens => { throw new Error("STUB"); });
 
-register('borderInlineStartWidth', tokens => singleWidth(tokens, 'borderStartWidth'));
-register('borderInlineEndWidth', tokens => singleWidth(tokens, 'borderEndWidth'));
-register('borderBlockStartWidth', tokens => singleWidth(tokens, 'borderTopWidth'));
-register('borderBlockEndWidth', tokens => singleWidth(tokens, 'borderBottomWidth'));
+register('borderInlineStartWidth', tokens => { throw new Error("STUB"); });
+register('borderInlineEndWidth', tokens => { throw new Error("STUB"); });
+register('borderBlockStartWidth', tokens => { throw new Error("STUB"); });
+register('borderBlockEndWidth', tokens => { throw new Error("STUB"); });
 
-register('borderInlineStartStyle', tokens => singleStyle(tokens, 'inline-start'));
-register('borderInlineEndStyle', tokens => singleStyle(tokens, 'inline-end'));
-register('borderBlockStartStyle', tokens => singleStyle(tokens, 'block-start'));
-register('borderBlockEndStyle', tokens => singleStyle(tokens, 'block-end'));
+register('borderInlineStartStyle', tokens => { throw new Error("STUB"); });
+register('borderInlineEndStyle', tokens => { throw new Error("STUB"); });
+register('borderBlockStartStyle', tokens => { throw new Error("STUB"); });
+register('borderBlockEndStyle', tokens => { throw new Error("STUB"); });
 
 // 6 axis shorthands
-register('borderInlineColor', tokens => axisColor(tokens, 'inline'));
-register('borderInlineWidth', tokens => axisWidth(tokens, 'inline'));
-register('borderInlineStyle', tokens => axisStyle(tokens, 'inline'));
-register('borderBlockColor', tokens => axisColor(tokens, 'block'));
-register('borderBlockWidth', tokens => axisWidth(tokens, 'block'));
-register('borderBlockStyle', tokens => axisStyle(tokens, 'block'));
+register('borderInlineColor', tokens => { throw new Error("STUB"); });
+register('borderInlineWidth', tokens => { throw new Error("STUB"); });
+register('borderInlineStyle', tokens => { throw new Error("STUB"); });
+register('borderBlockColor', tokens => { throw new Error("STUB"); });
+register('borderBlockWidth', tokens => { throw new Error("STUB"); });
+register('borderBlockStyle', tokens => { throw new Error("STUB"); });
 
 // 4 composite single-edge shorthands
-register('borderInlineStart', tokens => compositeEdge(tokens, 'inline-start'));
-register('borderInlineEnd', tokens => compositeEdge(tokens, 'inline-end'));
-register('borderBlockStart', tokens => compositeEdge(tokens, 'block-start'));
-register('borderBlockEnd', tokens => compositeEdge(tokens, 'block-end'));
+register('borderInlineStart', tokens => { throw new Error("STUB"); });
+register('borderInlineEnd', tokens => { throw new Error("STUB"); });
+register('borderBlockStart', tokens => { throw new Error("STUB"); });
+register('borderBlockEnd', tokens => { throw new Error("STUB"); });
 
 // 2 mode-spanning shorthands
-register('borderInline', tokens => modeSpanning(tokens, 'inline'));
-register('borderBlock', tokens => modeSpanning(tokens, 'block'));
+register('borderInline', tokens => { throw new Error("STUB"); });
+register('borderBlock', tokens => { throw new Error("STUB"); });
 
 // outline-style:hidden targeted warn (replaces fall-through to
 // native-shorthand-parse)

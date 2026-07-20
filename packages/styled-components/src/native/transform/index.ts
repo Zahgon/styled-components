@@ -79,40 +79,21 @@ import './shorthands.register';
 type SinglePassthroughHandler = (value: string, rawValue: string) => Dict<any>;
 const SINGLE_PASSTHROUGH_HANDLERS: Record<string, SinglePassthroughHandler> = {
   verticalAlign: value => {
-    // rn-web Text defaults to `display: inline`, where height is a no-op
-    // and vertical-align is inert inside flex parents; the align-content
-    // companion realizes the alignment there (flex-prefixed keywords only;
-    // rn-web's Flow types reject the bare `start` / `end` forms).
-    if (__NATIVE_WEB__) {
-      const alignContent =
-        value === 'top'
-          ? 'flex-start'
-          : value === 'middle'
-            ? 'center'
-            : value === 'bottom'
-              ? 'flex-end'
-              : null;
-      if (alignContent !== null) return { alignContent, verticalAlign: value };
-    }
-    return { verticalAlign: value };
-  },
-  boxShadow: value => ({ boxShadow: maybeExpandBoxShadowSystemColors(value) }),
-  filter: value => ({ filter: maybeExpandFilterDropShadowSystemColors(value) }),
+        throw new Error("STUB");
+    },
+  boxShadow: value => { throw new Error("STUB"); },
+  filter: value => { throw new Error("STUB"); },
   // Android has no isolation style key; the platform primitive that forces
   // an isolated compositing surface (so blended descendants composite
   // against the group, not the page) is the hardware-texture layer. iOS
   // drops the Android-suffixed prop and consumes the style key instead.
   isolation: value =>
-    !__NATIVE_WEB__ && value === 'isolate'
-      ? { isolation: value, renderToHardwareTextureAndroid: true }
-      : { isolation: value },
+    { throw new Error("STUB"); },
   // Dual-emit so RN Text honors the cascade. rn-web rejects `direction` as
   // a style key; the `dir` prop lift feeds its LocaleContext instead so
   // descendants and BiDi-aware text-align resolve against the new value.
   direction: value =>
-    __NATIVE_WEB__
-      ? { dir: value, writingDirection: value }
-      : { direction: value, writingDirection: value },
+    { throw new Error("STUB"); },
 };
 
 /**

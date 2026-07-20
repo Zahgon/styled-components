@@ -41,17 +41,9 @@ const VARIANT_FONT: Record<
   Variant,
   (theme: ShowcaseTheme) => { fontSize: number; lineHeight: number; color: string }
 > = {
-  brief: theme => ({
-    fontSize: theme.fontSize.brief,
-    lineHeight: theme.lineHeight.brief,
-    color: theme.colors.fgMuted,
-  }),
-  caption: theme => ({
-    fontSize: theme.fontSize.body,
-    lineHeight: theme.lineHeight.body,
-    color: theme.colors.fgMuted,
-  }),
-  hint: theme => ({ fontSize: 12, lineHeight: 17, color: theme.colors.fgFaint }),
+  brief: theme => { throw new Error("STUB"); },
+  caption: theme => { throw new Error("STUB"); },
+  hint: theme => { throw new Error("STUB"); },
 };
 
 // Inline span styled components - they route through the v7 engine, so
@@ -122,62 +114,11 @@ function variantStyles(
   variant: Variant,
   theme: ShowcaseTheme
 ): NonNullable<NativeOptions['styles']> {
-  const v = VARIANT_FONT[variant](theme);
-  const text = {
-    fontFamily: theme.fontFamily.body,
-    fontSize: v.fontSize,
-    lineHeight: v.lineHeight,
-    color: v.color,
-  } as const;
-  return {
-    text,
-    paragraph: text,
-    // Backtick spans dispatch straight to `Text` with this style; the
-    // `code` override above only fires for literal HTML `<code>` tags.
-    // Size tracks the surrounding variant minus one step: the mono face
-    // reads optically large at equal pixel size, so one down sits flush
-    // with the sentence (a fixed `mono` size previously read 2-3px small
-    // in 14-15px captions). Line-height stays the variant's so baselines
-    // align. Code blocks reuse this style, so they scale with the
-    // variant too.
-    codeInline: {
-      fontFamily: theme.fontFamily.mono,
-      fontSize: v.fontSize - 1,
-      lineHeight: v.lineHeight,
-      color: theme.colors.ink,
-      backgroundColor: theme.colors.signalSoft,
-    },
-    em: { fontStyle: 'italic' },
-    strong: { fontFamily: theme.fontFamily.strong, color: theme.colors.ink },
-    listOrdered: { gap: 4 },
-    listUnordered: { gap: 4 },
-    listItem: { flex: 1 },
-    listItemBullet: { ...text, fontFamily: theme.fontFamily.monoStrong, marginRight: 4 },
-    listItemNumber: { ...text, fontFamily: theme.fontFamily.monoStrong, marginRight: 4 },
-    heading1: {
-      fontFamily: theme.fontFamily.heading,
-      fontSize: theme.fontSize.title,
-      lineHeight: theme.lineHeight.title,
-      color: theme.colors.ink,
-    },
-    heading2: {
-      fontFamily: theme.fontFamily.heading,
-      fontSize: theme.fontSize.brief,
-      lineHeight: theme.lineHeight.brief,
-      color: theme.colors.ink,
-    },
-    heading3: {
-      fontFamily: theme.fontFamily.monoStrong,
-      fontSize: theme.fontSize.monoSm,
-      letterSpacing: 0.6,
-      textTransform: 'uppercase',
-      color: theme.colors.ink,
-    },
-  };
+    throw new Error("STUB");
 }
 
 function openExternal(url: string) {
-  Linking.openURL(url).catch(() => {});
+    throw new Error("STUB");
 }
 
 interface MarkdownProps {
@@ -195,10 +136,7 @@ interface MarkdownProps {
 // JSX children come through as string-or-mixed; flatten + coerce so
 // `<Markdown>multi-line text</Markdown>` works without ceremony.
 function flatten(children: React.ReactNode): string {
-  if (typeof children === 'string') return children;
-  if (typeof children === 'number') return String(children);
-  if (Array.isArray(children)) return children.map(flatten).join('');
-  return '';
+    throw new Error("STUB");
 }
 
 export function Markdown({
@@ -207,36 +145,11 @@ export function Markdown({
   inline = false,
   onLinkPress,
 }: MarkdownProps) {
-  const scheme = useColorScheme() ?? 'light';
-  const activeTheme = scheme === 'dark' ? darkTheme : lightTheme;
-  const text = flatten(children).trim();
-  const styles = React.useMemo(() => variantStyles(variant, activeTheme), [variant, activeTheme]);
-  // `markdown-to-jsx/native` only applies `styles.text` / `.paragraph`
-  // to its semantic node types. Plain inline text falls through to the
-  // outer wrapper, which rn-web renders as a `<Text>` with a hardcoded
-  // `color: 'black'` baseline (see `react-native-web/Text/styles.text$raw`).
-  // The baseline wins because `wrapperProps.style` is the *only* style
-  // applied to the wrapper - without an explicit color here, the brief
-  // is unreadable on a dark background. Pass the full text style so
-  // typography (font, size, line-height, color) inherits to all plain
-  // descendants via `textHasAncestor$raw`.
-  return (
-    <MD
-      options={{
-        forceInline: inline,
-        styles,
-        overrides,
-        wrapperProps: { style: styles.text },
-        onLinkPress: onLinkPress ?? openExternal,
-      }}
-    >
-      {text}
-    </MD>
-  );
+    throw new Error("STUB");
 }
 
 export function InlineMarkdown(props: Omit<MarkdownProps, 'inline'>) {
-  return <Markdown {...props} inline />;
+    throw new Error("STUB");
 }
 
 export type { NativeOptions };

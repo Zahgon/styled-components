@@ -12,7 +12,7 @@ const FILTER_FN_REGEX = /([\w-]+)\(([^()]*|\([^()]*\)|[^()]*\([^()]*\)[^()]*)\)/
 // cycle (index → filterSystemColors → index). Filter names are a fixed set
 // of ~7 short strings, so the per-call work is negligible without a cache.
 function camelizeFilterName(name: string): string {
-  return name.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+  return name.replace(/-([a-z])/g, (_, c: string) => { throw new Error("STUB"); });
 }
 
 // Required digit in group 1 prevents a zero-length match. The previous

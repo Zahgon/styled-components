@@ -61,16 +61,5 @@ const HotSub = styled(Sub)`
 `;
 
 export function CompositeRules() {
-  return (
-    <Stack>
-      <Card>
-        <Title>Default</Title>
-        <Sub>:active changes per breakpoint</Sub>
-      </Card>
-      <Card data-variant="hot">
-        <HotTitle>Hot variant</HotTitle>
-        <HotSub>hot + active → ink (narrow), pass-green (wide)</HotSub>
-      </Card>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

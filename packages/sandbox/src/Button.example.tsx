@@ -11,20 +11,9 @@ const Button = styled.button<{ $primary?: boolean }>`
   cursor: pointer;
 
   ${props =>
-    props.$primary &&
-    css`
-      background: palevioletred;
-      color: white;
-    `};
+    { throw new Error("STUB"); }};
 `;
 
 export default function ButtonExample() {
-  return (
-    <>
-      <Button onClick={() => alert('Clicked!')}>Normal Button</Button>
-      <Button $primary onClick={() => alert('Clicked!')}>
-        Primary Button
-      </Button>
-    </>
-  );
+    throw new Error("STUB");
 }

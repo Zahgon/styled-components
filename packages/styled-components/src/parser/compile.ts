@@ -307,32 +307,7 @@ export function compileWeb(
   sheet?: StyleSheet,
   compiler?: Compiler
 ): string[] | null {
-  const fragments: (FastPathFragment | null)[] = [];
-  const keyframes: CompiledKeyframes[] = [];
-  const filled = evaluateForFastPath(
-    source,
-    fillContext,
-    undefined,
-    compiler,
-    fragments,
-    keyframes
-  );
-  if (filled === null) return null;
-  if (sheet !== undefined) {
-    for (let i = 0; i < keyframes.length; i++) {
-      const kf = keyframes[i];
-      if (!sheet.hasNameForId(kf.id, kf.name)) {
-        sheet.insertRules(kf.id, kf.name, kf.rules);
-      }
-    }
-  }
-  return compileWebFilled(
-    source,
-    filled,
-    parentSelector,
-    options,
-    fragments.length > 0 ? fragments : null
-  );
+    throw new Error("STUB");
 }
 
 /**

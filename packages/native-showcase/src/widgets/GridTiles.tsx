@@ -47,33 +47,5 @@ const Label = styled.Text`
 `;
 
 export function GridTiles() {
-  return (
-    <Grid>
-      <Tile>
-        <Num>1</Num>
-      </Tile>
-      <Wide>
-        <WideNum>2</WideNum>
-        <Label>span 2</Label>
-      </Wide>
-      <Tile>
-        <Num>3</Num>
-      </Tile>
-      <Tile>
-        <Num>4</Num>
-      </Tile>
-      <Tile>
-        <Num>5</Num>
-      </Tile>
-      <Tile>
-        <Num>6</Num>
-      </Tile>
-      <Tile>
-        <Num>7</Num>
-      </Tile>
-      <Tile>
-        <Num>8</Num>
-      </Tile>
-    </Grid>
-  );
+    throw new Error("STUB");
 }

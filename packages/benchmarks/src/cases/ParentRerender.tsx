@@ -46,29 +46,7 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 export default function ParentRerender({ components, count, childCount }: IParentRerender) {
-  const { Box } = components;
-
-  // Parent renders with a changing `count` prop (drives the re-render).
-  // All children receive STABLE props - color is determined by index only,
-  // layout alternates by position, never changes between renders.
-  const children = [];
-  for (let i = 0; i < childCount; i++) {
-    children.push(
-      <Box
-        key={i}
-        color={i % 6}
-        layout={i % 2 === 0 ? 'column' : 'row'}
-        outer={i % 3 === 0}
-        fixed={i % 5 === 0}
-      />
-    );
-  }
-
-  return (
-    <div data-count={count} style={wrapperStyle}>
-      {children}
-    </div>
-  );
+    throw new Error("STUB");
 }
 
 ParentRerender.displayName = 'ParentRerender';

@@ -370,30 +370,7 @@ export function concatSourceInputs(
   baseRules: RuleSet<any>,
   extensionRules: RuleSet<any>
 ): RuleSet<any> {
-  const baseSlot = (baseRules as unknown as RulesWithSlot)[SOURCE_SLOT];
-  const extSlot = (extensionRules as unknown as RulesWithSlot)[SOURCE_SLOT];
-  if (baseSlot === undefined || extSlot === undefined) return combinedRules;
-  const baseStrings = baseSlot[2] !== null ? baseSlot[2].strings : baseSlot[0]!;
-  const baseInterpolations = baseSlot[2] !== null ? baseSlot[2].interpolations : baseSlot[1]!;
-  const extStrings = extSlot[2] !== null ? extSlot[2].strings : extSlot[0]!;
-  const extInterpolations = extSlot[2] !== null ? extSlot[2].interpolations : extSlot[1]!;
-  // Seam: last string of base + first string of extension joins as one
-  // CSS chunk. The slots in between stay positionally addressable because
-  // the resulting string array still satisfies
-  // `strings.length === interpolations.length + 1`.
-  const combinedStrings: string[] = [];
-  for (let i = 0; i < baseStrings.length - 1; i++) combinedStrings.push(baseStrings[i]);
-  combinedStrings.push((baseStrings[baseStrings.length - 1] || '') + (extStrings[0] || ''));
-  for (let i = 1; i < extStrings.length; i++) combinedStrings.push(extStrings[i]);
-  const combinedInterpolations: unknown[] = [];
-  for (let i = 0; i < baseInterpolations.length; i++) {
-    combinedInterpolations.push(baseInterpolations[i]);
-  }
-  for (let i = 0; i < extInterpolations.length; i++) {
-    combinedInterpolations.push(extInterpolations[i]);
-  }
-  attachSourceInputs(combinedRules, combinedStrings, combinedInterpolations);
-  return combinedRules;
+    throw new Error("STUB");
 }
 
 function interleaveWithSentinels(

@@ -84,30 +84,5 @@ const Multi = styled(Card)`
 `;
 
 export function ShadowComposer() {
-  return (
-    <Stack>
-      <Row>
-        <Soft>
-          <Caption>soft</Caption>
-        </Soft>
-        <Layered>
-          <Caption>layered · 3</Caption>
-        </Layered>
-        <Inset>
-          <Caption>inset</Caption>
-        </Inset>
-      </Row>
-      <Row>
-        <Spread>
-          <Caption>spread</Caption>
-        </Spread>
-        <Themed>
-          <Caption>theme color</Caption>
-        </Themed>
-        <Multi>
-          <Caption>inset + outer</Caption>
-        </Multi>
-      </Row>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

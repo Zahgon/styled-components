@@ -35,33 +35,32 @@ const bench = (name: string, iters: number, fn: () => void) =>
 
 // ── Color parse / serialize ────────────────────────────────────────
 console.log('\n=== parseAnimColor ===');
-bench('hex #ff0000', 1_000_000, () => parseAnimColor('#ff0000'));
-bench('hex #f00', 1_000_000, () => parseAnimColor('#f00'));
-bench('hex #ff0000aa', 1_000_000, () => parseAnimColor('#ff0000aa'));
-bench('rgb(200,50,100)', 1_000_000, () => parseAnimColor('rgb(200,50,100)'));
-bench('rgba(200,50,100,0.5)', 1_000_000, () => parseAnimColor('rgba(200,50,100,0.5)'));
-bench('rgb modern slash', 1_000_000, () => parseAnimColor('rgb(200 50 100 / 0.5)'));
-bench('oklch (slow path)', 500_000, () => parseAnimColor('oklch(0.5 0.1 180)'));
-bench('named (rebeccapurple)', 200_000, () => parseAnimColor('rebeccapurple'));
+bench('hex #ff0000', 1_000_000, () => { throw new Error("STUB"); });
+bench('hex #f00', 1_000_000, () => { throw new Error("STUB"); });
+bench('hex #ff0000aa', 1_000_000, () => { throw new Error("STUB"); });
+bench('rgb(200,50,100)', 1_000_000, () => { throw new Error("STUB"); });
+bench('rgba(200,50,100,0.5)', 1_000_000, () => { throw new Error("STUB"); });
+bench('rgb modern slash', 1_000_000, () => { throw new Error("STUB"); });
+bench('oklch (slow path)', 500_000, () => { throw new Error("STUB"); });
+bench('named (rebeccapurple)', 200_000, () => { throw new Error("STUB"); });
 
 console.log('\n=== rgbaToCss ===');
 const C1 = { r: 200, g: 50, b: 100, a: 1 };
 const C2 = { r: 0.5, g: 100.5, b: 200.7, a: 0.8 };
-bench('rgbaToCss opaque int', 2_000_000, () => rgbaToCss(C1));
-bench('rgbaToCss fractional alpha', 2_000_000, () => rgbaToCss(C2));
+bench('rgbaToCss opaque int', 2_000_000, () => { throw new Error("STUB"); });
+bench('rgbaToCss fractional alpha', 2_000_000, () => { throw new Error("STUB"); });
 
 console.log('\n=== interpolateColorOklab (standalone) ===');
 const FROM = { r: 200, g: 50, b: 100, a: 1 };
 const TO = { r: 50, g: 200, b: 100, a: 0.5 };
 let mid = 0;
 bench('oklab interp (varying t)', 1_000_000, () => {
-  interpolateColorOklab(FROM, TO, mid);
-  mid = (mid + 0.013) % 1;
+    throw new Error("STUB");
 });
 
 // ── Build full segmented interpolation (per-transition start cost) ──
 console.log('\n=== buildSegmentedInterpolation (per-transition start) ===');
-const fakeProgress = { interpolate: (cfg: any) => cfg };
+const fakeProgress = { interpolate: (cfg: any) => { throw new Error("STUB"); } };
 const topEasing = {
   kind: 'cubic-bezier' as const,
   p: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
@@ -86,35 +85,35 @@ const unitStops = [
 const noEasings = [undefined];
 
 bench('numeric 2-stop, 300ms', 200_000, () =>
-  buildSegmentedInterpolation(fakeProgress, numericStops, noEasings, topEasing, 300)
+  { throw new Error("STUB"); }
 );
 bench('unit-string 2-stop, 300ms', 200_000, () =>
-  buildSegmentedInterpolation(fakeProgress, unitStops, noEasings, topEasing, 300)
+  { throw new Error("STUB"); }
 );
 bench('color 2-stop, 300ms', 200_000, () =>
-  buildSegmentedInterpolation(fakeProgress, colorStops, noEasings, topEasing, 300)
+  { throw new Error("STUB"); }
 );
 bench('color 3-stop, 600ms', 100_000, () =>
-  buildSegmentedInterpolation(fakeProgress, colorStopsMulti, [undefined, undefined], topEasing, 600)
+  { throw new Error("STUB"); }
 );
 
 // ── Transform parse ────────────────────────────────────────────────
 console.log('\n=== parseTransformString ===');
-bench('translateX(10px)', 500_000, () => parseTransformString('translateX(10px)'));
-bench('scale(2)', 500_000, () => parseTransformString('scale(2)'));
+bench('translateX(10px)', 500_000, () => { throw new Error("STUB"); });
+bench('scale(2)', 500_000, () => { throw new Error("STUB"); });
 bench('combo translate+rotate', 500_000, () =>
-  parseTransformString('translateX(10px) rotate(45deg)')
+  { throw new Error("STUB"); }
 );
 bench('matrix3d (16 nums)', 500_000, () =>
-  parseTransformString('matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 10, 20, 0, 1)')
+  { throw new Error("STUB"); }
 );
 
 // ── Additive combine ───────────────────────────────────────────────
 console.log('\n=== additiveCombine ===');
-bench('additive numeric', 2_000_000, () => additiveCombine(10, 5));
-bench('additive color', 500_000, () => additiveCombine('#ff0000', '#0000ff'));
+bench('additive numeric', 2_000_000, () => { throw new Error("STUB"); });
+bench('additive color', 500_000, () => { throw new Error("STUB"); });
 bench('additive transform', 500_000, () =>
-  additiveCombine([{ translateX: 10 }], [{ translateX: 5 }])
+  { throw new Error("STUB"); }
 );
 
 console.log('\nDone.');

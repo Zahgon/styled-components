@@ -189,46 +189,7 @@ function bridgePrimitive<P extends BridgedProps>(
   displayName: string
 ): React.ForwardRefExoticComponent<React.PropsWithoutRef<P> & React.RefAttributes<unknown>> {
   const Bridged = React.forwardRef<unknown, P>((props, ref) => {
-    // `pointerEvents` is destructured off (not deleted) because rn-web
-    // deprecates the prop in favor of `style.pointerEvents`. Values
-    // `auto | none | box-none | box-only` pass through identically to
-    // rn-web's own `pointerEventsStyles` map.
-    const augmented = props as P & { pointerEvents?: unknown };
-    const { className, style, pointerEvents } = augmented;
-    // Build `rest` without object-rest destructuring so the bridge bundle does
-    // not import tslib's `__rest` helper; the package declares no tslib dep.
-    // The container is prototypeless so a prop literally named `__proto__` is
-    // copied as an own data property (matching object-rest) rather than hitting
-    // the `__proto__` setter and reassigning the prototype; `hasOwnProperty`
-    // keeps the copy to own enumerable keys.
-    const rest: Record<string, unknown> = Object.create(null);
-    for (const key in augmented) {
-      if (
-        key !== 'className' &&
-        key !== 'style' &&
-        key !== 'pointerEvents' &&
-        Object.prototype.hasOwnProperty.call(augmented, key)
-      ) {
-        rest[key] = (augmented as Record<string, unknown>)[key];
-      }
-    }
-    const fixedStyle = rewrite3dMatrices(style);
-    const classLayer = className ? { $$css: true, sc: className } : null;
-    const pointerLayer = pointerEvents != null ? { pointerEvents } : null;
-    let finalStyle: unknown = fixedStyle;
-    if (classLayer || pointerLayer) {
-      const layers: unknown[] = [];
-      if (classLayer) layers.push(classLayer);
-      if (Array.isArray(fixedStyle)) layers.push(...fixedStyle);
-      else if (fixedStyle != null) layers.push(fixedStyle);
-      if (pointerLayer) layers.push(pointerLayer);
-      finalStyle = layers;
-    }
-    const { dataSet, other } = collectDataProps(rest);
-    const base = other !== null ? other : rest;
-    const finalProps: Record<string, unknown> = { ...base, ref, style: finalStyle };
-    if (dataSet !== undefined) finalProps.dataSet = dataSet;
-    return React.createElement(Component, finalProps as unknown as P);
+      throw new Error("STUB");
   });
   Bridged.displayName = displayName;
   return Bridged;
@@ -392,10 +353,7 @@ const imageLifts: CssLiftMap = {
   // (no aspect preservation); `none` → `center` (no scaling, centered);
   // `scale-down` collapses to `contain` (nearest analog).
   'object-fit': liftEntry('object-fit', 'resizeMode', v => {
-    if (v === 'fill') return 'stretch';
-    if (v === 'none') return 'center';
-    if (v === 'scale-down') return 'contain';
-    return v;
+      throw new Error("STUB");
   }),
 };
 
@@ -466,10 +424,9 @@ const textLifts: CssLiftMap = {
   // `numberOfLines={1}` is set; lift forces the prop on. Map order
   // matters: `line-clamp` below overwrites `numberOfLines` when both
   // are authored.
-  'text-wrap': liftEntry('text-wrap', 'numberOfLines', v => (v === 'nowrap' ? 1 : undefined)),
+  'text-wrap': liftEntry('text-wrap', 'numberOfLines', v => { throw new Error("STUB"); }),
   'line-clamp': liftEntry('line-clamp', 'numberOfLines', v => {
-    const n = parseInt(v, 10);
-    return Number.isFinite(n) && n > 0 ? n : 1;
+      throw new Error("STUB");
   }),
 };
 
@@ -478,7 +435,7 @@ const textInputLifts: CssLiftMap = {
   // the browser honors `field-sizing: content` on) when
   // `multiline={true}`. The lift flips it so the authored CSS has a
   // target. `fixed` / `auto` are no-ops.
-  'field-sizing': liftEntry('field-sizing', 'multiline', v => (v === 'content' ? true : undefined)),
+  'field-sizing': liftEntry('field-sizing', 'multiline', v => { throw new Error("STUB"); }),
 };
 
 const switchLifts: CssLiftMap = {
@@ -487,8 +444,7 @@ const switchLifts: CssLiftMap = {
   // Canonicalize through canvas2d so oklch / lab / color-mix / system
   // colors fold to the rgba subset rn-web's normalizeColor accepts.
   'accent-color': liftEntry('accent-color', 'trackColor', v => {
-    const canonical = canonicalizeColor(v);
-    return { true: canonical, false: canonical };
+      throw new Error("STUB");
   }),
 };
 
@@ -526,13 +482,7 @@ const allLifts: CssLiftMap = {
 const rawToBridged = new WeakMap<object, React.ComponentType<BridgedProps>>();
 
 function bridgeStyledCall<T>(target: T): unknown {
-  let effectiveTarget = target;
-  if (target !== null && (typeof target === 'function' || typeof target === 'object')) {
-    const bridged = rawToBridged.get(target as object);
-    if (bridged !== undefined) effectiveTarget = bridged as unknown as T;
-  }
-  const result = (styledWeb as unknown as (t: T) => Factoryish)(effectiveTarget);
-  return wrapBridgeFactory(result, allLifts);
+    throw new Error("STUB");
 }
 styled = bridgeStyledCall as unknown as typeof styledWeb & BridgedNamespace;
 for (const key of Object.keys(styledWeb)) {
@@ -563,12 +513,10 @@ type Factoryish = ((
 function wrapBridgeFactory(target: Factoryish, lifts?: CssLiftMap): Factoryish {
   if (lifts === undefined) return target;
   const wrapped = ((strings: TemplateStringsArray, ...args: unknown[]) => {
-    const liftedAttrs = extractCssLifts(strings, lifts);
-    const withLifts = Object.keys(liftedAttrs).length > 0 ? target.attrs(liftedAttrs) : target;
-    return withLifts(strings, ...args);
+      throw new Error("STUB");
   }) as Factoryish;
-  wrapped.attrs = (a: unknown) => wrapBridgeFactory(target.attrs(a), lifts);
-  wrapped.withConfig = (c: unknown) => wrapBridgeFactory(target.withConfig(c), lifts);
+  wrapped.attrs = (a: unknown) => { throw new Error("STUB"); };
+  wrapped.withConfig = (c: unknown) => { throw new Error("STUB"); };
   return wrapped;
 }
 
@@ -661,8 +609,7 @@ const KNOWN_UNITS = new Set([
 function rewriteVarUnitSuffix(input: string): string {
   if (input.indexOf('var(') < 0) return input;
   return input.replace(VAR_WITH_UNIT_RE, (match, name: string, fallback: string, unit: string) => {
-    if (!KNOWN_UNITS.has(unit.toLowerCase())) return match;
-    return 'calc(var(' + name + ', ' + fallback + ') * 1' + unit + ')';
+      throw new Error("STUB");
   });
 }
 
@@ -686,7 +633,7 @@ function rewriteBareMathFn(input: string): string {
   return input.replace(
     BARE_MATH_IN_LENGTH_PROP_RE,
     (_match, head: string, fn: string, args: string) => {
-      return head + 'calc(' + fn + '(' + args.trim() + ') * 1px)';
+        throw new Error("STUB");
     }
   );
 }
@@ -792,9 +739,7 @@ function withBridgeRewrites<
   F extends (this: typeof mainCompiler, ...args: never[]) => string[] | null,
 >(original: F): F {
   const patched = function patched(this: typeof mainCompiler, ...args: Parameters<F>) {
-    const rules = original.apply(this, args);
-    if (rules !== null) applyBridgeRewritesToRules(rules);
-    return rules;
+      throw new Error("STUB");
   } as F & { __scBridgePatched?: true };
   patched.__scBridgePatched = true;
   return patched;
@@ -846,45 +791,11 @@ const bridgedCache = new Map<KnownAlias, unknown>();
 // for `styled.X` first. Lazy seeding caused a bug where mixing the
 // two forms across widgets depended on render order.
 aliases.forEach(alias => {
-  const primitive = reactNativeWeb[alias];
-  if (primitive) {
-    rawToBridged.set(
-      primitive as object,
-      bridgePrimitive(primitive as React.ComponentType<BridgedProps>, 'Bridged' + alias)
-    );
-  }
+    throw new Error("STUB");
 });
 
 aliases.forEach(alias => {
-  Object.defineProperty(styled, alias, {
-    enumerable: true,
-    configurable: false,
-    get(): unknown {
-      const cached = bridgedCache.get(alias);
-      if (cached) return cached;
-      const primitive = reactNativeWeb[alias];
-      if (!primitive) {
-        throw new Error(
-          `${alias} is not available in the currently-installed version of react-native-web`
-        );
-      }
-      // `rawToBridged` was seeded for every alias at module load so
-      // `styled(rawPrimitive)` resolves to the same bridged shim
-      // even when the consumer never touches the alias getter first.
-      const bridged = rawToBridged.get(primitive as object)!;
-      const baseline = baselineCss[alias];
-      const base = baseline
-        ? styledWeb(bridged)`
-            ${baseline}
-          `
-        : bridged;
-      const styledBridged = styledWeb(base as React.ComponentType);
-      const lifts = liftsByAlias[alias];
-      const exposed = wrapBridgeFactory(styledBridged as Factoryish, lifts);
-      bridgedCache.set(alias, exposed);
-      return exposed;
-    },
-  });
+    throw new Error("STUB");
 });
 
 /**
@@ -922,11 +833,7 @@ function BridgeThemeProvider(props: {
   children?: React.ReactNode;
 }): React.JSX.Element | null {
   const wrapperStyle = React.useMemo(() => {
-    if (typeof props.theme !== 'object' || props.theme === null) return null;
-    const cssVars: Record<string, string> = {};
-    flattenThemeToVars(props.theme, cssVars);
-    if (Object.keys(cssVars).length === 0) return null;
-    return { display: 'contents' as const, ...cssVars };
+      throw new Error("STUB");
   }, [props.theme]);
   if (props.children == null) return null;
   const inner = React.createElement(

@@ -23,7 +23,7 @@ import { applyResolvers, ResolveEnv } from './transform/polyfills/resolvers';
 import makeNativeStyleClass from '../models/NativeStyle';
 import { assembleFinalStyle } from '../models/StyledNativeComponent';
 
-const stubStyleSheet = { create: <T extends object>(s: T) => s } as any;
+const stubStyleSheet = { create: <T extends object>(s: T) => { throw new Error("STUB"); } } as any;
 const NativeStyle = makeNativeStyleClass(stubStyleSheet);
 
 // ────────────────────────────────────────────────────────────────────
@@ -31,36 +31,36 @@ const NativeStyle = makeNativeStyleClass(stubStyleSheet);
 // ────────────────────────────────────────────────────────────────────
 
 console.log('\n=== transformDecl single-pair ===');
-bench('passthrough (transform: scale(2))', 200_000, () => transformDecl('transform', 'scale(2)'));
-bench('numeric (padding-top: 8px)', 200_000, () => transformDecl('padding-top', '8px'));
-bench('hex color (color: #ff0000)', 200_000, () => transformDecl('color', '#ff0000'));
+bench('passthrough (transform: scale(2))', 200_000, () => { throw new Error("STUB"); });
+bench('numeric (padding-top: 8px)', 200_000, () => { throw new Error("STUB"); });
+bench('hex color (color: #ff0000)', 200_000, () => { throw new Error("STUB"); });
 bench('rgb color (color: rgb(200, 200, 200))', 200_000, () =>
-  transformDecl('color', 'rgb(200, 200, 200)')
+  { throw new Error("STUB"); }
 );
 bench('shorthand 4-value (padding: 4px 8px 12px 16px)', 100_000, () =>
-  transformDecl('padding', '4px 8px 12px 16px')
+  { throw new Error("STUB"); }
 );
-bench('shorthand 1-value (padding: 8px)', 200_000, () => transformDecl('padding', '8px'));
+bench('shorthand 1-value (padding: 8px)', 200_000, () => { throw new Error("STUB"); });
 bench('border composite (1px solid #000)', 100_000, () =>
-  transformDecl('border', '1px solid #000')
+  { throw new Error("STUB"); }
 );
-bench('flex composite (1 1 0)', 100_000, () => transformDecl('flex', '1 1 0'));
+bench('flex composite (1 1 0)', 100_000, () => { throw new Error("STUB"); });
 bench('static math (clamp(10px, 50%, 400px))', 100_000, () =>
-  transformDecl('width', 'clamp(10px, 50%, 400px)')
+  { throw new Error("STUB"); }
 );
 bench('static color (oklch(0.5 0.1 180))', 50_000, () =>
-  transformDecl('color', 'oklch(0.5 0.1 180)')
+  { throw new Error("STUB"); }
 );
 bench('color-mix (color-mix(in srgb, red, blue))', 50_000, () =>
-  transformDecl('color', 'color-mix(in srgb, red, blue)')
+  { throw new Error("STUB"); }
 );
-bench('viewport unit (height: 100vh)', 200_000, () => transformDecl('height', '100vh'));
-bench('sentinel (color: \\0sc:fg:#000)', 200_000, () => transformDecl('color', '\0sc:fg:#000'));
+bench('viewport unit (height: 100vh)', 200_000, () => { throw new Error("STUB"); });
+bench('sentinel (color: \\0sc:fg:#000)', 200_000, () => { throw new Error("STUB"); });
 bench('logical shorthand (margin-inline: 8px 16px)', 100_000, () =>
-  transformDecl('margin-inline', '8px 16px')
+  { throw new Error("STUB"); }
 );
 bench('text-shadow (1px 2px 4px black)', 100_000, () =>
-  transformDecl('text-shadow', '1px 2px 4px black')
+  { throw new Error("STUB"); }
 );
 
 // ────────────────────────────────────────────────────────────────────
@@ -68,14 +68,14 @@ bench('text-shadow (1px 2px 4px black)', 100_000, () =>
 // ────────────────────────────────────────────────────────────────────
 
 console.log('\n=== tokenize() ===');
-bench('tokenize trivial (#fff)', 500_000, () => tokenize('#fff'));
+bench('tokenize trivial (#fff)', 500_000, () => { throw new Error("STUB"); });
 bench('tokenize medium (clamp(10px, 50%, 400px))', 200_000, () =>
-  tokenize('clamp(10px, 50%, 400px)')
+  { throw new Error("STUB"); }
 );
 bench('tokenize complex (oklch(0.628 0.258 29.234 / 0.9))', 200_000, () =>
-  tokenize('oklch(0.628 0.258 29.234 / 0.9)')
+  { throw new Error("STUB"); }
 );
-bench('tokenize compound (4 8 12 16 px-mix)', 200_000, () => tokenize('4px 8px 12px 16px'));
+bench('tokenize compound (4 8 12 16 px-mix)', 200_000, () => { throw new Error("STUB"); });
 
 // ────────────────────────────────────────────────────────────────────
 // toNativeStyles;full path including parser
@@ -108,18 +108,7 @@ const CSS_MEDIUM = `
   text-align: center;
 `;
 const CSS_LARGE = (() => {
-  let css = CSS_MEDIUM;
-  css += `\n@media (min-width: 400px) { padding: 16px; font-size: 16px; }\n`;
-  css += `@media (min-width: 800px) { padding: 24px; font-size: 18px; }\n`;
-  css += `@container (min-width: 300px) { color: blue; }\n`;
-  css += `&:hover { color: purple; }\n`;
-  css += `&:focus { border-color: red; }\n`;
-  css += `&:active { opacity: 0.5; }\n`;
-  css += `&:disabled { opacity: 0.3; }\n`;
-  for (let i = 0; i < 5; i++) {
-    css += `&:is(:hover, :focus) { transform: scale(${1 + i * 0.05}); }\n`;
-  }
-  return css;
+    throw new Error("STUB");
 })();
 const CSS_POLYFILL = `
   width: clamp(10px, 50vw, 400px);
@@ -138,37 +127,31 @@ const CSS_SENTINEL = `
 
 console.log('\n=== toNativeStyles cold (cache reset each iter) ===');
 bench('cold tiny (1 decl)', 20_000, () => {
-  resetNativeStyleCache();
-  toNativeStyles(CSS_TINY, stubStyleSheet);
+    throw new Error("STUB");
 });
 bench('cold small (5 decls)', 10_000, () => {
-  resetNativeStyleCache();
-  toNativeStyles(CSS_SMALL, stubStyleSheet);
+    throw new Error("STUB");
 });
 bench('cold medium (15 decls)', 5_000, () => {
-  resetNativeStyleCache();
-  toNativeStyles(CSS_MEDIUM, stubStyleSheet);
+    throw new Error("STUB");
 });
 bench('cold large (medium + nested rules + at-rules)', 2_000, () => {
-  resetNativeStyleCache();
-  toNativeStyles(CSS_LARGE, stubStyleSheet);
+    throw new Error("STUB");
 });
 bench('cold polyfill-heavy', 5_000, () => {
-  resetNativeStyleCache();
-  toNativeStyles(CSS_POLYFILL, stubStyleSheet);
+    throw new Error("STUB");
 });
 bench('cold sentinel (createTheme)', 5_000, () => {
-  resetNativeStyleCache();
-  toNativeStyles(CSS_SENTINEL, stubStyleSheet);
+    throw new Error("STUB");
 });
 
 console.log('\n=== toNativeStyles warm (cache hit) ===');
-bench('warm tiny', 1_000_000, () => toNativeStyles(CSS_TINY, stubStyleSheet));
-bench('warm small', 1_000_000, () => toNativeStyles(CSS_SMALL, stubStyleSheet));
-bench('warm medium', 1_000_000, () => toNativeStyles(CSS_MEDIUM, stubStyleSheet));
-bench('warm large', 500_000, () => toNativeStyles(CSS_LARGE, stubStyleSheet));
-bench('warm polyfill', 500_000, () => toNativeStyles(CSS_POLYFILL, stubStyleSheet));
-bench('warm sentinel', 500_000, () => toNativeStyles(CSS_SENTINEL, stubStyleSheet));
+bench('warm tiny', 1_000_000, () => { throw new Error("STUB"); });
+bench('warm small', 1_000_000, () => { throw new Error("STUB"); });
+bench('warm medium', 1_000_000, () => { throw new Error("STUB"); });
+bench('warm large', 500_000, () => { throw new Error("STUB"); });
+bench('warm polyfill', 500_000, () => { throw new Error("STUB"); });
+bench('warm sentinel', 500_000, () => { throw new Error("STUB"); });
 
 // ────────────────────────────────────────────────────────────────────
 // applyResolvers;render-time pass over compiled output
@@ -184,45 +167,37 @@ const isStaticTiny = new NativeStyle([CSS_TINY] as any);
 const isStaticSmall = new NativeStyle([CSS_SMALL] as any);
 const isStaticMedium = new NativeStyle([CSS_MEDIUM] as any);
 const isStaticLarge = new NativeStyle([CSS_LARGE] as any);
-const isDynamicTiny = new NativeStyle(['color: ', (p: any) => p.$color, ';'] as any);
+const isDynamicTiny = new NativeStyle(['color: ', (p: any) => { throw new Error("STUB"); }, ';'] as any);
 const isDynamicMedium = new NativeStyle([
   CSS_MEDIUM + ' color: ',
-  (p: any) => p.$color,
+  (p: any) => { throw new Error("STUB"); },
   ';',
 ] as any);
 // Dynamic but the function output is stable (e.g., theme token doesn't change)
 const isDynamicStable = new NativeStyle([
   'color: ',
-  (p: any) => p.theme.primary,
+  (p: any) => { throw new Error("STUB"); },
   '; padding: 8px;',
 ] as any);
 
 const ctx: any = { theme: { primary: '#333' }, $color: 'red' };
 
-bench('static tiny;NativeStyle.compile', 5_000_000, () => isStaticTiny.compile(ctx));
-bench('static small;NativeStyle.compile', 5_000_000, () => isStaticSmall.compile(ctx));
-bench('static medium;NativeStyle.compile', 5_000_000, () => isStaticMedium.compile(ctx));
-bench('static large;NativeStyle.compile', 5_000_000, () => isStaticLarge.compile(ctx));
+bench('static tiny;NativeStyle.compile', 5_000_000, () => { throw new Error("STUB"); });
+bench('static small;NativeStyle.compile', 5_000_000, () => { throw new Error("STUB"); });
+bench('static medium;NativeStyle.compile', 5_000_000, () => { throw new Error("STUB"); });
+bench('static large;NativeStyle.compile', 5_000_000, () => { throw new Error("STUB"); });
 bench(
   'dynamic tiny;NativeStyle.compile (varying prop)',
   1_000_000,
   (() => {
-    let i = 0;
-    return () => {
-      ctx.$color = 'c' + (i++ % 30);
-      isDynamicTiny.compile(ctx);
-    };
+      throw new Error("STUB");
   })()
 );
 bench(
   'dynamic medium;NativeStyle.compile (varying prop)',
   500_000,
   (() => {
-    let i = 0;
-    return () => {
-      ctx.$color = 'c' + (i++ % 30);
-      isDynamicMedium.compile(ctx);
-    };
+      throw new Error("STUB");
   })()
 );
 // Stable output dedup: prop varies but CSS function returns same string
@@ -230,11 +205,7 @@ bench(
   'dynamic stable output;varying unrelated prop',
   5_000_000,
   (() => {
-    let i = 0;
-    return () => {
-      ctx.$color = 'c' + (i++ % 30); // varies but unused by CSS function
-      isDynamicStable.compile(ctx);
-    };
+      throw new Error("STUB");
   })()
 );
 
@@ -266,13 +237,13 @@ const env: ResolveEnv = {
 };
 
 bench('apply (no resolvers;fast path)', 5_000_000, () => {
-  applyResolvers(compiledNoResolvers.base, [], env);
+    throw new Error("STUB");
 });
 bench('apply (4 resolvers)', 1_000_000, () => {
-  applyResolvers(compiledWithResolvers.base, compiledWithResolvers.resolvers!, env);
+    throw new Error("STUB");
 });
 bench('apply (3 sentinel resolvers)', 1_000_000, () => {
-  applyResolvers(compiledSentinel.base, compiledSentinel.resolvers!, env);
+    throw new Error("STUB");
 });
 
 // ────────────────────────────────────────────────────────────────────
@@ -313,7 +284,7 @@ const elementProps: any = { 'data-state': 'closed' };
 
 // Per-render path: matchConditionals walks `nonPseudoEntries`.
 bench('assembleFinalStyle mixed (per-render)', 500_000, () =>
-  assembleFinalStyle(compiledMixed, mediaEnv, containerCtx, themeObj, undefined, elementProps)
+  { throw new Error("STUB"); }
 );
 
 // Per-state-callback path: pseudoStylesForState walks `pseudoEntries`.
@@ -327,7 +298,7 @@ const stateCallback = assembleFinalStyle(
 );
 const hoveredState = { hovered: true };
 bench('pseudoStylesForState hovered (state callback)', 1_000_000, () =>
-  stateCallback(hoveredState)
+  { throw new Error("STUB"); }
 );
 
 console.log('\nDone.');

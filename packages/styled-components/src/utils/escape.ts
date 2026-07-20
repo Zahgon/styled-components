@@ -5,5 +5,5 @@ const escapeRegex = /[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+/g;
 const dashesAtEnds = /(^-|-$)/g;
 
 export default function escape(str: string) {
-  return str.replace(escapeRegex, '-').replace(dashesAtEnds, '');
+    throw new Error("STUB");
 }

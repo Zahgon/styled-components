@@ -124,51 +124,5 @@ const HandleGrip = styled.View<{ $active: boolean }>`
 `;
 
 export function ContainerQueryCard() {
-  const [width, setWidth] = useState(INITIAL_W);
-  const [active, setActive] = useState(false);
-  const draggingRef = useRef<{ startX: number; startW: number } | null>(null);
-
-  return (
-    <Stage style={{ width }}>
-      <Wrapper>
-        <Avatar>
-          <Initial>EJ</Initial>
-        </Avatar>
-        <Body>
-          <Name>Evan Jacobs</Name>
-          <Subtitle>Open source</Subtitle>
-        </Body>
-        <Action accessibilityRole="button">
-          <ActionLabel>Follow</ActionLabel>
-        </Action>
-      </Wrapper>
-      <Handle
-        accessibilityLabel="Drag to resize container"
-        accessibilityHint={`Width is ${Math.round(width)} pixels. Drag horizontally to change.`}
-        onStartShouldSetResponder={() => true}
-        onMoveShouldSetResponder={() => true}
-        onResponderGrant={e => {
-          draggingRef.current = { startX: e.nativeEvent.pageX, startW: width };
-          setActive(true);
-        }}
-        onResponderMove={e => {
-          const dragging = draggingRef.current;
-          if (!dragging) return;
-          const delta = e.nativeEvent.pageX - dragging.startX;
-          const next = Math.max(MIN_W, Math.min(MAX_W, dragging.startW + delta));
-          setWidth(next);
-        }}
-        onResponderRelease={() => {
-          draggingRef.current = null;
-          setActive(false);
-        }}
-        onResponderTerminate={() => {
-          draggingRef.current = null;
-          setActive(false);
-        }}
-      >
-        <HandleGrip $active={active} data-active={String(active)} />
-      </Handle>
-    </Stage>
-  );
+    throw new Error("STUB");
 }

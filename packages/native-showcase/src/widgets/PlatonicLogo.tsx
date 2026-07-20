@@ -33,8 +33,7 @@ function qMul(a: Quat, b: Quat): Quat {
   ];
 }
 function qNorm(q: Quat): Quat {
-  const r = Math.hypot(q[0], q[1], q[2], q[3]);
-  return r > 0 ? [q[0] / r, q[1] / r, q[2] / r, q[3] / r] : q;
+    throw new Error("STUB");
 }
 function qFromAxisAngle(axis: Vec3, rad: number): Quat {
   const half = rad / 2;
@@ -44,18 +43,7 @@ function qFromAxisAngle(axis: Vec3, rad: number): Quat {
 
 // Quaternion → 3×3 rotation (row-major nine-element array).
 function qToRot(q: Quat): number[] {
-  const [w, x, y, z] = q;
-  return [
-    1 - 2 * y * y - 2 * z * z,
-    2 * x * y - 2 * w * z,
-    2 * x * z + 2 * w * y,
-    2 * x * y + 2 * w * z,
-    1 - 2 * x * x - 2 * z * z,
-    2 * y * z - 2 * w * x,
-    2 * x * z - 2 * w * y,
-    2 * y * z + 2 * w * x,
-    1 - 2 * x * x - 2 * y * y,
-  ];
+    throw new Error("STUB");
 }
 
 // Build column-major Mat4 from row-major 3×3 rotation + translation.
@@ -82,17 +70,7 @@ function buildMat4(rot: number[], tx: number, ty: number, tz: number): Mat4 {
 
 // Mat4 multiply (column-major), C = A × B.
 function mat4Mul(a: Mat4, b: Mat4): Mat4 {
-  const r = new Array<number>(16);
-  for (let j = 0; j < 4; j++) {
-    for (let i = 0; i < 4; i++) {
-      r[j * 4 + i] =
-        a[0 * 4 + i] * b[j * 4 + 0] +
-        a[1 * 4 + i] * b[j * 4 + 1] +
-        a[2 * 4 + i] * b[j * 4 + 2] +
-        a[3 * 4 + i] * b[j * 4 + 3];
-    }
-  }
-  return r;
+    throw new Error("STUB");
 }
 
 // Solid definitions - vertices on unit sphere, faces by vertex index.
@@ -248,43 +226,16 @@ type FaceData = {
 
 function computeFaces(verts: Vec3[], faces: number[][]): FaceData[] {
   return faces.map(f => {
-    const fv = f.map(i => verts[i]);
-    const n = fv.length as 3 | 4 | 5;
-    const c: Vec3 = [
-      fv.reduce((s, v) => s + v[0], 0) / n,
-      fv.reduce((s, v) => s + v[1], 0) / n,
-      fv.reduce((s, v) => s + v[2], 0) / n,
-    ];
-    let normal = vNorm(vCross(vSub(fv[1], fv[0]), vSub(fv[2], fv[0])));
-    if (vDot(c, normal) < 0) normal = [-normal[0], -normal[1], -normal[2]];
-    const u = vNorm(vSub(fv[1], fv[0]));
-    // `cross(normal, u)` lands on either side of edge 01 depending on the
-    // face's CCW-vs-CW winding, which differs across the five solids. The
-    // rendered shape (TriangleFace, PentagonFace) draws its apex / first
-    // slice in the −v direction of wrapper space, so we need v pointing
-    // *away* from vertex 2 - that way the rendered apex lands at the real
-    // vertex 2 in world coords. Without this flip, octa / icosa triangles
-    // are mirrored across edge 01 and don't interlock at vertices.
-    let v = vNorm(vCross(normal, u));
-    if (vDot(v, vSub(fv[2], fv[0])) > 0) {
-      v = [-v[0], -v[1], -v[2]];
-    }
-    return {
-      vertCount: n,
-      center: c,
-      basis: [u[0], v[0], normal[0], u[1], v[1], normal[1], u[2], v[2], normal[2]],
-    };
+      throw new Error("STUB");
   });
 }
 
-const ALL_FACES = SOLIDS.map(s => computeFaces(s.verts, s.faces));
+const ALL_FACES = SOLIDS.map(s => { throw new Error("STUB"); });
 
 // Per-solid edge length on the unit sphere. All faces of a Platonic solid are
 // congruent, so one sample (vertex 0 → vertex 1 of face 0) suffices.
 const SOLID_SIDE: number[] = SOLIDS.map(s => {
-  const v0 = s.verts[s.faces[0][0]];
-  const v1 = s.verts[s.faces[0][1]];
-  return Math.hypot(v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2]);
+    throw new Error("STUB");
 });
 
 // One scale factor per solid maps unit-sphere coordinates to pixels. Used for
@@ -295,14 +246,7 @@ const SOLID_SIDE: number[] = SOLIDS.map(s => {
 const SOLID_RADIUS_PX = 65;
 
 const ALL_LOCAL_MATS: Mat4[][] = ALL_FACES.map(faces =>
-  faces.map(face =>
-    buildMat4(
-      face.basis,
-      face.center[0] * SOLID_RADIUS_PX,
-      face.center[1] * SOLID_RADIUS_PX,
-      face.center[2] * SOLID_RADIUS_PX
-    )
-  )
+  { throw new Error("STUB"); }
 );
 
 // ---------------------------------------------------------------------------
@@ -386,9 +330,9 @@ const EDGE_OVERLAP = 1.006;
 // already separates faces by their distinct colors, and a 1px ink border
 // would z-fight with neighboring faces along shared cube edges.
 const SquareFace = styled.View<{ $color: string; $size: number }>`
-  width: ${p => p.$size * EDGE_OVERLAP}px;
-  height: ${p => p.$size * EDGE_OVERLAP}px;
-  background-color: ${p => p.$color};
+  width: ${p => { throw new Error("STUB"); }}px;
+  height: ${p => { throw new Error("STUB"); }}px;
+  background-color: ${p => { throw new Error("STUB"); }};
 `;
 
 /**
@@ -400,24 +344,16 @@ const SquareFace = styled.View<{ $color: string; $size: number }>`
 const TriangleShape = styled.View<{ $color: string; $size: number }>`
   width: 0;
   height: 0;
-  border-left-width: ${p => (p.$size * EDGE_OVERLAP) / 2}px;
-  border-right-width: ${p => (p.$size * EDGE_OVERLAP) / 2}px;
-  border-bottom-width: ${p => (p.$size * EDGE_OVERLAP * Math.sqrt(3)) / 2}px;
+  border-left-width: ${p => { throw new Error("STUB"); }}px;
+  border-right-width: ${p => { throw new Error("STUB"); }}px;
+  border-bottom-width: ${p => { throw new Error("STUB"); }}px;
   border-left-color: transparent;
   border-right-color: transparent;
-  border-bottom-color: ${p => p.$color};
+  border-bottom-color: ${p => { throw new Error("STUB"); }};
 `;
 
 function TriangleFace({ size, color }: { size: number; color: string }) {
-  const h = (size * Math.sqrt(3)) / 2;
-  // Centroid of an equilateral triangle is h/3 above the base. The shape's
-  // bounding box is `size × h` with the apex at the top-center; shift up by
-  // h/3 so the centroid coincides with the wrapper origin.
-  return (
-    <View style={{ width: size, height: h, transform: [{ translateY: -h / 6 }] }}>
-      <TriangleShape $color={color} $size={size} />
-    </View>
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -436,33 +372,7 @@ function TriangleFace({ size, color }: { size: number; color: string }) {
  * compile gives no cache benefit here.
  */
 function PentagonFace({ size, color }: { size: number; color: string }) {
-  const half = size / 2;
-  const apothem = (size * Math.cos(Math.PI / 5)) / (2 * Math.sin(Math.PI / 5));
-  const fill = color;
-  return (
-    <View style={{ width: 0, height: 0 }}>
-      {[0, 1, 2, 3, 4].map(i => (
-        <View
-          key={i}
-          style={{
-            position: 'absolute',
-            width: 0,
-            height: 0,
-            top: 0,
-            left: -half,
-            borderLeftWidth: half,
-            borderRightWidth: half,
-            borderBottomWidth: apothem,
-            borderLeftColor: 'transparent',
-            borderRightColor: 'transparent',
-            borderBottomColor: fill,
-            transformOrigin: '50% 0%',
-            transform: [{ rotate: `${i * 72}deg` }, { scale: EDGE_OVERLAP }],
-          }}
-        />
-      ))}
-    </View>
-  );
+    throw new Error("STUB");
 }
 
 function FaceShape({
@@ -474,9 +384,7 @@ function FaceShape({
   size: number;
   color: string;
 }) {
-  if (vertCount === 4) return <SquareFace $color={color} $size={size} />;
-  if (vertCount === 3) return <TriangleFace size={size} color={color} />;
-  return <PentagonFace size={size} color={color} />;
+    throw new Error("STUB");
 }
 
 // ---------------------------------------------------------------------------
@@ -523,25 +431,7 @@ export const RING_PALETTE: string[] = [
  * a smooth gradient rather than a random scatter.
  */
 function paletteAssignmentForFaces(faces: FaceData[]): number[] {
-  const cos45 = Math.cos(-Math.PI / 4);
-  const sin45 = Math.sin(-Math.PI / 4);
-  const indexed = faces.map((face, idx) => {
-    const c = face.center;
-    const r = Math.hypot(c[0], c[1], c[2]) || 1;
-    const nx = c[0] / r;
-    const nz = c[2] / r;
-    const rx = nx * cos45 + nz * sin45;
-    const rz = -nx * sin45 + nz * cos45;
-    return { idx, az: Math.atan2(rx, rz) };
-  });
-  indexed.sort((a, b) => a.az - b.az);
-
-  const result = new Array<number>(faces.length);
-  const n = faces.length;
-  for (let rank = 0; rank < n; rank++) {
-    result[indexed[rank].idx] = Math.round((rank * PALETTE_STEPS) / n) % PALETTE_STEPS;
-  }
-  return result;
+    throw new Error("STUB");
 }
 
 const SOLID_PALETTE_IDX: number[][] = ALL_FACES.map(paletteAssignmentForFaces);
@@ -583,21 +473,7 @@ const DEFAULT_SOLID_IDX = 4; // icosahedron - visually richest at rest
 type PersistedLogoState = { paused: boolean; solidIdx: number };
 
 function parsePersistedState(raw: string | null): Partial<PersistedLogoState> {
-  if (raw == null) return {};
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (parsed == null || typeof parsed !== 'object') return {};
-    const out: Partial<PersistedLogoState> = {};
-    const p = (parsed as Record<string, unknown>).paused;
-    const s = (parsed as Record<string, unknown>).solidIdx;
-    if (typeof p === 'boolean') out.paused = p;
-    if (typeof s === 'number' && s >= 0 && s < SOLIDS.length && Number.isInteger(s)) {
-      out.solidIdx = s;
-    }
-    return out;
-  } catch {
-    return {};
-  }
+    throw new Error("STUB");
 }
 
 type TransitionState = {
@@ -618,26 +494,14 @@ type TransitionState = {
 // moment of full invisibility. Returns collapseT (0..1, scale = 1 - collapseT).
 const SWAP_AT = 0.35;
 function collapseEase(t: number): number {
-  if (t <= SWAP_AT) {
-    const u = t / SWAP_AT;
-    return u * u * (3 - 2 * u); // smoothstep collapse
-  }
-  const u = (t - SWAP_AT) / (1 - SWAP_AT);
-  return (1 - u) * (1 - u) * (1 - u); // ease-out cubic expand
+    throw new Error("STUB");
 }
 
 /** Build a face's local matrix scaled and translated by `s` (1 = full
  *  position, 0 = collapsed to origin with zero size). Used by the collapse-
  *  expand animation to interpolate between resting and collapsed states. */
 function buildScaledLocalMat(face: FaceData, s: number): Mat4 {
-  const b = face.basis;
-  const r = SOLID_RADIUS_PX * s;
-  return buildMat4(
-    [b[0] * s, b[1] * s, b[2] * s, b[3] * s, b[4] * s, b[5] * s, b[6] * s, b[7] * s, b[8] * s],
-    face.center[0] * r,
-    face.center[1] * r,
-    face.center[2] * r
-  );
+    throw new Error("STUB");
 }
 
 // ---------------------------------------------------------------------------
@@ -665,8 +529,8 @@ const CONTROLS_HIDE_MS = 3000;
 const Controls = styled.View<{ $visible: boolean }>`
   flex-direction: row;
   gap: 4px;
-  opacity: ${p => (p.$visible ? 0.75 : 0)};
-  pointer-events: ${p => (p.$visible ? 'auto' : 'none')};
+  opacity: ${p => { throw new Error("STUB"); }};
+  pointer-events: ${p => { throw new Error("STUB"); }};
   transition: opacity 240ms ease-out;
   /* Web-only: keep controls visible while the user hovers the logo's
      column. The :hover rule on the column class only fires on web; on
@@ -684,377 +548,18 @@ const CtrlBtn = styled.Pressable<{ $dim?: boolean }>`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  opacity: ${p => (p.$dim ? 0.3 : 1)};
+  opacity: ${p => { throw new Error("STUB"); }};
   transition: opacity 120ms ease-out;
 
   &:hover {
-    opacity: ${p => (p.$dim ? 0.5 : 1)};
+    opacity: ${p => { throw new Error("STUB"); }};
   }
 
   &:active {
-    opacity: ${p => (p.$dim ? 0.25 : 0.6)};
+    opacity: ${p => { throw new Error("STUB"); }};
   }
 `;
 
 export function PlatonicLogo() {
-  const [, forceTick] = useState(0);
-  const reduce = useMediaQuery('(prefers-reduced-motion: reduce)');
-  // Vector-icon color bypasses the styled-components pipeline, so the
-  // light-dark() polyfill doesn't apply. Resolve in JS instead.
-  const scheme = useColorScheme();
-  const iconColor = scheme === 'dark' ? '#f5f3ee' : '#0e0e10';
-
-  const quatRef = useRef<Quat>(INITIAL_TILT);
-  const draggingRef = useRef(false);
-  const lastTouchRef = useRef({ x: 0, y: 0 });
-  // Pointer-equivalent angular velocity in (dx, dy) per frame. Initialized
-  // to IDLE_VEL so the resting state is a slow tumble; drag updates this
-  // via EMA smoothing of pointer deltas; release leaves it as the captured
-  // fling velocity, and the tick blends it back toward IDLE_VEL.
-  const velocityRef = useRef({ ...IDLE_VEL });
-  // The solid currently displayed when no transition is in flight. Mirrors
-  // `activeSolid` state below - the ref is read synchronously by the rAF
-  // closure and the transition machinery, the state drives persistence
-  // and is the value rendered.
-  const activeSolidRef = useRef(DEFAULT_SOLID_IDX);
-  // When set, a collapse → expand animation is in flight: the "from" solid
-  // shrinks to origin, the "to" solid expands back out. Cleared on completion.
-  const transitionRef = useRef<TransitionState | null>(null);
-  // Painter's z-sort cache. zIndex is assigned by depth RANK (0..n-1) and the
-  // ranks array is rebuilt only when the depth order actually changes. Fabric
-  // sorts real subview order by zIndex, so a fresh zIndex value on every rAF
-  // tick (the old `round(z * 100)` scheme) forced reorder mounting ops on
-  // every face every frame; rank values hold steady between order flips.
-  const zRanksRef = useRef<{ key: string; ranks: number[] }>({ key: '', ranks: [] });
-
-  // User-controllable settings, persisted to AsyncStorage on change.
-  // `restored` gates writes so the first paint doesn't echo defaults back
-  // into storage before the load has had a chance to surface anything.
-  const [paused, setPaused] = useState(false);
-  const [activeSolid, setActiveSolid] = useState(DEFAULT_SOLID_IDX);
-  const [restored, setRestored] = useState(false);
-  // Controls hide after a stretch of no interaction so the resting
-  // logo reads as artwork, not chrome. Touch/click on the logo or any
-  // control button bumps; web hover keeps them visible via CSS.
-  const [controlsVisible, setControlsVisible] = useState(false);
-  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const bumpControls = useCallback(() => {
-    setControlsVisible(true);
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-    hideTimerRef.current = setTimeout(() => setControlsVisible(false), CONTROLS_HIDE_MS);
-  }, []);
-  useEffect(
-    () => () => {
-      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-    },
-    []
-  );
-
-  // Restore on mount.
-  useEffect(() => {
-    let cancelled = false;
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then(raw => {
-        if (cancelled) return;
-        const next = parsePersistedState(raw);
-        if (next.paused !== undefined) setPaused(next.paused);
-        if (next.solidIdx !== undefined) {
-          setActiveSolid(next.solidIdx);
-          activeSolidRef.current = next.solidIdx;
-        }
-        setRestored(true);
-      })
-      .catch(() => {
-        if (!cancelled) setRestored(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // Persist on change. One write per change is fine - AsyncStorage is
-  // async and these toggles are user-driven, not high-frequency.
-  useEffect(() => {
-    if (!restored) return;
-    AsyncStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ paused, solidIdx: activeSolid } satisfies PersistedLogoState)
-    ).catch(() => undefined);
-  }, [paused, activeSolid, restored]);
-
-  // Kick off a transition to a specific solid. Used by both the auto-cycle
-  // interval and the manual prev/next buttons. No-ops if a transition is
-  // already in flight or the target equals the current solid.
-  const startTransition = useCallback((toSolid: number) => {
-    if (transitionRef.current) return;
-    const fromSolid = activeSolidRef.current;
-    if (fromSolid === toSolid) return;
-    transitionRef.current = {
-      startTime: performance.now(),
-      fromSolid,
-      toSolid,
-      freezeQuat: [...quatRef.current] as Quat,
-    };
-  }, []);
-
-  // Cycle through all five solids on a timer. Skipped under reduce-motion
-  // (settles on whatever solid was last shown) and when the user has paused.
-  // Each tick starts a collapse-expand transition; the rAF loop advances it.
-  useEffect(() => {
-    if (reduce || paused) return;
-    const id = setInterval(() => {
-      if (draggingRef.current || transitionRef.current) return;
-      startTransition((activeSolidRef.current + 1) % SOLIDS.length);
-    }, SOLID_CYCLE_MS);
-    return () => clearInterval(id);
-  }, [reduce, paused, startTransition]);
-
-  const handlePrev = useCallback(() => {
-    bumpControls();
-    startTransition((activeSolidRef.current - 1 + SOLIDS.length) % SOLIDS.length);
-  }, [startTransition, bumpControls]);
-  const handleNext = useCallback(() => {
-    bumpControls();
-    startTransition((activeSolidRef.current + 1) % SOLIDS.length);
-  }, [startTransition, bumpControls]);
-  const handlePause = useCallback(() => {
-    bumpControls();
-    setPaused(true);
-  }, [bumpControls]);
-  const handlePlay = useCallback(() => {
-    bumpControls();
-    // Drop any captured fling velocity so unpause resumes at idle. Without
-    // this, a drag-release-pause within one frame leaves the captured fling
-    // sitting in velocityRef, and the next tick after unpause replays it as
-    // a phantom flick.
-    velocityRef.current.dx = IDLE_VEL.dx;
-    velocityRef.current.dy = IDLE_VEL.dy;
-    setPaused(false);
-  }, [bumpControls]);
-
-  // Drive idle spin + drag + transition advance via a single rAF loop. The
-  // per-frame deltas are scaled by `dt * 60` so visual rate is constant
-  // across display refresh rates (60Hz native baseline, 120Hz web /
-  // ProMotion). Re-render is triggered by toggling a counter rather than
-  // reading the quaternion directly, so we don't allocate a new state
-  // object per frame. Transition completion finalizes activeSolidRef
-  // in-tick so the next render reads the new solid via the existing
-  // forceTick.
-  useEffect(() => {
-    let last = 0;
-    let cancelled = false;
-    const tick = (now: number) => {
-      if (cancelled) return;
-      const dt = last === 0 ? 0 : Math.min((now - last) / 1000, 1 / 30);
-      last = now;
-      // 1.0 on a 60Hz display, 0.5 on 120Hz, capped at 2.0 by the dt clamp
-      // above (covers tab-resume cases without runaway rotation jumps).
-      const tickScale = dt * 60;
-      // Advance velocity-driven rotation when not dragging, not paused, not
-      // under reduce-motion, and not mid-transition. The velocity vector
-      // composes pointer-equivalent (dx, dy) deltas: IDLE_VEL at rest,
-      // fling-velocity immediately after release, blending back toward idle
-      // each frame.
-      if (!draggingRef.current && !paused && !reduce && !transitionRef.current) {
-        const vel = velocityRef.current;
-        // CSS Transforms 2 uses a Y-down coordinate system, so rotateY(+θ)
-        // pulls the right edge toward the viewer — visually the front face
-        // moves left. Negate dx so positive pointer-right delta produces the
-        // intuitive "front face follows the finger" direction.
-        const dq = qMul(
-          qFromAxisAngle([1, 0, 0], -vel.dy * FLING_SENSITIVITY * tickScale),
-          qFromAxisAngle([0, 1, 0], -vel.dx * FLING_SENSITIVITY * tickScale)
-        );
-        quatRef.current = qNorm(qMul(dq, quatRef.current));
-        // Exponential blend toward IDLE_VEL: fast flings decay quickly while
-        // small drifts stabilise without a visible jump back to idle. Same
-        // per-second decay across refresh rates via tickScale, capped at 1
-        // so a stalled tab doesn't overshoot.
-        const blend = Math.min(VELOCITY_BLEND_RATE * tickScale, 1);
-        vel.dx = vel.dx * (1 - blend) + IDLE_VEL.dx * blend;
-        vel.dy = vel.dy * (1 - blend) + IDLE_VEL.dy * blend;
-      }
-      const trans = transitionRef.current;
-      if (trans && now - trans.startTime >= TRANSITION_MS) {
-        activeSolidRef.current = trans.toSolid;
-        transitionRef.current = null;
-        // Mirror into state so the persistence effect picks it up. Batched
-        // with `forceTick` below by React 19's automatic batching.
-        setActiveSolid(trans.toSolid);
-      }
-      forceTick(c => (c + 1) & 0xffff);
-      rafId = requestAnimationFrame(tick);
-    };
-    let rafId = requestAnimationFrame(tick);
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafId);
-    };
-  }, [reduce, paused]);
-
-  // PanResponder: drag the solid by accumulating quaternion rotations
-  // proportional to pointer delta.
-  const responder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: () => true,
-        onPanResponderGrant: (_, g) => {
-          draggingRef.current = true;
-          lastTouchRef.current = { x: g.x0, y: g.y0 };
-          // Stop existing motion on grab so the drag feels stuck to the
-          // pointer instead of inheriting any in-flight fling velocity.
-          velocityRef.current.dx = 0;
-          velocityRef.current.dy = 0;
-          bumpControls();
-        },
-        onPanResponderMove: (_, g) => {
-          const x = g.moveX;
-          const y = g.moveY;
-          const dx = x - lastTouchRef.current.x;
-          const dy = y - lastTouchRef.current.y;
-          lastTouchRef.current = { x, y };
-          // Apply rotation directly for instant pointer feedback. dx is
-          // negated for the same Y-down handedness reason as the tick loop.
-          const dq = qMul(
-            qFromAxisAngle([1, 0, 0], -dy * FLING_SENSITIVITY),
-            qFromAxisAngle([0, 1, 0], -dx * FLING_SENSITIVITY)
-          );
-          quatRef.current = qNorm(qMul(dq, quatRef.current));
-          // EMA-smooth pointer delta into velocity. Weighting recent samples
-          // 40% keeps the captured velocity reflective of the user's intent
-          // at release without spiking on a single noisy frame.
-          const vel = velocityRef.current;
-          vel.dx = dx * 0.4 + vel.dx * 0.6;
-          vel.dy = dy * 0.4 + vel.dy * 0.6;
-        },
-        onPanResponderRelease: () => {
-          draggingRef.current = false;
-          // velocity already holds the smoothed pointer delta - tick blends
-          // it back toward IDLE_VEL, producing the fling.
-        },
-        onPanResponderTerminate: () => {
-          draggingRef.current = false;
-        },
-      }),
-    [bumpControls]
-  );
-
-  // Resolve which solid is currently visible and how collapsed it is.
-  // The "from" solid renders before SWAP_AT, the "to" solid after. The
-  // parent rotation is frozen at transition start so collapse and expand
-  // share the same orientation reference (the spin keeps moving the world
-  // through ~25° during the 700ms transition otherwise, and the new solid
-  // emerges off-axis from where the old one disappeared).
-  let renderSolidIdx = activeSolidRef.current;
-  let scale = 1;
-  let renderQuat = quatRef.current;
-  const trans = transitionRef.current;
-  if (trans) {
-    const t = Math.min(1, (performance.now() - trans.startTime) / TRANSITION_MS);
-    scale = 1 - collapseEase(t);
-    renderSolidIdx = t < SWAP_AT ? trans.fromSolid : trans.toSolid;
-    renderQuat = trans.freezeQuat;
-  }
-
-  const faces = ALL_FACES[renderSolidIdx];
-  const paletteIdx = SOLID_PALETTE_IDX[renderSolidIdx];
-  const parentRot = qToRot(renderQuat);
-  const parentMat = buildMat4(parentRot, 0, 0, 0);
-
-  // Face polygon edge length in pixels. Same scale factor (SOLID_RADIUS_PX)
-  // used by the matrix translation, so each face's rendered edge ends exactly
-  // at the polyhedron's edge - adjacent faces' edges meet without gaps.
-  // Constant during transition; the matrix scale handles shrinking.
-  const facePixelSize = SOLID_SIDE[renderSolidIdx] * SOLID_RADIUS_PX;
-
-  // Compose all face matrices first so the depth sort can run over the full
-  // set before any JSX is produced.
-  const composedMats = faces.map((face, i) => {
-    // Use the cached static matrix only when no transition is running.
-    // During transitions, scale varies frame-to-frame so we rebuild.
-    const localMat = trans ? buildScaledLocalMat(face, scale) : ALL_LOCAL_MATS[renderSolidIdx][i];
-    return mat4Mul(parentMat, localMat);
-  });
-  const depthOrder = composedMats
-    .map((_, i) => i)
-    .sort((a, b) => composedMats[a][14] - composedMats[b][14]);
-  const orderKey = depthOrder.join(',');
-  if (zRanksRef.current.key !== orderKey) {
-    const ranks = new Array<number>(depthOrder.length);
-    for (let rank = 0; rank < depthOrder.length; rank++) {
-      ranks[depthOrder[rank]] = rank;
-    }
-    zRanksRef.current = { key: orderKey, ranks };
-  }
-  const zRanks = zRanksRef.current.ranks;
-
-  return (
-    <HeroColumn>
-      <Controls $visible={controlsVisible}>
-        <CtrlBtn
-          accessibilityRole="button"
-          accessibilityLabel="Previous solid"
-          onPress={handlePrev}
-        >
-          <MaterialIcons name="fast-rewind" size={ICON_SIZE} color={iconColor} />
-        </CtrlBtn>
-        <CtrlBtn
-          accessibilityRole="button"
-          accessibilityLabel="Pause motion"
-          accessibilityState={{ selected: paused }}
-          onPress={handlePause}
-          $dim={paused}
-        >
-          <MaterialIcons name="pause" size={ICON_SIZE} color={iconColor} />
-        </CtrlBtn>
-        <CtrlBtn
-          accessibilityRole="button"
-          accessibilityLabel="Resume auto-cycle"
-          accessibilityState={{ selected: !paused }}
-          onPress={handlePlay}
-          $dim={!paused}
-        >
-          <MaterialIcons name="play-arrow" size={ICON_SIZE} color={iconColor} />
-        </CtrlBtn>
-        <CtrlBtn accessibilityRole="button" accessibilityLabel="Next solid" onPress={handleNext}>
-          <MaterialIcons name="fast-forward" size={ICON_SIZE} color={iconColor} />
-        </CtrlBtn>
-      </Controls>
-      <Stage {...responder.panHandlers}>
-        {/* No collapsable={false} on SceneOrigin: forcing it to
-            materialize shatters face positioning on iOS after Fast
-            Refresh (recycled host views keep stale transform state).
-            Stage's isolation: isolate already scopes the blend group on
-            every platform via the library's Android layer lift. */}
-        <SceneOrigin>
-          {faces.map((face, i) => {
-            // Painter's z-sort: faces farther from the camera (more negative
-            // resolved z) get lower zIndex so closer faces draw on top. On
-            // native this also approximates depth ordering since transforms
-            // are flattened (no preserve-3d). On web, transform-style and
-            // perspective on Stage/SceneOrigin/FaceWrapper let the browser
-            // composite in real 3D and the soft-light blend reads through to
-            // the rear faces - no JS backface cull needed.
-            return (
-              <FaceWrapper
-                key={i}
-                style={{
-                  transform: [{ matrix: composedMats[i] }],
-                  zIndex: zRanks[i],
-                }}
-                pointerEvents="none"
-              >
-                <FaceShape
-                  vertCount={face.vertCount}
-                  size={facePixelSize}
-                  color={RING_PALETTE[paletteIdx[i]]}
-                />
-              </FaceWrapper>
-            );
-          })}
-        </SceneOrigin>
-      </Stage>
-    </HeroColumn>
-  );
+    throw new Error("STUB");
 }

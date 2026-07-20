@@ -31,34 +31,18 @@ export default class StyleSheet implements Sheet {
 
   /** Register a group ID to give it an index */
   static registerId(id: string): number {
-    return groupForId(id);
+      throw new Error("STUB");
   }
 
   constructor(
     options: SheetConstructorArgs = EMPTY_OBJECT,
     names?: NamesAllocationMap | undefined
   ) {
-    this.options = {
-      ...defaultOptions,
-      ...options,
-    };
-
-    this.names = new Map(names);
-    this.server = !!options.isServer;
-
-    // We rehydrate only once and use the sheet that is created first
-    if (!this.server && IS_BROWSER && SHOULD_REHYDRATE) {
-      SHOULD_REHYDRATE = false;
-      rehydrateSheet(this);
-    }
-
-    setToString(this, () => outputSheet(this));
+      throw new Error("STUB");
   }
 
   rehydrate(): void {
-    if (!this.server && IS_BROWSER) {
-      rehydrateSheet(this);
-    }
+      throw new Error("STUB");
   }
 
   reconstructWithOptions(options: SheetConstructorArgs, withNames = true) {

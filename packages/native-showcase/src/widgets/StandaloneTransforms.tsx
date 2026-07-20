@@ -117,47 +117,9 @@ interface DemoRowProps {
 }
 
 function DemoRow({ label, children }: DemoRowProps) {
-  return (
-    <Row>
-      <RowLabel>{label}</RowLabel>
-      <SwatchPair>
-        <Idle />
-        {children}
-      </SwatchPair>
-    </Row>
-  );
+    throw new Error("STUB");
 }
 
 export function StandaloneTransforms() {
-  return (
-    <Stack>
-      <DemoRow label="translate: 20px">
-        <TranslateX />
-      </DemoRow>
-      <DemoRow label="translate: 16px 10px">
-        <TranslateXY />
-      </DemoRow>
-      <DemoRow label="rotate: 30deg">
-        <Rotate />
-      </DemoRow>
-      <DemoRow label="rotate: -45deg">
-        <RotateNeg />
-      </DemoRow>
-      <DemoRow label="scale: 1.4">
-        <ScaleUniform />
-      </DemoRow>
-      <DemoRow label="scale: 0.7">
-        <ScaleDown />
-      </DemoRow>
-      <DemoRow label="scale: 1.6 0.7 (two-axis)">
-        <ScaleTwoAxis />
-      </DemoRow>
-      <DemoRow label="translate + rotate + scale (cascading)">
-        <Combined />
-      </DemoRow>
-      <DemoRow label="perspective: 200px (last wins over translate-rotate-scale)">
-        <Perspective />
-      </DemoRow>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

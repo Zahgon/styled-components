@@ -2,19 +2,7 @@ import styled from 'styled-components';
 import { HintText } from '../../components/test-ui';
 
 export default function PageA() {
-  return (
-    <Card>
-      <h2>Page A</h2>
-      <Text>
-        Navigated here via client-side routing. The gradient background and rainbow top border from
-        the layout&apos;s <code>createGlobalStyle</code> should still be active.
-      </Text>
-      <HintText>
-        If broken: gradient or top border disappear - the layout&apos;s global style was removed
-        during navigation.
-      </HintText>
-    </Card>
-  );
+    throw new Error("STUB");
 }
 
 const Card = styled.div`

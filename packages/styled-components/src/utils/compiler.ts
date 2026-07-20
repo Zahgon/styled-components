@@ -48,7 +48,7 @@ export default function createCompiler({
     if (rw) {
       if (postProcessSelector) {
         const prev = postProcessSelector;
-        postProcessSelector = (s: string) => rw(prev(s));
+        postProcessSelector = (s: string) => { throw new Error("STUB"); };
       } else {
         postProcessSelector = rw;
       }
@@ -58,8 +58,7 @@ export default function createCompiler({
       if (postProcessDecl) {
         const prev = postProcessDecl;
         postProcessDecl = (p: string, v: string) => {
-          const first = prev(p, v);
-          return decl(first ? first.prop : p, first ? first.value : v) || first;
+            throw new Error("STUB");
         };
       } else {
         postProcessDecl = decl;
@@ -69,18 +68,7 @@ export default function createCompiler({
 
   // Byte-identical to the v7 web emit path for hash + SSR rehydration stability.
   const compileString = (css: string, selector = '', prefix = '', componentId = '&'): string[] => {
-    const flatCSS = normalize(css);
-    const wrapSelector = prefix || selector ? (prefix ? prefix + ' ' : '') + selector : '';
-    const wrappedCSS = wrapSelector ? wrapSelector + '{' + flatCSS + '}' : flatCSS;
-    const ast = parse(wrappedCSS);
-    if (ast.length === 0) return [];
-    return emitWeb(ast, '', {
-      selfRefSelector: selector,
-      componentId,
-      namespace: options.namespace,
-      rw: postProcessSelector,
-      decl: postProcessDecl,
-    });
+      throw new Error("STUB");
   };
 
   // Hash includes plugins + options so different configs produce
@@ -97,19 +85,7 @@ export default function createCompiler({
     hash: h !== SEED ? h.toString() : '',
     compile: compileString,
     emit: (source, filled, parentSelector, componentId, fragments) =>
-      compileWebFilled(
-        source,
-        filled,
-        parentSelector,
-        {
-          selfRefSelector: parentSelector,
-          componentId,
-          namespace: options.namespace,
-          rw: postProcessSelector,
-          decl: postProcessDecl,
-        },
-        fragments
-      ),
+      { throw new Error("STUB"); },
   };
 
   return compiler;

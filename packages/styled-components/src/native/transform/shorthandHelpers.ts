@@ -19,7 +19,7 @@ export function withoutSlashes(tokens: Token[]): Token[] {
     }
   }
   if (!hasSlash) return tokens;
-  return tokens.filter(t => t.kind !== TokenKind.Slash);
+  return tokens.filter(t => { throw new Error("STUB"); });
 }
 
 /**
@@ -138,27 +138,7 @@ export function directional(
   bareKey: string,
   keys: readonly [string, string, string, string]
 ): Dict<any> | null {
-  const stripped = withoutSlashes(tokens);
-  const len = stripped.length;
-  if (len < 1 || len > 4) return null;
-  const values: Token[] = new Array(len);
-  for (let i = 0; i < len; i++) {
-    const t = acceptDimensionLike(stripped[i]);
-    if (t === null) return null;
-    values[i] = t;
-  }
-  if (len === 1) return { [bareKey]: tokenToValue(values[0]) };
-  // 1→aaaa  2→abab  3→abcb  4→abcd
-  const top = values[0];
-  const right = values[1];
-  const bottom = len >= 3 ? values[2] : top;
-  const left = len === 4 ? values[3] : right;
-  return {
-    [keys[0]]: tokenToValue(top),
-    [keys[1]]: tokenToValue(right),
-    [keys[2]]: tokenToValue(bottom),
-    [keys[3]]: tokenToValue(left),
-  };
+    throw new Error("STUB");
 }
 
 /**
@@ -170,27 +150,7 @@ export function directionalColor(
   bareKey: string,
   keys: readonly [string, string, string, string]
 ): Dict<any> | null {
-  const stripped = withoutSlashes(tokens);
-  const stream = new TokenStream(stripped);
-  const values: Token[] = [];
-  while (values.length < 4 && !stream.eof()) {
-    const t = consumeColor(stream);
-    if (t === null) return null;
-    values.push(t);
-  }
-  if (!stream.eof() || values.length === 0) return null;
-
-  if (values.length === 1) {
-    return { [bareKey]: colorTokenToRnStyleValue(values[0]) };
-  }
-
-  const [top, right = top, bottom = top, left = right] = values;
-  const out: Dict<any> = {};
-  out[keys[0]] = colorTokenToRnStyleValue(top);
-  out[keys[1]] = colorTokenToRnStyleValue(right);
-  out[keys[2]] = colorTokenToRnStyleValue(bottom);
-  out[keys[3]] = colorTokenToRnStyleValue(left);
-  return out;
+    throw new Error("STUB");
 }
 
 /** Predicate-only form for callers that already hold the token. */

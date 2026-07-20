@@ -36,27 +36,7 @@ const SPEC_TO_ANDROID: Record<string, 'none' | 'normal' | 'full'> = {
 };
 
 function hyphensShorthand(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const name = t.name!;
-  if (!VALUES.has(name)) return null;
-  if (__NATIVE_WEB__) {
-    // Browser ships hyphens end-to-end; the Android prop lift and the
-    // iOS-limitation warn are native-only.
-    return { hyphens: name };
-  }
-  const out: Dict<any> = {
-    hyphens: name,
-    android_hyphenationFrequency: SPEC_TO_ANDROID[name],
-  };
-  if (__DEV__ && name === 'auto' && getReactNativePlatformOS() === 'ios') {
-    warnOnce(
-      'native-hyphens-ios',
-      '`hyphens: auto` cannot enable automatic hyphenation on iOS in React Native. On iOS, add soft hyphens (U+00AD) where words may break.'
-    );
-  }
-  return out;
+    throw new Error("STUB");
 }
 
 register('hyphens', hyphensShorthand);

@@ -59,9 +59,9 @@ const LegendItem = styled.View`
 `;
 
 const LegendSwatch = styled.View<{ $color: string; $square?: boolean }>`
-  width: ${p => (p.$square ? 16 : 22)}px;
+  width: ${p => { throw new Error("STUB"); }}px;
   height: 16px;
-  background-color: ${p => p.$color};
+  background-color: ${p => { throw new Error("STUB"); }};
 `;
 
 const LegendText = styled.Text`
@@ -165,136 +165,5 @@ const FilteredProbe = styled.View`
 `;
 
 export function SiblingNthBoard() {
-  return (
-    <Stack>
-      <Legend>
-        <LegendItem>
-          <LegendSwatch $color={OFF} />
-          <LegendText>OFF</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <LegendSwatch $color={MATCH} />
-          <LegendText>RULE FIRES</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <LegendSwatch $color={MARKER_COLOR} $square />
-          <LegendText>MARKER</LegendText>
-        </LegendItem>
-      </Legend>
-
-      <Section>
-        <SectionTitle>Sibling combinators</SectionTitle>
-        <RowGroup>
-          <LabeledRow>
-            <InlineMarkdown variant="brief">
-              {'`${Marker} + &` - adjacent: prev sibling must be a `Marker`'}
-            </InlineMarkdown>
-            <ProbeRow>
-              <AdjacentProbe />
-              <Marker />
-              <AdjacentProbe />
-              <View style={{ width: 8 }} />
-              <Marker />
-              <AdjacentProbe />
-            </ProbeRow>
-          </LabeledRow>
-
-          <LabeledRow>
-            <InlineMarkdown variant="brief">
-              {'`${Marker} ~ &` - general: any prior sibling must be a `Marker`'}
-            </InlineMarkdown>
-            <ProbeRow>
-              <GeneralProbe />
-              <Marker />
-              <GeneralProbe />
-              <GeneralProbe />
-            </ProbeRow>
-          </LabeledRow>
-        </RowGroup>
-      </Section>
-
-      <Section>
-        <SectionTitle>:nth-child positions</SectionTitle>
-        <RowGroup>
-          <LabeledRow>
-            <InlineMarkdown variant="brief">
-              {'`&:first-child` - only the first probe fires'}
-            </InlineMarkdown>
-            <ProbeRow>
-              <PosProbe />
-              <PosProbe />
-              <PosProbe />
-              <PosProbe />
-            </ProbeRow>
-          </LabeledRow>
-
-          <LabeledRow>
-            <InlineMarkdown variant="brief">
-              {'`&:last-child` - only the final probe fires'}
-            </InlineMarkdown>
-            <ProbeRow>
-              <LastProbe />
-              <LastProbe />
-              <LastProbe />
-              <LastProbe />
-            </ProbeRow>
-          </LabeledRow>
-
-          <LabeledRow>
-            <InlineMarkdown variant="brief">{'`&:nth-child(odd)` - alternating'}</InlineMarkdown>
-            <ProbeRow>
-              <OddProbe />
-              <OddProbe />
-              <OddProbe />
-              <OddProbe />
-              <OddProbe />
-            </ProbeRow>
-          </LabeledRow>
-
-          <LabeledRow>
-            <InlineMarkdown variant="brief">
-              {'`&:nth-child(2)` - only the second probe fires'}
-            </InlineMarkdown>
-            <ProbeRow>
-              <Nth2Probe />
-              <Nth2Probe />
-              <Nth2Probe />
-              <Nth2Probe />
-            </ProbeRow>
-          </LabeledRow>
-        </RowGroup>
-      </Section>
-
-      <Section>
-        <SectionTitle>:nth-child(&lt;formula&gt; of S)</SectionTitle>
-        <Markdown variant="hint">
-          {
-            'The formula counts position WITHIN the filter selector, not the full sibling list. Inactive probes never advance the counter, so `2n+1 of [data-active]` matches every odd ACTIVE sibling regardless of how many inactive ones sit between them.'
-          }
-        </Markdown>
-        <ProbeRow>
-          <FilteredProbe data-active />
-          <FilteredProbe />
-          <FilteredProbe data-active />
-          <FilteredProbe />
-          <FilteredProbe data-active />
-          <FilteredProbe data-active />
-        </ProbeRow>
-      </Section>
-
-      <Section>
-        <SectionTitle>:nth-of-type vs :nth-child</SectionTitle>
-        <Markdown variant="hint">
-          {
-            'Same parent, mixed element types (`View` + `Text`). `:nth-of-type(1)` indexes only same-target siblings - the first `View` matches even though it is the second JSX child.'
-          }
-        </Markdown>
-        <ProbeRow>
-          <InlineMarkdown variant="brief">{'`(Text)`'}</InlineMarkdown>
-          <TypeProbe />
-          <TypeProbe />
-        </ProbeRow>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

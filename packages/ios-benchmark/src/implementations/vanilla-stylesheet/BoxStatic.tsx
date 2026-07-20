@@ -1,11 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, type ViewProps } from 'react-native';
 
-const BoxStatic: React.FC<ViewProps> = ({ children, ...rest }) => (
-  <View {...rest} style={styles.box}>
-    {children}
-  </View>
-);
+const BoxStatic: React.FC<ViewProps> = ({ children, ...rest }) => { throw new Error("STUB"); };
 
 // No fixed dimensions — leaves render as a tiny padding-only square; container
 // nodes (with nested children) expand to fit. `flex-direction: row` +

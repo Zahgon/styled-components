@@ -29,36 +29,7 @@ const sections = [
 ];
 
 export function Sidebar() {
-  const pathname = usePathname();
-  const themeToggle = useThemeToggle();
-
-  return (
-    <Nav>
-      <Brand href="/">SC Sandbox</Brand>
-      {sections.map(section => (
-        <Section key={section.title}>
-          <SectionTitle>{section.title}</SectionTitle>
-          {section.items.map(item => (
-            <NavLink
-              key={item.href}
-              href={item.href}
-              $active={
-                pathname === item.href ||
-                (item.href !== '/' && pathname.startsWith(item.href + '/'))
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </Section>
-      ))}
-      {themeToggle && (
-        <Footer>
-          <ThemeButton onClick={themeToggle.toggle}>{themeToggle.label}</ThemeButton>
-        </Footer>
-      )}
-    </Nav>
-  );
+    throw new Error("STUB");
 }
 
 const Nav = styled.nav`
@@ -110,9 +81,9 @@ const NavLink = styled(Link)<{ $active: boolean }>`
   border-radius: 6px;
   font-size: 13px;
   text-decoration: none;
-  color: ${p => (p.$active ? theme.colors.primary : theme.colors.textMuted)};
-  background: ${p => (p.$active ? theme.colors.surface : 'transparent')};
-  font-weight: ${p => (p.$active ? 600 : 400)};
+  color: ${p => { throw new Error("STUB"); }};
+  background: ${p => { throw new Error("STUB"); }};
+  font-weight: ${p => { throw new Error("STUB"); }};
 
   &:hover {
     background: ${theme.colors.surface};

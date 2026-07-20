@@ -5,19 +5,9 @@
  * (e.g., `Object.prototype.toString` frozen by a test/security harness).
  */
 const directAssignmentWorks: boolean = (() => {
-  try {
-    const probe: { toString?: () => string } = {};
-    probe.toString = () => 'x';
-    return probe.toString() === 'x';
-  } catch {
-    return false;
-  }
+    throw new Error("STUB");
 })();
 
 export function setToString(object: object, toStringFn: () => string) {
-  if (directAssignmentWorks) {
-    (object as { toString: () => string }).toString = toStringFn;
-  } else {
-    Object.defineProperty(object, 'toString', { value: toStringFn });
-  }
+    throw new Error("STUB");
 }

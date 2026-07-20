@@ -1,11 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, type ViewProps } from 'react-native';
 
-const Wrapper: React.FC<ViewProps> = ({ children, ...rest }) => (
-  <View {...rest} style={styles.wrapper}>
-    {children}
-  </View>
-);
+const Wrapper: React.FC<ViewProps> = ({ children, ...rest }) => { throw new Error("STUB"); };
 
 const styles = StyleSheet.create({
   wrapper: {

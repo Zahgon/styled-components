@@ -21,11 +21,7 @@ type RscRenderSlot = {
 
 const getRscSlot: (() => RscRenderSlot) | null = IS_RSC
   ? React.cache(
-      (): RscRenderSlot => ({
-        override: null,
-        lastPlugins: undefined,
-        cachedCompiler: mainCompiler,
-      })
+      (): RscRenderSlot => { throw new Error("STUB"); }
     )
   : null;
 
@@ -48,9 +44,8 @@ function warnUnsupportedPlugins(plugins: SCPlugin[] | undefined): void {
 // Reset once per RSC render.
 const ensureSheetReset: (() => void) | null = IS_RSC
   ? React.cache(() => {
-      mainSheet.names.clear();
-      mainSheet.clearTag();
-    })
+      throw new Error("STUB");
+  })
   : null;
 
 /**
@@ -62,11 +57,7 @@ const ensureSheetReset: (() => void) | null = IS_RSC
  * clean default context.
  */
 export function __resetRSCOverrideForTesting(): void {
-  if (!getRscSlot) return;
-  const slot = getRscSlot();
-  slot.override = null;
-  slot.lastPlugins = undefined;
-  slot.cachedCompiler = mainCompiler;
+    throw new Error("STUB");
 }
 
 export type IStyleSheetContext = {
@@ -89,9 +80,9 @@ export const StyleSheetContext = !IS_RSC
   ? React.createContext<IStyleSheetContext>(defaultContextValue)
   : ({
       Provider: ({ children }: { children: React.ReactNode; value?: IStyleSheetContext }) =>
-        children,
+        { throw new Error("STUB"); },
       Consumer: ({ children }: { children: (value: IStyleSheetContext) => React.ReactNode }) =>
-        children(defaultContextValue),
+        { throw new Error("STUB"); },
     } as React.Context<IStyleSheetContext>);
 
 export const StyleSheetConsumer = StyleSheetContext.Consumer;
@@ -214,36 +205,14 @@ export function StyleSheetManager(props: IStyleSheetManager): React.JSX.Element 
   const { styleSheet } = parentContext;
 
   const resolvedStyleSheet = React.useMemo(() => {
-    let sheet = styleSheet;
-
-    if (props.sheet) {
-      sheet = props.sheet;
-    } else if (props.target) {
-      sheet = sheet.reconstructWithOptions(
-        props.nonce !== undefined
-          ? { target: props.target, nonce: props.nonce }
-          : { target: props.target },
-        false
-      );
-    } else if (props.nonce !== undefined) {
-      sheet = sheet.reconstructWithOptions({ nonce: props.nonce });
-    }
-
-    return sheet;
+      throw new Error("STUB");
   }, [props.nonce, props.sheet, props.target, styleSheet]);
 
   // When `namespace` changes, create a new instance but still inherit plugins
   // from the parent if `plugins` is omitted. An explicit empty array disables
   // inherited plugins.
   const compiler = React.useMemo(() => {
-    if (props.plugins === undefined && props.namespace === undefined) {
-      return parentContext.compiler;
-    }
-    warnUnsupportedPlugins(props.plugins);
-    return createCompiler({
-      options: { namespace: props.namespace },
-      plugins: props.plugins ?? parentContext.plugins,
-    });
+      throw new Error("STUB");
   }, [props.namespace, props.plugins, parentContext.compiler, parentContext.plugins]);
 
   const shouldForwardProp =
@@ -252,12 +221,7 @@ export function StyleSheetManager(props: IStyleSheetManager): React.JSX.Element 
   const resolvedPlugins = props.plugins ?? parentContext.plugins;
 
   const styleSheetContextValue = React.useMemo(
-    () => ({
-      shouldForwardProp,
-      styleSheet: resolvedStyleSheet,
-      compiler,
-      plugins: resolvedPlugins,
-    }),
+    () => { throw new Error("STUB"); },
     [shouldForwardProp, resolvedStyleSheet, compiler, resolvedPlugins]
   );
 

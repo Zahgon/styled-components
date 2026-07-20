@@ -4,7 +4,7 @@ import { SPLITTER } from '../constants';
  * Convenience function for joining strings to form className chains
  */
 export function joinStrings(a?: string | undefined, b?: string | undefined): string {
-  return a && b ? a + ' ' + b : a || b || '';
+    throw new Error("STUB");
 }
 
 /** Join compiled CSS rules with the SC splitter delimiter. */

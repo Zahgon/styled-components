@@ -60,46 +60,7 @@ function parseOne(stream: TokenStream): ParsedValue | null {
 }
 
 function textOverflowShorthand(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const first = parseOne(stream);
-  if (first === null) return null;
-
-  let chosen = first;
-  // A Level 4 form is any value RN can't honor exactly: a <string>, a
-  // fade / fade(), or the two-value form (Level 3 had a single keyword).
-  let anyL4 = first.isL4;
-  if (!stream.eof()) {
-    const second = parseOne(stream);
-    if (second === null) return null;
-    // The line-right (second) value is the end edge in LTR; RN's
-    // ellipsizeMode models only that edge.
-    chosen = second;
-    anyL4 = true;
-  }
-  if (!stream.eof()) return null;
-
-  const raw = tokens
-    .map(t => t.raw)
-    .join(' ')
-    .trim();
-
-  if (__NATIVE_WEB__) {
-    // The browser implements the full grammar; pass the authored value
-    // through and don't lift ellipsizeMode.
-    return { textOverflow: raw };
-  }
-
-  if (anyL4 && __DEV__) {
-    warnOnce(
-      'native-text-overflow-l4',
-      '`text-overflow: ' +
-        raw +
-        '` is approximated on React Native; iOS and Android only truncate at the end edge with a clip or an ellipsis. Strings render as an ellipsis, `fade` clips, and two-value forms use the end (second) value. Use `clip` or `ellipsis` for an exact match.',
-      raw
-    );
-  }
-
-  return { ellipsizeMode: chosen.mode };
+    throw new Error("STUB");
 }
 
 register('textOverflow', textOverflowShorthand);

@@ -133,76 +133,7 @@ const GenericCursive = styled.Text`
 const LONG = `Line clamp truncates to N visible lines and adds an ellipsis on overflow. The text-input here is intentionally long so the clamp can do its job and prove that the polyfill maps to numberOfLines.`;
 
 export function TypeFeaturesShelf() {
-  return (
-    <Stack>
-      <TabularRow>
-        <Tag>tabular-nums</Tag>
-        <Numbers>1,234.56 · 7,890.12</Numbers>
-      </TabularRow>
-      <TabularRow>
-        <Tag>proportional-nums</Tag>
-        <ProportionalNumbers>1,234.56 · 7,890.12</ProportionalNumbers>
-      </TabularRow>
-      <Row>
-        <Tag>line-clamp · 2</Tag>
-      </Row>
-      <Clamped>{LONG}</Clamped>
-      <Row>
-        <Tag>letter-spacing</Tag>
-      </Row>
-      <Tracked>Tracked heading</Tracked>
-      <Row>
-        <Tag>text-decoration</Tag>
-      </Row>
-      <Decorated>Underline keyed to a theme color.</Decorated>
-      <Decorated>
-        Multi-line underline check: this sentence is long on purpose so the layout wraps it across
-        two or three visual lines, letting us verify that each wrapped segment receives its own
-        colored underline that starts and ends at the line's content boundaries.
-      </Decorated>
-      <Struck>Strikethrough keyed to a theme color.</Struck>
-      <Struck>
-        Multi-line strikethrough check: another deliberately long sentence so we can confirm each
-        wrapped line gets its own colored strike positioned around the x-height midline.
-      </Struck>
-      <DecoratedDouble>Double-stroke underline.</DecoratedDouble>
-      <DecoratedDotted>Dotted underline.</DecoratedDotted>
-      <DecoratedDashed>Dashed underline.</DecoratedDashed>
-      <DecoratedWavy>Wavy underline.</DecoratedWavy>
-      <Row>
-        <Tag>font-size · absolute-size keywords</Tag>
-      </Row>
-      <SizeXXSmall>xx-small · 9px</SizeXXSmall>
-      <SizeXSmall>x-small · 10px</SizeXSmall>
-      <SizeSmall>small · 13px</SizeSmall>
-      <SizeMedium>medium · 16px</SizeMedium>
-      <SizeLarge>large · 18px</SizeLarge>
-      <SizeXLarge>x-large · 24px</SizeXLarge>
-      <SizeXXLarge>xx-large · 32px</SizeXXLarge>
-      <SizeXXXLarge>xxx-large · 48px</SizeXXXLarge>
-      <Row>
-        <Tag>font-size · relative-size keywords</Tag>
-      </Row>
-      <RelativeScope>
-        <RelativeBase>medium (anchor)</RelativeBase>
-        <RelativeLarger>larger · steps up the ramp</RelativeLarger>
-        <RelativeSmaller>smaller · steps down the ramp</RelativeSmaller>
-      </RelativeScope>
-      <Row>
-        <Tag>generic font families · §2.1.5</Tag>
-      </Row>
-      <GenericSerif>serif · Times New Roman / serif</GenericSerif>
-      <GenericSansSerif>sans-serif · System / sans-serif</GenericSansSerif>
-      <GenericMonospace>monospace · Menlo / monospace</GenericMonospace>
-      <GenericSystemUI>system-ui · System / sans-serif</GenericSystemUI>
-      <GenericUIRounded>ui-rounded · SF Pro Rounded / sans-serif</GenericUIRounded>
-      <GenericCursive>cursive · Snell Roundhand / cursive</GenericCursive>
-      <Row>
-        <Tag>font-style: oblique · §2.4</Tag>
-      </Row>
-      <Oblique>Oblique (maps to italic on native; rn-web uses the italic face).</Oblique>
-    </Stack>
-  );
+    throw new Error("STUB");
 }
 
 /* iOS / Android won't synthesize italic for a custom face - only the

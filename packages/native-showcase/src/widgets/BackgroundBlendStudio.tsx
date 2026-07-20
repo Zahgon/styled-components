@@ -55,7 +55,7 @@ const PhotoCard = styled.View<{ $blend: string }>`
   background-image: url(${dogUri});
   background-size: cover;
   background-position: bottom;
-  background-blend-mode: ${p => p.$blend};
+  background-blend-mode: ${p => { throw new Error("STUB"); }};
   border: ${t.borderWidth.hairline}px solid ${t.colors.border};
   align-items: flex-start;
   justify-content: flex-end;
@@ -86,53 +86,12 @@ const StackedCard = styled.View<{ $blend: string }>`
   background-image:
     linear-gradient(135deg, transparent 0%, #000 100%),
     linear-gradient(45deg, #ff8a00 0%, transparent 60%);
-  background-blend-mode: ${p => p.$blend};
+  background-blend-mode: ${p => { throw new Error("STUB"); }};
   border: ${t.borderWidth.hairline}px solid ${t.colors.border};
   align-items: flex-start;
   justify-content: flex-end;
 `;
 
 export function BackgroundBlendStudio() {
-  return (
-    <>
-      <Stack>
-        {BLENDS.map(blend => (
-          <PhotoCard key={blend} $blend={blend}>
-            <Label>{blend}</Label>
-          </PhotoCard>
-        ))}
-      </Stack>
-
-      <Markdown variant="hint">
-        Same photo + bubble-gum `background-color`, only `background-blend-mode` changes between
-        cards.
-      </Markdown>
-
-      <StackedRow>
-        <StackedCard $blend="multiply, screen">
-          <Label>multiply, screen</Label>
-        </StackedCard>
-        <StackedCard $blend="screen, overlay">
-          <Label>screen, overlay</Label>
-        </StackedCard>
-        <StackedCard $blend="overlay, hard-light">
-          <Label>overlay, hard-light</Label>
-        </StackedCard>
-      </StackedRow>
-
-      <Markdown variant="hint">
-        Multi-layer: two stacked gradients with paired blend modes (first comma applies to the top
-        gradient).
-      </Markdown>
-
-      <Markdown variant="hint">
-        On rn-web the browser handles `background-blend-mode` natively. On iOS / Android
-        styled-components synthesizes the spec by injecting absolutely-positioned blend layers +
-        `isolation: isolate`. Linear-friendly modes (multiply / screen / darken / lighten /
-        difference / exclusion) match browsers. Gamma-sensitive modes (color-burn / color-dodge /
-        soft-light / overlay / hard-light) render with more saturation on native because platform
-        compositors blend in linear-light while browsers blend in gamma-encoded sRGB per CSS spec.
-      </Markdown>
-    </>
-  );
+    throw new Error("STUB");
 }

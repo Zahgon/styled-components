@@ -37,8 +37,8 @@ const Tag = styled.Text`
 `;
 
 const Card = styled.View<{ $size: number }>`
-  font-size: ${p => p.$size}px;
-  line-height: ${p => p.$size * 1.4}px;
+  font-size: ${p => { throw new Error("STUB"); }}px;
+  line-height: ${p => { throw new Error("STUB"); }}px;
   padding: 1em;
   gap: 0.5em;
   border: ${t.borderWidth.hairline}px solid ${t.colors.border};
@@ -71,7 +71,7 @@ const Caption = styled.Text`
 
 const Bar = styled.View<{ $em: number }>`
   height: 4px;
-  width: ${p => p.$em}em;
+  width: ${p => { throw new Error("STUB"); }}em;
   background-color: ${t.colors.ink};
 `;
 
@@ -79,8 +79,8 @@ const Bar = styled.View<{ $em: number }>`
 // same component flips end-edge under `direction: rtl`. The em
 // padding adapts to the cascade font-size on its way down.
 const DirectionalCard = styled.View<{ $size: number; $dir: 'ltr' | 'rtl' }>`
-  font-size: ${p => p.$size}px;
-  direction: ${p => p.$dir};
+  font-size: ${p => { throw new Error("STUB"); }}px;
+  direction: ${p => { throw new Error("STUB"); }};
   padding: 1em;
   border: ${t.borderWidth.hairline}px solid ${t.colors.border};
   background-color: ${t.colors.surface};
@@ -98,55 +98,5 @@ const DirectionalLabel = styled.Text`
 `;
 
 export function EmLhCascadeBoard() {
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Each card sets one \`font-size\` at the top. Everything inside - padding, gap, letter-spacing, margin-block-end, bar widths - scales relative to that single number.`}
-      </InlineMarkdown>
-      <Section>
-        <SectionTitle>font-size cascades em / lh down the subtree</SectionTitle>
-        <Tag>font-size: 14px · padding: 1em · gap: 0.5em</Tag>
-        <Card $size={14}>
-          <Headline>Hello world</Headline>
-          <Body>Body text reads `font-size: 0.75em` so it tracks the parent down.</Body>
-          <Caption>Caption · 0.625em</Caption>
-          <Bar $em={6} />
-          <Bar $em={3} />
-        </Card>
-        <Tag>font-size: 20px · same declarations</Tag>
-        <Card $size={20}>
-          <Headline>Hello world</Headline>
-          <Body>Body text reads `font-size: 0.75em` so it tracks the parent up.</Body>
-          <Caption>Caption · 0.625em</Caption>
-          <Bar $em={6} />
-          <Bar $em={3} />
-        </Card>
-      </Section>
-      <Section>
-        <SectionTitle>direction-aware text-align: start</SectionTitle>
-        <Markdown variant="hint">
-          {`Every card below uses the same \`text-align: start\` declaration. The visual edge of the text depends on the inherited paragraph \`direction\` and the script of the content. Latin glyphs read left-to-right; Arabic reads right-to-left.`}
-        </Markdown>
-        <Tag>direction: ltr · Latin script</Tag>
-        <DirectionalCard $size={16} $dir="ltr">
-          <DirectionalLabel>▸ start edge</DirectionalLabel>
-        </DirectionalCard>
-        <Tag>direction: rtl · Latin script</Tag>
-        <DirectionalCard $size={16} $dir="rtl">
-          <DirectionalLabel>▸ start edge</DirectionalLabel>
-        </DirectionalCard>
-        <Tag>direction: ltr · Arabic script</Tag>
-        <DirectionalCard $size={16} $dir="ltr">
-          <DirectionalLabel>الحافة البادئة ▸</DirectionalLabel>
-        </DirectionalCard>
-        <Tag>direction: rtl · Arabic script</Tag>
-        <DirectionalCard $size={16} $dir="rtl">
-          <DirectionalLabel>الحافة البادئة ▸</DirectionalLabel>
-        </DirectionalCard>
-      </Section>
-      <Markdown variant="hint">
-        {`A child reading \`1em\` resolves to the nearest ancestor's \`font-size\` at render time. rn-web hands the same declarations to the browser, which does the same.`}
-      </Markdown>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

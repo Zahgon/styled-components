@@ -43,7 +43,7 @@ const BaseLayer = styled.View<{ $gradient: string }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: ${p => p.$gradient};
+  background-image: ${p => { throw new Error("STUB"); }};
 `;
 
 /**
@@ -57,8 +57,8 @@ const IncomingLayer = styled.View<{ $gradient: string; $on: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: ${p => p.$gradient};
-  opacity: ${p => (p.$on ? 1 : 0)};
+  background-image: ${p => { throw new Error("STUB"); }};
+  opacity: ${p => { throw new Error("STUB"); }};
   transition: opacity ${TRANSITION_MS}ms ease-in-out;
 `;
 
@@ -107,55 +107,5 @@ const Caption = styled.Text`
 `;
 
 export function BlendModeBoard() {
-  const [settled, setSettled] = useState(0);
-  const [incomingOn, setIncomingOn] = useState(false);
-  const env = useMediaEnv();
-
-  const incoming = (settled + 1) % GRADIENTS.length;
-
-  useEffect(() => {
-    // Honor the OS reduce-motion preference.
-    if (env.reduceMotion) return;
-    let cancelled = false;
-    let promoteTimer: ReturnType<typeof setTimeout> | null = null;
-
-    const tick = () => {
-      if (cancelled) return;
-      // Phase 1: trigger the incoming layer to fade in on top of base.
-      setIncomingOn(true);
-      promoteTimer = setTimeout(() => {
-        if (cancelled) return;
-        // Phase 2: the incoming layer is now at α=1, fully covering
-        // base. Promote: shift `settled` forward (base instantly
-        // updates to the new gradient - invisible because it's
-        // covered) and reset incoming. The `key` on IncomingLayer is
-        // tied to `settled`, so this triggers a remount at α=0 with
-        // the NEXT gradient, sidestepping the reverse-transition flash
-        // that a plain `setIncomingOn(false)` on the same layer would
-        // cause.
-        setSettled(s => (s + 1) % GRADIENTS.length);
-        setIncomingOn(false);
-      }, TRANSITION_MS);
-    };
-
-    const id = setInterval(tick, HOLD_MS + TRANSITION_MS);
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-      if (promoteTimer) clearTimeout(promoteTimer);
-    };
-  }, [env.reduceMotion]);
-
-  return (
-    <Stage>
-      <BaseLayer $gradient={GRADIENTS[settled]} />
-      <IncomingLayer key={settled} $gradient={GRADIENTS[incoming]} $on={incomingOn} />
-      <Row>
-        <Multiply />
-        <Screen />
-        <Difference />
-      </Row>
-      <Caption>multiply · screen · difference</Caption>
-    </Stage>
-  );
+    throw new Error("STUB");
 }

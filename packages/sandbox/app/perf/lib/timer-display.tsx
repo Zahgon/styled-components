@@ -20,107 +20,22 @@ export function TimerDisplay({
   onAutoStart,
   onAutoStop,
 }: TimerDisplayProps) {
-  const hasAuto = autoRun && onAutoStart && onAutoStop;
-
-  if (timings.length === 0) {
-    return (
-      <Wrapper $idle $running={false}>
-        <Row>
-          <Label>Render timer</Label>
-          {hasAuto && (
-            <Controls>
-              {PRESETS.map(n => (
-                <Btn key={n} onClick={() => onAutoStart(n)}>
-                  Run {n}x
-                </Btn>
-              ))}
-            </Controls>
-          )}
-        </Row>
-      </Wrapper>
-    );
-  }
-
-  const last = timings[timings.length - 1];
-  const sorted = timings.map(t => t.ms).sort((a, b) => a - b);
-  const mid = sorted.length >> 1;
-  const median = sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-  const min = sorted[0];
-  const max = sorted[sorted.length - 1];
-  const running = autoRun?.running ?? false;
-
-  return (
-    <Wrapper $idle={false} $running={running}>
-      <Row>
-        <Stat>
-          <Val>{last.ms.toFixed(1)}ms</Val> {last.label}
-        </Stat>
-        <Sep />
-        <Stat>
-          <Val>{median.toFixed(1)}ms</Val> median ({timings.length})
-        </Stat>
-        {timings.length > 1 && (
-          <>
-            <Sep />
-            <Stat>
-              {min.toFixed(1)} min / {max.toFixed(1)} max
-            </Stat>
-          </>
-        )}
-        {running && autoRun && (
-          <>
-            <Sep />
-            <Progress>
-              {autoRun.total - autoRun.remaining}/{autoRun.total}
-            </Progress>
-            <Btn $danger onClick={onAutoStop}>
-              Stop
-            </Btn>
-          </>
-        )}
-        <Spacer />
-        {hasAuto && !running && (
-          <Controls>
-            {PRESETS.map(n => (
-              <Btn key={n} onClick={() => onAutoStart(n)}>
-                {n}x
-              </Btn>
-            ))}
-          </Controls>
-        )}
-        <Btn onClick={onClear}>Clear</Btn>
-        <Details>
-          <summary>Samples</summary>
-          <SampleList>
-            {timings.map((t, i) => (
-              <Sample key={i} $latest={i === timings.length - 1}>
-                {t.ms.toFixed(1)}
-              </Sample>
-            ))}
-          </SampleList>
-        </Details>
-      </Row>
-    </Wrapper>
-  );
+    throw new Error("STUB");
 }
 
 const Wrapper = styled.div<{ $idle: boolean; $running: boolean }>`
   position: sticky;
   top: 0;
   z-index: 50;
-  background: ${p => (p.$idle ? p.theme.colors.surface : p.theme.colors.background)};
+  background: ${p => { throw new Error("STUB"); }};
   border: 2px solid
     ${p =>
-      p.$running
-        ? p.theme.colors.success
-        : p.$idle
-          ? p.theme.colors.border
-          : p.theme.colors.primary};
+      { throw new Error("STUB"); }};
   border-radius: 8px;
   padding: 6px 12px;
   font-family: ui-monospace, 'SF Mono', monospace;
   font-size: 12px;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   margin-bottom: 16px;
   backdrop-filter: blur(8px);
 `;
@@ -133,11 +48,11 @@ const Row = styled.div`
 `;
 
 const Label = styled.span`
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const Stat = styled.span`
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 `;
@@ -145,7 +60,7 @@ const Stat = styled.span`
 const Val = styled.span`
   font-weight: 700;
   font-size: 14px;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   font-variant-numeric: tabular-nums;
   display: inline-block;
   min-width: 7ch;
@@ -155,13 +70,13 @@ const Val = styled.span`
 const Sep = styled.div`
   width: 1px;
   height: 14px;
-  background: ${p => p.theme.colors.border};
+  background: ${p => { throw new Error("STUB"); }};
   flex-shrink: 0;
 `;
 
 const Progress = styled.span`
   font-weight: 600;
-  color: ${p => p.theme.colors.success};
+  color: ${p => { throw new Error("STUB"); }};
   font-variant-numeric: tabular-nums;
 `;
 
@@ -175,24 +90,24 @@ const Controls = styled.div`
 `;
 
 const Btn = styled.button<{ $danger?: boolean }>`
-  background: ${p => (p.$danger ? p.theme.colors.danger : p.theme.colors.surface)};
-  border: 1px solid ${p => (p.$danger ? p.theme.colors.danger : p.theme.colors.border)};
+  background: ${p => { throw new Error("STUB"); }};
+  border: 1px solid ${p => { throw new Error("STUB"); }};
   border-radius: 4px;
-  color: ${p => (p.$danger ? '#fff' : p.theme.colors.text)};
+  color: ${p => { throw new Error("STUB"); }};
   padding: 1px 6px;
   font-size: 11px;
   font-family: ui-monospace, 'SF Mono', monospace;
   cursor: pointer;
 
   &:hover {
-    border-color: ${p => (p.$danger ? p.theme.colors.danger : p.theme.colors.primary)};
-    color: ${p => (p.$danger ? '#fff' : p.theme.colors.primary)};
+    border-color: ${p => { throw new Error("STUB"); }};
+    color: ${p => { throw new Error("STUB"); }};
   }
 `;
 
 const Details = styled.details`
   font-size: 11px;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
 
   & > summary {
     cursor: pointer;
@@ -208,6 +123,6 @@ const SampleList = styled.div`
 `;
 
 const Sample = styled.span<{ $latest: boolean }>`
-  color: ${p => (p.$latest ? p.theme.colors.primary : p.theme.colors.textMuted)};
-  font-weight: ${p => (p.$latest ? 600 : 400)};
+  color: ${p => { throw new Error("STUB"); }};
+  font-weight: ${p => { throw new Error("STUB"); }};
 `;

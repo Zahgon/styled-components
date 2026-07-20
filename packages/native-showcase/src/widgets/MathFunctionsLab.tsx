@@ -96,52 +96,9 @@ interface RowProps {
 }
 
 function Row({ formula, result, Bar }: RowProps) {
-  return (
-    <Track>
-      <TrackLabel>
-        {formula} → {result}
-      </TrackLabel>
-      <Bar />
-    </Track>
-  );
+    throw new Error("STUB");
 }
 
 export function MathFunctionsLab() {
-  return (
-    <Stack>
-      <Section>
-        <SectionTitle>Static folds (compile time)</SectionTitle>
-        <Markdown variant="hint">
-          {
-            'Each black bar is exactly the formula result wide. The library folds the expression to a fixed pixel value before the style ever reaches React Native.'
-          }
-        </Markdown>
-        <Baseline>
-          <Row formula="calc(120px + 80px)" result="200px" Bar={SumFold} />
-          <Row formula="max(32px, 200px)" result="200px" Bar={MaxFold} />
-          <Row formula="abs(-180)" result="180px" Bar={AbsFold} />
-          <Row formula="clamp(80px, 160px, 240px)" result="160px" Bar={ClampFold} />
-          <Row formula="round(157.4px, 5px)" result="155px" Bar={RoundFold} />
-          <Row formula="calc(sin(45deg) * 200px)" result="≈ 141px" Bar={TrigFold} />
-          <Row formula="hypot(60, 80)" result="100px" Bar={HypotFold} />
-          <Row formula="pow(8, 2)" result="64px" Bar={PowFold} />
-          <Row formula="mod(127, 30)" result="7px" Bar={ModFold} />
-        </Baseline>
-      </Section>
-
-      <Section>
-        <SectionTitle>Viewport-aware (runtime)</SectionTitle>
-        <Markdown variant="hint">
-          {
-            'Each green bar mixes static and viewport arms. Rotate the device or resize the window - these re-resolve every render against `Dimensions.get(window)`.'
-          }
-        </Markdown>
-        <Baseline>
-          <Row formula="calc(50vw + 24px)" result="half the viewport, +24px" Bar={VwAdd} />
-          <Row formula="min(70vw, 360px)" result="capped at 360px" Bar={VwMin} />
-          <Row formula="clamp(160px, 80vw, 420px)" result="160–420px" Bar={VwClamp} />
-        </Baseline>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

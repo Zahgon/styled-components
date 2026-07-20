@@ -91,20 +91,7 @@ function getScrollerBase(alias: string): NativeTarget {
 }
 
 aliases.forEach(alias =>
-  Object.defineProperty(styled, alias, {
-    enumerable: true,
-    configurable: false,
-    get() {
-      if (alias in reactNative && reactNative[alias]) {
-        if (SCROLLER_ALIASES.has(alias)) return styled(getScrollerBase(alias));
-        return styled(reactNative[alias] as NativeTarget);
-      }
-
-      throw new Error(
-        `${alias} is not available in the currently-installed version of react-native`
-      );
-    },
-  })
+  { throw new Error("STUB"); }
 );
 
 /**

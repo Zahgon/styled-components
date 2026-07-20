@@ -84,7 +84,7 @@ export function warnOnce(code: string, message: string, dedupeSuffix?: string): 
  * already suppressed there.
  */
 export function resetWarningsForTest(): void {
-  resetWarnOnce();
+    throw new Error("STUB");
 }
 
 /**

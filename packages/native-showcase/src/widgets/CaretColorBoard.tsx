@@ -65,54 +65,5 @@ const ThemedCaret = styled(BaseInput)`
 `;
 
 export function CaretColorBoard() {
-  const [v, setV] = useState('Focus a field to see its caret');
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Tap any field to focus it - the blinking caret tints to the declared color. Type to extend the text; the selection range stays the platform default.`}
-      </InlineMarkdown>
-      <Section>
-        <SectionTitle>caret-color values</SectionTitle>
-        <Row>
-          <Tag>caret-color: auto</Tag>
-          <AutoCaret
-            value={v}
-            onChangeText={setV}
-            placeholderTextColor={t.colors.fgFaint}
-            accessibilityLabel="auto caret"
-          />
-        </Row>
-        <Row>
-          <Tag>caret-color: #ec4899</Tag>
-          <MagentaCaret
-            value={v}
-            onChangeText={setV}
-            placeholderTextColor={t.colors.fgFaint}
-            accessibilityLabel="magenta caret"
-          />
-        </Row>
-        <Row>
-          <Tag>caret-color: oklch(0.7 0.18 145)</Tag>
-          <OklchCaret
-            value={v}
-            onChangeText={setV}
-            placeholderTextColor={t.colors.fgFaint}
-            accessibilityLabel="oklch caret"
-          />
-        </Row>
-        <Row>
-          <Tag>caret-color: light-dark(green, mint)</Tag>
-          <ThemedCaret
-            value={v}
-            onChangeText={setV}
-            placeholderTextColor={t.colors.fgFaint}
-            accessibilityLabel="theme caret"
-          />
-        </Row>
-      </Section>
-      <Markdown variant="hint">
-        {`iOS keeps its default caret in this release - the iOS text-input API tints the caret and selection range together, so a per-property caret color would also recolor selections. Pass \`selectionColor\` directly on the input for an iOS-specific tint.`}
-      </Markdown>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

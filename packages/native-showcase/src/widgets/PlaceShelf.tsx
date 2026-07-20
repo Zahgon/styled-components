@@ -123,44 +123,5 @@ const SelfCard = styled.View`
 const PLACES = ['start', 'center', 'end', 'stretch'] as const;
 
 export function PlaceShelf() {
-  return (
-    <Stack>
-      <Row>
-        <Tag>place-items · §7.3</Tag>
-        <InlineMarkdown variant="brief">
-          {`Shorthand for \`align-items\` + \`justify-items\`. On native, only the cross-axis half lands; rn-web honors both.`}
-        </InlineMarkdown>
-        {PLACES.map(place => (
-          <Row key={place}>
-            <Caption>{`place-items: ${place}`}</Caption>
-            <ItemsContainer data-place={place}>
-              <Card>
-                <CardLabel>A</CardLabel>
-              </Card>
-              <Card>
-                <CardLabel>B</CardLabel>
-              </Card>
-              <Card>
-                <CardLabel>C</CardLabel>
-              </Card>
-            </ItemsContainer>
-          </Row>
-        ))}
-      </Row>
-
-      <Row>
-        <Tag>place-self · §6.3</Tag>
-        <InlineMarkdown variant="brief">
-          {`Each card overrides container alignment via the per-item shorthand. Container defaults to \`align-items: flex-start\`.`}
-        </InlineMarkdown>
-        <SelfContainer>
-          {PLACES.map(place => (
-            <SelfCard key={place} data-self={place}>
-              <CardLabel>{place}</CardLabel>
-            </SelfCard>
-          ))}
-        </SelfContainer>
-      </Row>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

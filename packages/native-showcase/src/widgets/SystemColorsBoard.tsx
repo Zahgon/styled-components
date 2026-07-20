@@ -107,53 +107,5 @@ const ActiveTextLabel = styled(TileLabel)`
 `;
 
 export function SystemColorsBoard() {
-  return (
-    <Stack>
-      <Section>
-        <SectionTitle>surfaces · canvas / canvastext</SectionTitle>
-        <Row>
-          <CanvasTile>
-            <CanvasTextLabel>Canvas</CanvasTextLabel>
-          </CanvasTile>
-          <FieldTile>
-            <FieldTextLabel>Field</FieldTextLabel>
-          </FieldTile>
-          <HighlightTile>
-            <HighlightTextLabel>Highlight</HighlightTextLabel>
-          </HighlightTile>
-        </Row>
-      </Section>
-      <Section>
-        <SectionTitle>state surfaces · selected / button / mark</SectionTitle>
-        <Row>
-          <SelectedItemTile>
-            <SelectedItemTextLabel>SelectedItem</SelectedItemTextLabel>
-          </SelectedItemTile>
-          <ButtonTile>
-            <ButtonTextLabel>ButtonFace</ButtonTextLabel>
-          </ButtonTile>
-          <MarkTile>
-            <MarkTextLabel>Mark</MarkTextLabel>
-          </MarkTile>
-        </Row>
-      </Section>
-      <Section>
-        <SectionTitle>text accents</SectionTitle>
-        <Row>
-          <NeutralTile>
-            <GrayTextLabel>GrayText</GrayTextLabel>
-          </NeutralTile>
-          <NeutralTile>
-            <LinkTextLabel>LinkText</LinkTextLabel>
-          </NeutralTile>
-          <NeutralTile>
-            <VisitedTextLabel>VisitedText</VisitedTextLabel>
-          </NeutralTile>
-          <NeutralTile>
-            <ActiveTextLabel>ActiveText</ActiveTextLabel>
-          </NeutralTile>
-        </Row>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

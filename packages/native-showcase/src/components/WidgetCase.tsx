@@ -42,14 +42,5 @@ const Demo = styled.View`
 `;
 
 export function WidgetCase({ title, brief, slug, feature, children }: WidgetCaseProps) {
-  return (
-    <Section nativeID={slug ? `fidget-${slug}` : undefined}>
-      <Header>
-        {feature ? <FeatureChip>{feature}</FeatureChip> : null}
-        <Title>{title}</Title>
-        <InlineMarkdown variant="brief">{brief}</InlineMarkdown>
-      </Header>
-      <Demo>{children}</Demo>
-    </Section>
-  );
+    throw new Error("STUB");
 }

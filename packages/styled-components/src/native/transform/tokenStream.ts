@@ -30,31 +30,21 @@ export class TokenStream {
   }
 
   save(): number {
-    return this.pos;
+      throw new Error("STUB");
   }
 
   rewind(saved: number): void {
-    this.pos = saved;
+      throw new Error("STUB");
   }
 
   matchKind(kind: TokenKind): Token | null {
-    const t = this.tokens[this.pos];
-    if (t !== undefined && t.kind === kind) {
-      this.pos++;
-      return t;
-    }
-    return null;
+      throw new Error("STUB");
   }
 
   /**
    * Match an ident by its lowercased name. Advances on match.
    */
   matchIdent(name: string): boolean {
-    const t = this.tokens[this.pos];
-    if (t !== undefined && t.kind === TokenKind.Ident && t.name === name) {
-      this.pos++;
-      return true;
-    }
-    return false;
+      throw new Error("STUB");
   }
 }

@@ -97,43 +97,9 @@ const FitScaleDown = styled.Image`
 `;
 
 function FittedImage({ fit }: { fit: Fit }) {
-  const src = { uri: dogUri };
-  switch (fit) {
-    case 'fill':
-      return <FitFill source={src} />;
-    case 'contain':
-      return <FitContain source={src} />;
-    case 'cover':
-      return <FitCover source={src} />;
-    case 'none':
-      return <FitNone source={src} />;
-    case 'scale-down':
-      return <FitScaleDown source={src} />;
-  }
+    throw new Error("STUB");
 }
 
 export function ObjectFitBoard() {
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Every cell is the same image cropped to two different aspect ratios. The CSS \`object-fit\` keyword decides how the image fills its box.`}
-      </InlineMarkdown>
-      {FITS.map(fit => (
-        <Section key={fit}>
-          <SectionTitle>object-fit: {fit}</SectionTitle>
-          <Row>
-            <Tag>wide box (2:1) · tall box (1:2)</Tag>
-            <Pair>
-              <Wide>
-                <FittedImage fit={fit} />
-              </Wide>
-              <Tall>
-                <FittedImage fit={fit} />
-              </Tall>
-            </Pair>
-          </Row>
-        </Section>
-      ))}
-    </Stack>
-  );
+    throw new Error("STUB");
 }

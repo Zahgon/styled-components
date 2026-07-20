@@ -40,7 +40,7 @@ export function isWebPlatform(): boolean {
 
 /** Test-only: clear the cached platform result. */
 export function __resetPlatformCacheForTesting(): void {
-  isWebCached = null;
+    throw new Error("STUB");
 }
 
 type RNComponentRefs = {
@@ -51,19 +51,7 @@ type RNComponentRefs = {
 let cachedRn: RNComponentRefs | undefined = undefined;
 
 function getRNComponents(): RNComponentRefs {
-  if (cachedRn === undefined) {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const rn = require('react-native') as {
-        View?: React.ComponentType<any>;
-        Image?: React.ComponentType<any>;
-      };
-      cachedRn = { View: rn.View ?? null, Image: rn.Image ?? null };
-    } catch {
-      cachedRn = { View: null, Image: null };
-    }
-  }
-  return cachedRn;
+    throw new Error("STUB");
 }
 
 // ──────────────────────────────────────────────────────────────────
@@ -78,7 +66,7 @@ function getRNComponents(): RNComponentRefs {
 export function applyStylePolyfills(
   elementProps: Record<string, unknown>
 ): Record<string, unknown> {
-  return applyBackgroundBlendModePolyfill(elementProps);
+    throw new Error("STUB");
 }
 
 // ── background-blend-mode ─────────────────────────────────────────
@@ -132,96 +120,7 @@ export function applyStylePolyfills(
 export function applyBackgroundBlendModePolyfill(
   elementProps: Record<string, unknown>
 ): Record<string, unknown> {
-  if (!hasBackgroundBlendMode(elementProps.style)) return elementProps;
-
-  const flat: Record<string, unknown> = {};
-  flatten(elementProps.style, flat);
-  const blendMode = flat.backgroundBlendMode;
-  if (typeof blendMode !== 'string') return elementProps;
-  const bgImage =
-    typeof flat.experimental_backgroundImage === 'string'
-      ? flat.experimental_backgroundImage
-      : typeof flat.backgroundImage === 'string'
-        ? flat.backgroundImage
-        : null;
-  if (bgImage === null) return elementProps;
-
-  const { View, Image } = getRNComponents();
-  if (View === null) return elementProps;
-
-  const images = splitTopLevelCommas(bgImage, true);
-  const modes = splitTopLevelCommas(blendMode, true);
-  const sizes = readLayered(flat, 'experimental_backgroundSize', 'backgroundSize');
-  const positions = readLayered(flat, 'experimental_backgroundPosition', 'backgroundPosition');
-  const repeats = readLayered(flat, 'experimental_backgroundRepeat', 'backgroundRepeat');
-
-  const layers: React.ReactElement[] = [];
-  for (let i = images.length - 1; i >= 0; i--) {
-    const image = images[i];
-    if (image.length === 0) continue;
-    const blend = modes[i % modes.length] ?? 'normal';
-    const url = parseUrlLayer(image);
-    const key = `__sc_bg_blend_${i}`;
-    if (url !== null && Image !== null) {
-      // Photo / asset layer. RN's gradient parser doesn't handle url();
-      // render an Image with the resolved URI. The Image is wrapped in
-      // a View that carries mixBlendMode because iOS's
-      // RCTImageComponentView keeps the photo bitmap on an inner
-      // _imageView sublayer; setting compositingFilter on the outer
-      // image layer doesn't reliably composite the inner sublayer with
-      // the parent's backdrop. A plain View with mixBlendMode + Image
-      // child gives Core Animation a single-layer compositing subject.
-      layers.push(
-        createBlendLayer(
-          View,
-          key,
-          blend,
-          { overflow: 'hidden' },
-          React.createElement(Image, {
-            source: { uri: url },
-            resizeMode: parseResizeMode(sizes ? sizes[i % sizes.length] : undefined),
-            // Lock to absolute fill: `width/height: '100%'` on Image inside an
-            // absolute-positioned parent doesn't always resolve on Android.
-            style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
-          })
-        )
-      );
-      continue;
-    }
-    // Gradient layer. The View carries the gradient string directly.
-    const layerStyle: Record<string, unknown> = {
-      experimental_backgroundImage: image,
-      backgroundImage: image,
-    };
-    applyLayered(layerStyle, sizes, i, 'experimental_backgroundSize', 'backgroundSize');
-    applyLayered(layerStyle, positions, i, 'experimental_backgroundPosition', 'backgroundPosition');
-    applyLayered(layerStyle, repeats, i, 'experimental_backgroundRepeat', 'backgroundRepeat');
-    layers.push(createBlendLayer(View, key, blend, layerStyle));
-  }
-  if (layers.length === 0) return elementProps;
-
-  const wrapperStyle: Record<string, unknown> = {};
-  for (const k in flat) {
-    if (!BG_BLEND_STRIP_KEYS.has(k)) wrapperStyle[k] = flat[k];
-  }
-  wrapperStyle.isolation = 'isolate';
-
-  const bgColor = wrapperStyle.backgroundColor;
-  if (bgColor !== undefined && bgColor !== null && bgColor !== 'transparent') {
-    delete wrapperStyle.backgroundColor;
-    layers.unshift(
-      createBlendLayer(View, '__sc_bg_blend_color', null, { backgroundColor: bgColor })
-    );
-  }
-
-  const origChildren = elementProps.children;
-  const newChildren: React.ReactNode = !Array.isArray(origChildren)
-    ? origChildren == null
-      ? layers
-      : [...layers, origChildren as React.ReactNode]
-    : [...layers, ...(origChildren as React.ReactNode[])];
-
-  return { ...elementProps, style: wrapperStyle, children: newChildren };
+    throw new Error("STUB");
 }
 
 const BG_BLEND_STRIP_KEYS: ReadonlySet<string> = new Set([
@@ -253,25 +152,7 @@ function createBlendLayer(
   extraStyle: Record<string, unknown>,
   child?: React.ReactNode
 ): React.ReactElement {
-  const style: Record<string, unknown> = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    ...extraStyle,
-  };
-  if (blend !== null) style.mixBlendMode = blend;
-  return React.createElement(
-    View,
-    {
-      key,
-      pointerEvents: 'none',
-      shouldRasterizeIOS: true,
-      style,
-    },
-    child
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -287,11 +168,7 @@ function applyLayered(
   experimentalKey: string,
   standardKey: string
 ): void {
-  if (values === null) return;
-  const v = values[i % values.length];
-  if (!v) return;
-  out[experimentalKey] = v;
-  out[standardKey] = v;
+    throw new Error("STUB");
 }
 
 // ──────────────────────────────────────────────────────────────────
@@ -304,16 +181,7 @@ function applyLayered(
  * skipped: the polyfill chain doesn't try to evaluate callbacks.
  */
 function flatten(style: unknown, out: Record<string, unknown>): void {
-  if (style === null || style === undefined) return;
-  if (Array.isArray(style)) {
-    for (let i = 0; i < style.length; i++) flatten(style[i], out);
-    return;
-  }
-  if (typeof style !== 'object') return;
-  for (const k in style as Record<string, unknown>) {
-    const v = (style as Record<string, unknown>)[k];
-    if (v !== undefined) out[k] = v;
-  }
+    throw new Error("STUB");
 }
 
 /**
@@ -322,17 +190,7 @@ function flatten(style: unknown, out: Record<string, unknown>): void {
  * `backgroundBlendMode` pays roughly one property-existence check.
  */
 function hasBackgroundBlendMode(style: unknown): boolean {
-  if (style === null || style === undefined || typeof style === 'function') {
-    return false;
-  }
-  if (Array.isArray(style)) {
-    for (let i = 0; i < style.length; i++) {
-      if (hasBackgroundBlendMode(style[i])) return true;
-    }
-    return false;
-  }
-  if (typeof style !== 'object') return false;
-  return (style as Record<string, unknown>).backgroundBlendMode !== undefined;
+    throw new Error("STUB");
 }
 
 /**
@@ -345,8 +203,7 @@ function readLayered(
   experimentalKey: string,
   standardKey: string
 ): string[] | null {
-  const v = flat[experimentalKey] ?? flat[standardKey];
-  return typeof v === 'string' ? splitTopLevelCommas(v, true) : null;
+    throw new Error("STUB");
 }
 
 /**
@@ -356,18 +213,7 @@ function readLayered(
  * keyword) so the caller can fall back to the gradient render path.
  */
 function parseUrlLayer(image: string): string | null {
-  if (!image.startsWith('url(') || !image.endsWith(')')) return null;
-  let inner = image.slice(4, -1).trim();
-  if (inner.length >= 2) {
-    const first = inner.charCodeAt(0);
-    if (
-      (first === 0x22 /* " */ || first === 0x27) /* ' */ &&
-      inner.charCodeAt(inner.length - 1) === first
-    ) {
-      inner = inner.slice(1, -1);
-    }
-  }
-  return inner.length === 0 ? null : inner;
+    throw new Error("STUB");
 }
 
 /**
@@ -377,8 +223,5 @@ function parseUrlLayer(image: string): string | null {
  * background expectation, matching CSS's `cover` keyword behavior).
  */
 function parseResizeMode(size: string | undefined): 'cover' | 'contain' | 'stretch' | 'center' {
-  if (size === 'contain') return 'contain';
-  if (size === 'stretch' || size === '100% 100%') return 'stretch';
-  if (size === 'center') return 'center';
-  return 'cover';
+    throw new Error("STUB");
 }

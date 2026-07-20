@@ -92,41 +92,5 @@ const BlockEndBox = styled.View`
 `;
 
 export function LogicalSpacingDial() {
-  return (
-    <Stage>
-      <InlineBrick>
-        <Caption>margin-inline</Caption>
-      </InlineBrick>
-      <BlockBrick>
-        <Caption>margin-block</Caption>
-      </BlockBrick>
-      <PaddedInline>
-        <Caption>padding-inline</Caption>
-      </PaddedInline>
-      <PaddedBlock>
-        <Caption>padding-block</Caption>
-      </PaddedBlock>
-      <InsetBox>
-        <InsetTab>
-          <InsetCaption>inset-inline · inset-block</InsetCaption>
-        </InsetTab>
-      </InsetBox>
-      <LogicalBorderRow>
-        <InlineEdgeBox>
-          <Caption>border-inline</Caption>
-        </InlineEdgeBox>
-        <BlockEdgeBox>
-          <Caption>border-block</Caption>
-        </BlockEdgeBox>
-      </LogicalBorderRow>
-      <LogicalBorderRow>
-        <InlineStartBox>
-          <Caption>border-inline-start</Caption>
-        </InlineStartBox>
-        <BlockEndBox>
-          <Caption>border-block-end</Caption>
-        </BlockEndBox>
-      </LogicalBorderRow>
-    </Stage>
-  );
+    throw new Error("STUB");
 }

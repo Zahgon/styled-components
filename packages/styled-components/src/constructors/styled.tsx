@@ -30,7 +30,7 @@ const styled = baseStyled as typeof baseStyled & {
 // the correct types are declared on the `styled` const above via the mapped type.
 const styledShorthands = styled as Record<SupportedHTMLElements, ReturnType<typeof baseStyled>>;
 domElements.forEach(domElement => {
-  styledShorthands[domElement] = baseStyled(domElement);
+    throw new Error("STUB");
 });
 
 export default styled;

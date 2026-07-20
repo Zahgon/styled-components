@@ -182,8 +182,8 @@ export function buildResolver(value: unknown, prop?: string): Resolver | null {
   // render time so the same value lands on web, iOS, and Android.
   if (value.length === 2 && c0 === 0) {
     const c1 = value.charCodeAt(1);
-    if (c1 === 0x2b /* + */) return env => relativeSize(env.fontSize, 1);
-    if (c1 === 0x2d /* - */) return env => relativeSize(env.fontSize, -1);
+    if (c1 === 0x2b /* + */) return env => { throw new Error("STUB"); };
+    if (c1 === 0x2d /* - */) return env => { throw new Error("STUB"); };
   }
 
   // createTheme sentinel; `\0<prefix>:<path>:<fallback>`. Full-value single
@@ -373,7 +373,7 @@ function resolveMathFn(value: string, prop?: string): Resolver | null {
   // polyfilled attr() / anchor() / tree-counting / container units) force
   // JS evaluation on rn-web.
   if (__NATIVE_WEB__ && !rnWebMathNeedsJsResolution(value)) {
-    return () => value;
+    return () => { throw new Error("STUB"); };
   }
   return r;
 }
@@ -490,21 +490,8 @@ function skipString(s: string, i: number, quote: number): number {
 
 const NATIVE_MATH_OPTS: BuildOpts = {
   resolvePercent: env => {
-    const c = env.container;
-    if (c !== null) {
-      // Container exists but is pending its first measurement
-      // (width === 0). Return null to drop the calc declaration for
-      // one frame so the descendant auto-sizes rather than resolving
-      // against the viewport; viewport-fallback over-sized
-      // descendants and triggered un-recoverable flex-wrap overflow
-      // on Android (Yoga didn't re-flow after the published width
-      // arrived). After the first onLayout publishes, width is
-      // positive and the calc resolves normally.
-      return c.width > 0 ? c.width : null;
-    }
-    const w = env.media.width;
-    return w > 0 ? w : null;
-  },
+        throw new Error("STUB");
+    },
 };
 
 /**
@@ -522,21 +509,7 @@ function viewportResolver(n: number, unit: string): Resolver {
       ? unit.slice(1)
       : unit;
   return env => {
-    const { width: w, height: h } = env.media;
-    switch (u) {
-      case 'vw':
-      case 'vi': // inline axis = width in horizontal-tb
-        return (n * w) / 100;
-      case 'vh':
-      case 'vb': // block axis = height in horizontal-tb
-        return (n * h) / 100;
-      case 'vmin':
-        return (n * Math.min(w, h)) / 100;
-      case 'vmax':
-        return (n * Math.max(w, h)) / 100;
-      default:
-        return n;
-    }
+      throw new Error("STUB");
   };
 }
 
@@ -564,34 +537,34 @@ const IC_FRACTION = 1.0;
 function fontRelativeResolver(n: number, unit: string): Resolver {
   switch (unit) {
     case 'rem':
-      return env => n * env.rootFontSize;
+      return env => { throw new Error("STUB"); };
     case 'rlh':
       // See header note: today this matches lh once cascade.lineHeight
       // is propagated; spec-correct root-only behavior needs a
       // separate ResolveEnv.rootLineHeight slot.
-      return env => n * env.lineHeight;
+      return env => { throw new Error("STUB"); };
     case 'em':
-      return env => n * env.fontSize;
+      return env => { throw new Error("STUB"); };
     case 'lh':
-      return env => n * env.lineHeight;
+      return env => { throw new Error("STUB"); };
     case 'ex':
-      return env => n * env.fontSize * EX_FRACTION;
+      return env => { throw new Error("STUB"); };
     case 'cap':
-      return env => n * env.fontSize * CAP_FRACTION;
+      return env => { throw new Error("STUB"); };
     case 'ch':
-      return env => n * env.fontSize * CH_FRACTION;
+      return env => { throw new Error("STUB"); };
     case 'ic':
-      return env => n * env.fontSize * IC_FRACTION;
+      return env => { throw new Error("STUB"); };
     case 'rex':
-      return env => n * env.rootFontSize * EX_FRACTION;
+      return env => { throw new Error("STUB"); };
     case 'rcap':
-      return env => n * env.rootFontSize * CAP_FRACTION;
+      return env => { throw new Error("STUB"); };
     case 'rch':
-      return env => n * env.rootFontSize * CH_FRACTION;
+      return env => { throw new Error("STUB"); };
     case 'ric':
-      return env => n * env.rootFontSize * IC_FRACTION;
+      return env => { throw new Error("STUB"); };
     default:
-      return env => n;
+      return env => { throw new Error("STUB"); };
   }
 }
 
@@ -606,7 +579,7 @@ function lineWidthRoundResolver(value: string): Resolver | null {
   if (m === null) return null;
   const n = parseFloat(m[1]);
   if (!Number.isFinite(n)) return null;
-  return env => snapAsLineWidth(n, env.media.pixelRatio);
+  return env => { throw new Error("STUB"); };
 }
 
 // snap-as-line-width: integer device pixels pass through; sub-device-pixel
@@ -633,33 +606,7 @@ function relativeSize(inherited: number, direction: 1 | -1): number {
 
 function containerResolver(n: number, unit: string): Resolver {
   return env => {
-    // No eligible query container falls back to the small viewport size
-    // for that axis. On RN the layout viewport is the small viewport (no
-    // URL-bar surface to produce dvh/svh divergence), so env.media is
-    // the correct fallback container size.
-    //
-    // Pending containers (width === 0 && height === 0, set by
-    // `ContainerPublisher` before its first onLayout) defer to null so
-    // the cq-bearing declaration drops for one frame, mirroring the
-    // calc(%) defer behavior in `NATIVE_MATH_OPTS`.
-    const c = env.container;
-    if (c !== null && c.width === 0 && c.height === 0) return null;
-    const w = c !== null ? c.width : env.media.width;
-    const h = c !== null ? c.height : env.media.height;
-    switch (unit) {
-      case 'cqw':
-      case 'cqi': // inline axis; horizontal in horizontal-tb (Yoga's only mode)
-        return (n * w) / 100;
-      case 'cqh':
-      case 'cqb': // block axis; vertical in horizontal-tb (Yoga's only mode)
-        return (n * h) / 100;
-      case 'cqmin':
-        return (n * Math.min(w, h)) / 100;
-      case 'cqmax':
-        return (n * Math.max(w, h)) / 100;
-      default:
-        return n;
-    }
+      throw new Error("STUB");
   };
 }
 
@@ -695,9 +642,7 @@ function lightDarkResolver(value: string): Resolver | null {
   // at render time; the OS color-scheme change re-renders via the
   // Appearance listener.
   return env => {
-    const isDark = env.media.colorScheme === 'dark';
-    if (isDark) return darkR !== null ? darkR(env) : dark;
-    return lightR !== null ? lightR(env) : light;
+      throw new Error("STUB");
   };
 }
 
@@ -782,18 +727,7 @@ function embeddedLightDarkResolver(value: string): Resolver | null {
   }
   if (calls.length === 0) return null;
   return env => {
-    let out = '';
-    let pos = 0;
-    for (let i = 0; i < calls.length; i++) {
-      const c = calls[i];
-      if (pos < c.start) out += value.substring(pos, c.start);
-      const v = c.resolver(env);
-      if (v === null) return null;
-      out += typeof v === 'number' ? String(v) : v;
-      pos = c.end;
-    }
-    if (pos < value.length) out += value.substring(pos);
-    return out;
+      throw new Error("STUB");
   };
 }
 
@@ -822,16 +756,16 @@ function envResolver(value: string): Resolver | null {
 
   switch (name) {
     case 'safe-area-inset-top':
-      return env => env.insets.top;
+      return env => { throw new Error("STUB"); };
     case 'safe-area-inset-right':
-      return env => env.insets.right;
+      return env => { throw new Error("STUB"); };
     case 'safe-area-inset-bottom':
-      return env => env.insets.bottom;
+      return env => { throw new Error("STUB"); };
     case 'safe-area-inset-left':
-      return env => env.insets.left;
+      return env => { throw new Error("STUB"); };
     default:
       if (fallbackR !== null) return fallbackR;
-      return () => fallbackValue;
+      return () => { throw new Error("STUB"); };
   }
 }
 
@@ -864,23 +798,7 @@ function themeResolver(value: string): Resolver | null {
   let lastResult: any;
 
   return env => {
-    if (env.theme === lastTheme) return lastResult;
-    let v: any = env.theme;
-    for (let i = 0; i < segments.length; i++) {
-      if (
-        v == null ||
-        typeof v !== 'object' ||
-        !Object.prototype.hasOwnProperty.call(v, segments[i])
-      ) {
-        v = undefined;
-        break;
-      }
-      v = v[segments[i]];
-    }
-    const out = v === undefined || v === null ? fallback : v;
-    lastTheme = env.theme;
-    lastResult = out;
-    return out;
+      throw new Error("STUB");
   };
 }
 
@@ -995,27 +913,12 @@ function templateResolver(value: string): Resolver | null {
   }
   if (segments.length === 0) return null;
   return env => {
-    let out = '';
-    let pos = 0;
-    for (let i = 0; i < segments.length; i++) {
-      const s = segments[i];
-      if (pos < s.start) out += value.substring(pos, s.start);
-      const v = s.resolver(env);
-      if (v === null) return null;
-      if (typeof v === 'number') {
-        out += s.unit === '' ? String(v) : String(v) + s.unit;
-      } else {
-        out += String(v);
-      }
-      pos = s.end;
-    }
-    if (pos < value.length) out += value.substring(pos);
-    return out;
+      throw new Error("STUB");
   };
 }
 
-const siblingIndexResolver: Resolver = env => env.siblingIndex ?? 1;
-const siblingCountResolver: Resolver = env => env.siblingCount ?? 1;
+const siblingIndexResolver: Resolver = env => { throw new Error("STUB"); };
+const siblingCountResolver: Resolver = env => { throw new Error("STUB"); };
 
 /**
  * Unit names accepted by attr()'s `<attr-unit>` type. The spec defines
@@ -1194,31 +1097,7 @@ function attrResolver(value: string): Resolver | null {
         : null;
 
   return env => {
-    // Fallback construction is a pure env read (no subscription side
-    // effects), so it's deferred to only the paths that actually need
-    // it; the common present-and-valid-prop cases never touch it.
-    const getFallback = () => (fallbackResolver !== null ? fallbackResolver(env) : staticFallback);
-    const props = env.props;
-    const raw = props == null ? undefined : props[name];
-    if (raw === undefined || raw === null) return getFallback();
-
-    switch (type.kind) {
-      case 'string':
-        return typeof raw === 'string' ? raw : String(raw);
-      case 'number': {
-        const n = attrToNumber(raw);
-        return n === null ? getFallback() : n;
-      }
-      case 'unit': {
-        if (type.unit === null) return getFallback();
-        const n = attrToNumber(raw);
-        if (n === null) return getFallback();
-        if (type.unit === 'px') return n;
-        return n + type.unit;
-      }
-      case 'syntax':
-        return resolveAttrSyntax(type.syntax, raw, getFallback);
-    }
+      throw new Error("STUB");
   };
 }
 
@@ -1393,9 +1272,7 @@ function calcResolverFromFn(fn: Token, opts?: BuildOpts): Resolver | null {
   const armEval = buildExpression(args, opts);
   if (armEval === null) return null;
   return env => {
-    const r = armEval(env);
-    if (r === null) return null;
-    return numericToCss(r);
+      throw new Error("STUB");
   };
 }
 
@@ -1454,46 +1331,7 @@ function minMaxClampResolverFromFn(name: string, fn: Token, opts?: BuildOpts): R
   }
 
   return env => {
-    const operands: Array<NumericResult | null> = [];
-    const realOperands: NumericResult[] = [];
-    for (let i = 0; i < armResolvers.length; i++) {
-      const ar = armResolvers[i];
-      if (ar === null) {
-        operands.push(null);
-        continue;
-      }
-      const r = ar(env);
-      if (r === null) return null;
-      operands.push(r);
-      realOperands.push(r);
-    }
-    const unit = unifyUnits(realOperands);
-    if (unit === null) return null;
-
-    let result: number;
-    if (name === 'min') {
-      result = realOperands[0].value;
-      for (let i = 1; i < realOperands.length; i++) {
-        if (realOperands[i].value < result) result = realOperands[i].value;
-      }
-    } else if (name === 'max') {
-      result = realOperands[0].value;
-      for (let i = 1; i < realOperands.length; i++) {
-        if (realOperands[i].value > result) result = realOperands[i].value;
-      }
-    } else {
-      // clamp(MIN, VAL, MAX) === max(MIN, min(VAL, MAX)). MIN wins
-      // when MIN > MAX. `none` arms drop out of the comparison.
-      const lo = operands[0];
-      const val = operands[1];
-      const hi = operands[2];
-      if (val === null) return null;
-      let v = val.value;
-      if (hi !== null && v > hi.value) v = hi.value;
-      if (lo !== null && v < lo.value) v = lo.value;
-      result = v;
-    }
-    return numericToCss({ value: result, unit });
+      throw new Error("STUB");
   };
 }
 
@@ -1565,33 +1403,12 @@ function buildExpression(
     if (rp === undefined) return operandEvals[0];
     const eval0 = operandEvals[0];
     return env => {
-      const r = eval0(env);
-      if (r === null || r.unit !== '%') return r;
-      const base = rp(env);
-      if (base === null) return null;
-      return { value: (r.value / 100) * base, unit: 'px' };
+        throw new Error("STUB");
     };
   }
 
   return env => {
-    const items: Array<NumericResult | string> = [];
-    for (let i = 0; i < operandEvals.length; i++) {
-      let r = operandEvals[i](env);
-      if (r === null) return null;
-      if (rp !== undefined && r.unit === '%') {
-        // Native path: any operand surfacing as `%` (literal Percent
-        // token, sentinel resolving to '10%', nested calc returning a
-        // percent string) converts to px against the container/viewport
-        // base. Centralising the conversion here covers every operand
-        // shape with one rule.
-        const base = rp(env);
-        if (base === null) return null;
-        r = { value: (r.value / 100) * base, unit: 'px' };
-      }
-      items.push(r);
-      if (i < ops.length) items.push(ops[i]);
-    }
-    return reduceMath(items);
+      throw new Error("STUB");
   };
 }
 
@@ -1605,75 +1422,72 @@ function buildOperand(
 ): ((env: ResolveEnv) => NumericResult | null) | null {
   if (t.kind === TokenKind.Number) {
     const v = t.value!;
-    return () => ({ value: v, unit: '' });
+    return () => { throw new Error("STUB"); };
   }
   if (t.kind === TokenKind.Length) {
     const v = t.value!;
     const unit = t.unit!;
     if (unit === 'px' || unit === '') {
-      return () => ({ value: v, unit });
+      return () => { throw new Error("STUB"); };
     }
     // Viewport / container unit;defer to buildResolver, which produces
     // a number at render time. Inherit the original unit on the result so
     // outer arithmetic reports a coherent unit.
     const r = buildResolver(t.raw);
     if (r === null) return null;
-    return env => valueToNumeric(r(env), 'px');
+    return env => { throw new Error("STUB"); };
   }
   if (t.kind === TokenKind.Percent) {
     const v = t.value!;
-    return () => ({ value: v, unit: '%' });
+    return () => { throw new Error("STUB"); };
   }
   if (t.kind === TokenKind.Sentinel) {
     const r = buildResolver(t.raw);
     if (r === null) return null;
-    return env => valueToNumeric(r(env), '');
+    return env => { throw new Error("STUB"); };
   }
   if (t.kind === TokenKind.Ident) {
     // Math-context numeric constants. `pi` / `e` are <number>s.
     // `infinity` / `-infinity` / `NaN` warn + drop.
     const num = identToNumeric(t.name!, t.raw);
     if (num === null) return null;
-    return () => num;
+    return () => { throw new Error("STUB"); };
   }
   if (t.kind === TokenKind.Function) {
     // Static fold first (cheap, common case for nested static math).
     const num = resolveStaticMathFunction(t);
-    if (num !== null) return () => num;
+    if (num !== null) return () => { throw new Error("STUB"); };
     // Otherwise build a runtime resolver from the function's raw form.
     const inner = t.name || '';
     if (inner === 'calc') {
       const r = calcResolverFromFn(t, opts);
       if (r === null) return null;
-      return env => valueToNumeric(r(env), '');
+      return env => { throw new Error("STUB"); };
     }
     if (inner === 'min' || inner === 'max' || inner === 'clamp') {
       const r = minMaxClampResolverFromFn(inner, t, opts);
       if (r === null) return null;
-      return env => valueToNumeric(r(env), '');
+      return env => { throw new Error("STUB"); };
     }
     if (inner === 'env' || inner === 'light-dark') {
       const r = buildResolver(t.raw);
       if (r === null) return null;
-      return env => valueToNumeric(r(env), '');
+      return env => { throw new Error("STUB"); };
     }
     if (inner === 'sibling-index' || inner === 'sibling-count') {
       if ((t.args || '').trim() !== '') return null;
       const isIndex = inner === 'sibling-index';
-      return env => ({
-        value: isIndex ? (env.siblingIndex ?? 1) : (env.siblingCount ?? 1),
-        unit: '',
-      });
+      return env => { throw new Error("STUB"); };
     }
     if (inner === 'attr') {
       const r = attrResolver(t.raw);
       if (r === null) return null;
-      return env => valueToNumeric(r(env), '');
+      return env => { throw new Error("STUB"); };
     }
     if ((inner === 'anchor' || inner === 'anchor-size') && opts?.prop !== undefined) {
       const r = buildAnchorResolver(t.raw, opts.prop, inner === 'anchor-size');
       if (r === null) return null;
-      return env => valueToNumeric(r(env), 'px');
+      return env => { throw new Error("STUB"); };
     }
   }
   return null;
@@ -1908,28 +1722,7 @@ function colorFnResolver(value: string): Resolver | null {
   }
   if (segments.length === 0) return null;
   return env => {
-    let out = '';
-    let pos = 0;
-    for (let k = 0; k < segments.length; k++) {
-      const s = segments[k];
-      if (pos < s.start) out += value.substring(pos, s.start);
-      const v = s.resolver(env);
-      if (v === null) return null;
-      if (typeof v === 'number') {
-        out += s.unit === '' ? String(v) : String(v) + s.unit;
-      } else {
-        out += String(v);
-      }
-      pos = s.end;
-    }
-    if (pos < value.length) out += value.substring(pos);
-    const tokens = tokenize(out);
-    if (tokens.length !== 1 || tokens[0].kind !== TokenKind.Function) return null;
-    // Wide-gamut color functions stay authored CSS text on rn-web; the
-    // sentinels only splice resolved numbers into the string and the
-    // browser parses the function (and its color space) natively.
-    if (__NATIVE_WEB__) return out;
-    return staticColorFunctionToHex(tokens[0]);
+      throw new Error("STUB");
   };
 }
 

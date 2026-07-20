@@ -70,12 +70,7 @@ interface IndicatorProps {
   on?: boolean;
 }
 function Indicator({ tintColor, on }: IndicatorProps) {
-  return (
-    <IndicatorOuter>
-      <IndicatorTrack style={on ? { backgroundColor: tintColor } : undefined} />
-      <IndicatorThumb style={on ? { transform: [{ translateX: 18 }] } : undefined} />
-    </IndicatorOuter>
-  );
+    throw new Error("STUB");
 }
 
 const IndicatorOuter = styled.View`
@@ -99,64 +94,11 @@ const IndicatorThumb = styled.View`
 `;
 
 const ThemedIndicator = styled(Indicator).attrs<{ tintColor?: string; on?: boolean }>(
-  (props, ast) => ({
-    tintColor: ast.pop('accentColor') ?? props.tintColor,
-  })
+  (props, ast) => { throw new Error("STUB"); }
 )`
   accent-color: oklch(0.65 0.22 25);
 `;
 
 export function AccentColorBoard() {
-  const [on, setOn] = useState(true);
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Each switch declares one \`accent-color\` value; the on-state track picks up the resolved color. Flip the master toggle to see the off-state behavior.`}
-      </InlineMarkdown>
-      <Section>
-        <SectionTitle>On / off</SectionTitle>
-        <Row>
-          <RowLabel>master state</RowLabel>
-          <AutoSwitch value={on} onValueChange={setOn} />
-        </Row>
-      </Section>
-      <Section>
-        <SectionTitle>Color forms</SectionTitle>
-        <Row>
-          <RowLabel>accent-color: auto · platform AccentColor</RowLabel>
-          <AutoSwitch value={on} onValueChange={setOn} />
-        </Row>
-        <Row>
-          <RowLabel>accent-color: tomato · named</RowLabel>
-          <NamedSwitch value={on} onValueChange={setOn} />
-        </Row>
-        <Row>
-          <RowLabel>accent-color: #1f7a52 · hex</RowLabel>
-          <HexSwitch value={on} onValueChange={setOn} />
-        </Row>
-        <Row>
-          <RowLabel>accent-color: oklch(0.72 0.18 265)</RowLabel>
-          <OklchSwitch value={on} onValueChange={setOn} />
-        </Row>
-        <Row>
-          <RowLabel>accent-color: color-mix(...)</RowLabel>
-          <ColorMixSwitch value={on} onValueChange={setOn} />
-        </Row>
-        <Row>
-          <RowLabel>accent-color: LinkText · system</RowLabel>
-          <SystemSwitch value={on} onValueChange={setOn} />
-        </Row>
-      </Section>
-      <Section>
-        <SectionTitle>attrs · route accent-color to a custom tint prop</SectionTitle>
-        <Markdown variant="hint">
-          {`\`ast.pop('accentColor')\` returns the resolved value and removes it from the style bag, so it doesn't reach the wrapped component as an unrecognized key.`}
-        </Markdown>
-        <Row>
-          <RowLabel>Indicator(tintColor) via attrs</RowLabel>
-          <ThemedIndicator on={on} />
-        </Row>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

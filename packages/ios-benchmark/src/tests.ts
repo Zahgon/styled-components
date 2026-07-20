@@ -24,70 +24,42 @@ const cases: Record<string, BenchCase> = {
     type: BenchmarkType.MOUNT,
     sampleCount: 500,
     timeout: 240000, // 4 min @ ~460ms/sample
-    getComponentProps: ({ cycle }, components) => ({
-      breadth: 2,
-      components,
-      depth: 7,
-      id: cycle,
-      wrap: 1,
-    }),
+    getComponentProps: ({ cycle }, components) => { throw new Error("STUB"); },
   },
   'Mount wide tree': {
     Component: Tree,
     type: BenchmarkType.MOUNT,
     sampleCount: 500,
     timeout: 200000, // ~3.3 min
-    getComponentProps: ({ cycle }, components) => ({
-      breadth: 6,
-      components,
-      depth: 3,
-      id: cycle,
-      wrap: 2,
-    }),
+    getComponentProps: ({ cycle }, components) => { throw new Error("STUB"); },
   },
   'Parent rerender (200 children)': {
     Component: ParentRerender,
     type: BenchmarkType.UPDATE,
     sampleCount: 500,
     timeout: 60000,
-    getComponentProps: ({ cycle }, components) => ({
-      components,
-      count: cycle,
-      childCount: 200,
-    }),
+    getComponentProps: ({ cycle }, components) => { throw new Error("STUB"); },
   },
   'Parent rerender (1000 children)': {
     Component: ParentRerender,
     type: BenchmarkType.UPDATE,
     sampleCount: 500,
     timeout: 90000,
-    getComponentProps: ({ cycle }, components) => ({
-      components,
-      count: cycle,
-      childCount: 1000,
-    }),
+    getComponentProps: ({ cycle }, components) => { throw new Error("STUB"); },
   },
   'Static parent rerender (1000 children)': {
     Component: ParentRerenderStatic,
     type: BenchmarkType.UPDATE,
     sampleCount: 500,
     timeout: 90000,
-    getComponentProps: ({ cycle }, components) => ({
-      components,
-      count: cycle,
-      childCount: 1000,
-    }),
+    getComponentProps: ({ cycle }, components) => { throw new Error("STUB"); },
   },
   'Static mount deep tree': {
     Component: TreeStatic,
     type: BenchmarkType.MOUNT,
     sampleCount: 500,
     timeout: 240000,
-    getComponentProps: (_info, components) => ({
-      breadth: 2,
-      components,
-      depth: 7,
-    }),
+    getComponentProps: (_info, components) => { throw new Error("STUB"); },
   },
 };
 

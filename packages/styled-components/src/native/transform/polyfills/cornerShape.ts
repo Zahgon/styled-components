@@ -40,110 +40,21 @@ KEYWORD_CURVE.squircle = 'continuous';
 const UNSUPPORTED_KEYWORDS = new Set(['scoop', 'bevel', 'notch', 'square']);
 
 function warnUnsupported(raw: string): void {
-  if (!__DEV__) return;
-  warnOnce(
-    'native-corner-shape-unsupported',
-    '`corner-shape: ' +
-      raw +
-      '` has no React Native equivalent. iOS and Android can only render circular or Apple-smooth corners. Use `round` or `squircle`.',
-    raw
-  );
+    throw new Error("STUB");
 }
 
 function warnAndroid(): void {
-  if (!__DEV__) return;
-  if (getReactNativePlatformOS() !== 'android') return;
-  warnOnce(
-    'native-corner-shape-android',
-    '`corner-shape` renders circular corners on Android. The `borderCurve` it maps to only takes effect on iOS; Android ignores it and falls back to the default rounded corner.'
-  );
+    throw new Error("STUB");
 }
 
 // Resolve one `<corner-shape-value>` token (keyword or superellipse())
 // to a Curve, or `null` when no faithful RN contour exists.
 function resolveValue(t: Token): Curve | null {
-  if (t.kind === TokenKind.Ident && t.name !== undefined) {
-    const curve = KEYWORD_CURVE[t.name];
-    if (curve !== undefined) return curve;
-    return null;
-  }
-  if (t.kind === TokenKind.Function && t.name === 'superellipse') {
-    const args = tokenizeFunctionArgs(t);
-    // superellipse() takes a single <number> | infinity | -infinity.
-    // infinity / -infinity are square / notch, which RN can't draw.
-    if (args.length !== 1) return null;
-    const arg = args[0];
-    if (arg.kind !== TokenKind.Number || arg.value === undefined) return null;
-    const k = arg.value;
-    if (k >= CONTINUOUS_MIN && k <= CONTINUOUS_MAX) return 'continuous';
-    if (k >= CIRCULAR_MIN && k <= CIRCULAR_MAX) return 'circular';
-    return null;
-  }
-  return null;
+    throw new Error("STUB");
 }
 
 export function cornerShapeShorthand(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const values: Token[] = [];
-  while (!stream.eof()) {
-    const t = stream.consume();
-    if (!t) return null;
-    const isValueToken =
-      (t.kind === TokenKind.Ident && t.name !== undefined) ||
-      (t.kind === TokenKind.Function && t.name === 'superellipse');
-    if (!isValueToken) return null;
-    values.push(t);
-  }
-  // Grammar is `<corner-shape-value>{1,4}`.
-  if (values.length === 0 || values.length > 4) return null;
-
-  const raw = values.map(t => t.raw).join(' ');
-
-  if (__NATIVE_WEB__) {
-    // Chrome 139+ renders corner-shape natively; pass the authored value
-    // straight through and let the browser draw the contour.
-    return { cornerShape: raw };
-  }
-
-  const curves: (Curve | null)[] = [];
-  for (let i = 0; i < values.length; i++) {
-    const t = values[i];
-    // Validate the token shape before resolving so a bogus keyword is a
-    // hard parse failure (null), not a silent drop with a warning.
-    if (t.kind === TokenKind.Ident && t.name !== undefined) {
-      if (KEYWORD_CURVE[t.name] === undefined && !UNSUPPORTED_KEYWORDS.has(t.name)) return null;
-    }
-    curves.push(resolveValue(t));
-  }
-
-  // A null in the resolved list means at least one corner has no RN
-  // contour. Whether the rest map cleanly or not, the whole declaration
-  // drops: borderCurve is per-view, so a partial application would lie.
-  if (curves.indexOf(null) !== -1) {
-    warnUnsupported(raw);
-    return {};
-  }
-
-  // Every corner resolved. If they don't all agree, borderCurve still
-  // can't represent the mix; drop with the mixed warning.
-  const first = curves[0];
-  for (let i = 1; i < curves.length; i++) {
-    if (curves[i] !== first) {
-      if (__DEV__) {
-        warnOnce(
-          'native-corner-shape-mixed',
-          '`corner-shape: ' +
-            raw +
-            '` mixes different corner contours, but React Native applies one `borderCurve` to the whole view. Give every corner the same shape (`round` or `squircle`), or split the corners onto separate wrapping Views.',
-          raw
-        );
-      }
-      return {};
-    }
-  }
-
-  warnAndroid();
-  return { borderCurve: first! };
+    throw new Error("STUB");
 }
 
 register('cornerShape', cornerShapeShorthand);

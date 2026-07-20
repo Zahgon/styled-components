@@ -104,7 +104,7 @@ const ItemLabel = styled.Text`
   color: ${t.colors.ink};
 `;
 
-const ROWS = Array.from({ length: 24 }, (_, i) => `Row ${i + 1}`);
+const ROWS = Array.from({ length: 24 }, (_, i) => { throw new Error("STUB"); });
 
 type OverscrollMode = 'auto' | 'contain' | 'none';
 type ScrollbarMode = 'auto' | 'none';
@@ -121,14 +121,7 @@ function ScrollVariant({
   scrollbar: ScrollbarMode;
   children: React.ReactNode;
 }) {
-  if (overscroll === 'auto' && scrollbar === 'auto')
-    return <ScrollAA nestedScrollEnabled>{children}</ScrollAA>;
-  if (overscroll === 'auto') return <ScrollAN nestedScrollEnabled>{children}</ScrollAN>;
-  if (overscroll === 'contain' && scrollbar === 'auto')
-    return <ScrollCA nestedScrollEnabled>{children}</ScrollCA>;
-  if (overscroll === 'contain') return <ScrollCN nestedScrollEnabled>{children}</ScrollCN>;
-  if (scrollbar === 'auto') return <ScrollNA nestedScrollEnabled>{children}</ScrollNA>;
-  return <ScrollNN nestedScrollEnabled>{children}</ScrollNN>;
+    throw new Error("STUB");
 }
 
 interface SegmentedProps<T extends string> {
@@ -138,52 +131,9 @@ interface SegmentedProps<T extends string> {
 }
 
 function Segmented<T extends string>({ values, value, onChange }: SegmentedProps<T>) {
-  return (
-    <ToggleRow>
-      {values.map(v => {
-        const pressed = v === value;
-        return (
-          <Toggle key={v} aria-pressed={pressed} onPress={() => onChange(v)}>
-            <ToggleLabel aria-pressed={pressed}>{v}</ToggleLabel>
-          </Toggle>
-        );
-      })}
-    </ToggleRow>
-  );
+    throw new Error("STUB");
 }
 
 export function ScrollSurfacesBoard() {
-  const [overscroll, setOverscroll] = useState<OverscrollMode>('auto');
-  const [scrollbar, setScrollbar] = useState<ScrollbarMode>('auto');
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Drag the list past its top or bottom edge - the bounce / over-scroll glow follows the active \`overscroll-behavior\`. Indicator visibility tracks \`scrollbar-width\`.`}
-      </InlineMarkdown>
-      <ControlBlock>
-        <ControlLabel>overscroll-behavior</ControlLabel>
-        <Segmented
-          values={['auto', 'contain', 'none'] as const}
-          value={overscroll}
-          onChange={setOverscroll}
-        />
-      </ControlBlock>
-      <ControlBlock>
-        <ControlLabel>scrollbar-width</ControlLabel>
-        <Segmented values={['auto', 'none'] as const} value={scrollbar} onChange={setScrollbar} />
-      </ControlBlock>
-      <ScrollFrame>
-        <ScrollVariant overscroll={overscroll} scrollbar={scrollbar}>
-          {ROWS.map(label => (
-            <Item key={label}>
-              <ItemLabel>{label}</ItemLabel>
-            </Item>
-          ))}
-        </ScrollVariant>
-      </ScrollFrame>
-      <Markdown variant="hint">
-        {`\`scrollbar-width: thin\` is treated like \`auto\` on iOS and Android. Web builds keep all three values so the browser handles them.`}
-      </Markdown>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

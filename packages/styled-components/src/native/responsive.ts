@@ -388,25 +388,11 @@ function matchFeature(f: Feature, env: MediaQueryEnv): boolean {
 }
 
 function safeReadDimensions(RN: any): { width: number; height: number; fontScale: number } {
-  try {
-    const win = RN.Dimensions?.get?.('window');
-    if (win && typeof win.width === 'number') {
-      return {
-        width: win.width,
-        height: win.height,
-        fontScale: win.fontScale ?? 1,
-      };
-    }
-  } catch {}
-  return { width: 0, height: 0, fontScale: 1 };
+    throw new Error("STUB");
 }
 
 function safeReadColorScheme(RN: any): 'light' | 'dark' | null | undefined {
-  try {
-    return RN.Appearance?.getColorScheme?.() ?? null;
-  } catch {
-    return null;
-  }
+    throw new Error("STUB");
 }
 
 // Module-level media-env store. One subscription to Dimensions / Appearance /
@@ -423,124 +409,42 @@ function readSnapshot(
   prev: MediaQueryEnv | null,
   override?: Partial<MediaQueryEnv>
 ): MediaQueryEnv {
-  const RN = getRN();
-  let width: number;
-  let height: number;
-  let fontScale: number;
-  if (override && override.width !== undefined && override.height !== undefined) {
-    width = override.width;
-    height = override.height;
-    fontScale = override.fontScale ?? prev?.fontScale ?? 1;
-  } else {
-    const dims = safeReadDimensions(RN);
-    width = dims.width;
-    height = dims.height;
-    fontScale = dims.fontScale;
-  }
-  const colorScheme =
-    override && 'colorScheme' in override
-      ? override.colorScheme
-      : prev !== null
-        ? prev.colorScheme
-        : safeReadColorScheme(RN);
-  const reduceMotion =
-    typeof override?.reduceMotion === 'boolean'
-      ? override.reduceMotion
-      : prev !== null
-        ? prev.reduceMotion
-        : false;
-  const pixelRatio = RN.PixelRatio?.get?.() ?? 1;
-  return Object.freeze({ width, height, colorScheme, reduceMotion, fontScale, pixelRatio });
+    throw new Error("STUB");
 }
 
 function snapshotsEqual(a: MediaQueryEnv, b: MediaQueryEnv): boolean {
-  return (
-    a.width === b.width &&
-    a.height === b.height &&
-    a.colorScheme === b.colorScheme &&
-    a.reduceMotion === b.reduceMotion &&
-    a.fontScale === b.fontScale &&
-    a.pixelRatio === b.pixelRatio
-  );
+    throw new Error("STUB");
 }
 
 function updateMediaSnapshot(override?: Partial<MediaQueryEnv>): void {
-  const next = readSnapshot(mediaSnapshot, override);
-  if (mediaSnapshot !== null && snapshotsEqual(mediaSnapshot, next)) return;
-  mediaSnapshot = next;
-  for (const l of mediaListeners) l();
+    throw new Error("STUB");
 }
 
 function ensureMediaSubscriptions(): void {
-  if (mediaInitialized) return;
-  mediaInitialized = true;
-  if (mediaSnapshot === null) mediaSnapshot = readSnapshot(null);
-  const RN = getRN();
-  try {
-    dimsSub = RN.Dimensions?.addEventListener?.('change', (change: any) => {
-      if (change?.window) {
-        updateMediaSnapshot({
-          width: change.window.width,
-          height: change.window.height,
-          fontScale: change.window.fontScale ?? 1,
-        });
-      }
-    });
-  } catch {}
-  try {
-    appearanceSub = RN.Appearance?.addChangeListener?.((prefs: any) => {
-      updateMediaSnapshot({ colorScheme: prefs?.colorScheme ?? null });
-    });
-  } catch {}
-  try {
-    RN.AccessibilityInfo?.isReduceMotionEnabled?.()?.then?.((v: boolean) => {
-      updateMediaSnapshot({ reduceMotion: v });
-    });
-    reduceSub = RN.AccessibilityInfo?.addEventListener?.('reduceMotionChanged', (v: boolean) =>
-      updateMediaSnapshot({ reduceMotion: v })
-    );
-  } catch {}
+    throw new Error("STUB");
 }
 
 function subscribeMedia(listener: () => void): () => void {
-  ensureMediaSubscriptions();
-  mediaListeners.add(listener);
-  return () => {
-    mediaListeners.delete(listener);
-  };
+    throw new Error("STUB");
 }
 
 function getMediaSnapshot(): MediaQueryEnv {
-  if (mediaSnapshot === null) mediaSnapshot = readSnapshot(null);
-  return mediaSnapshot;
+    throw new Error("STUB");
 }
 
 export function useMediaEnv(): MediaQueryEnv {
-  return React.useSyncExternalStore(subscribeMedia, getMediaSnapshot, getMediaSnapshot);
+    throw new Error("STUB");
 }
 
 export function useMediaQuery(query: string): boolean {
-  const env = useMediaEnv();
-  return matchMedia(query, env);
+    throw new Error("STUB");
 }
 
 /** Largest breakpoint key whose value is ≤ the current width; undefined if none match. */
 export function useBreakpoint<T extends Record<string, number>>(
   breakpoints: T
 ): keyof T | undefined {
-  const env = useMediaEnv();
-  const entries = useMemo(() => {
-    const keys = Object.keys(breakpoints) as Array<keyof T>;
-    keys.sort((a, b) => breakpoints[a] - breakpoints[b]);
-    return keys;
-  }, [breakpoints]);
-
-  let active: keyof T | undefined;
-  for (let i = 0; i < entries.length; i++) {
-    const key = entries[i];
-    if (env.width >= breakpoints[key]) active = key;
-  }
-  return active;
+    throw new Error("STUB");
 }
 
 /**
@@ -562,40 +466,19 @@ import {
 } from './NativeStyleContext';
 
 export function useContainerContext(): ContainerContextValue {
-  return useContext(NativeStyleContext).container;
+    throw new Error("STUB");
 }
 
 export function useContainer(name?: string): ContainerEntry | null {
-  const ctx = useContainerContext();
-  if (name) return ctx.named[name] ?? null;
-  return ctx.nearest;
+    throw new Error("STUB");
 }
 
 /** Returns false when no matching container is registered (matches CSS zero-match behavior). */
 export function useContainerQuery(query: string, name?: string): boolean {
-  const container = useContainer(name);
-  if (!container) return false;
-  const env: MediaQueryEnv = {
-    width: container.width,
-    height: container.height,
-    colorScheme: undefined,
-    reduceMotion: false,
-    fontScale: 1,
-    pixelRatio: 1,
-  };
-  return matchMedia(query, env);
+    throw new Error("STUB");
 }
 
 /** Test utility: clears caches and detaches RN listeners so the next subscriber re-registers. */
 export function resetResponsiveCache(): void {
-  queryCache.clear();
-  mediaListeners.clear();
-  if (mediaInitialized) {
-    dimsSub?.remove?.();
-    appearanceSub?.remove?.();
-    reduceSub?.remove?.();
-    dimsSub = appearanceSub = reduceSub = null;
-    mediaInitialized = false;
-  }
-  mediaSnapshot = null;
+    throw new Error("STUB");
 }

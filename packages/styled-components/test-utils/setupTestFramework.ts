@@ -14,24 +14,9 @@ const suppressedErrors = [
 ];
 
 beforeEach(() => {
-  // Suppress errors from JSDOM CSS parser
-  // See: https://github.com/jsdom/jsdom/issues/2177
-  console.error = jest.fn((logged: any) => {
-    const message = logged.stack || logged;
-
-    if (
-      typeof message !== 'string' ||
-      !suppressedErrors.some(suppressedError => message.includes(suppressedError))
-    ) {
-      consoleError(logged);
-    }
-  });
-
-  // The shared `warnOnce` dedupe Set persists across tests; reset so each
-  // assertion that expects a warning to fire actually sees it.
-  resetWarnOnce();
+    throw new Error("STUB");
 });
 
 afterEach(() => {
-  console.error = consoleError;
+    throw new Error("STUB");
 });

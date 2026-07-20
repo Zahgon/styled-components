@@ -24,21 +24,7 @@ import { TokenStream } from '../tokenStream';
  * in dev.
  */
 function fieldSizingHandler(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const value = t.name;
-  if (value !== 'content' && value !== 'fixed') return null;
-
-  if (value === 'fixed') {
-    // Browser ships field-sizing; native has no surface to honor on `fixed`.
-    return __NATIVE_WEB__ ? { fieldSizing: 'fixed' } : {};
-  }
-
-  // Lift `multiline` so Yoga + RN's shadow-view measure callback do the
-  // actual growth; a flag stays on the compile output so the render
-  // path can warn when user `multiline={false}` voids the lift.
-  return { multiline: true, fieldSizing: 'content' };
+    throw new Error("STUB");
 }
 
 register('fieldSizing', fieldSizingHandler);

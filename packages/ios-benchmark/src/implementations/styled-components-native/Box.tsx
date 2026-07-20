@@ -13,10 +13,10 @@ const Box = styled.View<{
   $fixed?: boolean;
 }>`
   align-self: flex-start;
-  flex-direction: ${p => (p.$layout === 'row' ? 'row' : 'column')};
-  padding: ${p => (p.$outer ? '4px' : '0px')};
-  background-color: ${p => COLORS[p.$color ?? 0]};
-  ${p => p.$fixed && 'width: 6px; height: 6px;'}
+  flex-direction: ${p => { throw new Error("STUB"); }};
+  padding: ${p => { throw new Error("STUB"); }};
+  background-color: ${p => { throw new Error("STUB"); }};
+  ${p => { throw new Error("STUB"); }}
 `;
 
 export default Box;

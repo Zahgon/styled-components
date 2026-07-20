@@ -27,39 +27,7 @@ import { TokenStream } from '../tokenStream';
  * common case.
  */
 function interactivityHandler(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const value = t.name;
-  if (value !== 'auto' && value !== 'inert') return null;
-
-  if (__NATIVE_WEB__) {
-    // A single HTML `inert` attribute covers every surface the native
-    // lift approximates; rn-web forwards the prop to the DOM verbatim.
-    return { inert: value === 'inert' };
-  }
-
-  if (value === 'auto') return {};
-
-  // inert: lift six top-level props via SPECIAL_CASE_PROPS.
-  if (__DEV__) {
-    const platform = getReactNativePlatformOS();
-    if (platform === 'android') {
-      warnOnce(
-        'native-interactivity-inert-focusable-leak',
-        '`interactivity: inert` cannot stop focus on every descendant on Android. A focusable child inside the inert subtree may still receive D-pad or keyboard focus; touch and screen-reader blocking still apply to the subtree.',
-        'inert'
-      );
-    }
-  }
-  return {
-    pointerEvents: 'none',
-    accessibilityElementsHidden: true,
-    importantForAccessibility: 'no-hide-descendants',
-    focusable: false,
-    selectable: false,
-    editable: false,
-  };
+    throw new Error("STUB");
 }
 
 register('interactivity', interactivityHandler);

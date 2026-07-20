@@ -28,11 +28,5 @@ export function escapeCssForStyleTag(css: string): string {
  * already safe because React handles attribute escaping).
  */
 export function escapeHtmlAttribute(value: string): string {
-  for (let i = 0; i < value.length; i++) {
-    const c = value.charCodeAt(i);
-    if (c === 34 /* " */ || c === 38 /* & */ || c === 60 /* < */) {
-      return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-    }
-  }
-  return value;
+    throw new Error("STUB");
 }

@@ -66,7 +66,7 @@ const identifiers: { [key: string]: number } = {};
  * `${StyledFoo}` interpolation resolves to the class selector.
  */
 function styledToString(this: { styledComponentId: string }): string {
-  return '.' + this.styledComponentId;
+    throw new Error("STUB");
 }
 
 /**
@@ -86,25 +86,14 @@ const HOIST_EXCLUDE = {
 /** Test-only: clear the per-displayName counter so component IDs stay stable
  *  across tests. Not for production use. */
 export const resetIdentifiers = (): void => {
-  for (const k in identifiers) delete identifiers[k];
+    throw new Error("STUB");
 };
 
 function generateId(
   displayName?: string | undefined,
   parentComponentId?: string | undefined
 ): string {
-  const name = typeof displayName !== 'string' ? 'sc' : escape(displayName);
-  identifiers[name] = (identifiers[name] || 0) + 1;
-
-  const componentId =
-    name +
-    '-' +
-    generateComponentId(
-      // Isolate multiple styled-components runtimes on one page.
-      SC_VERSION + name + identifiers[name]
-    );
-
-  return parentComponentId ? parentComponentId + '-' + componentId : componentId;
+    throw new Error("STUB");
 }
 
 function useInjectedStyle<T extends ExecutionContext>(
@@ -113,7 +102,7 @@ function useInjectedStyle<T extends ExecutionContext>(
   styleSheet: StyleSheet,
   compiler: Compiler
 ): string {
-  return webStyle.flush(resolvedAttrs, styleSheet, compiler);
+    throw new Error("STUB");
 }
 
 /**
@@ -129,12 +118,7 @@ function rscFlush<T extends ExecutionContext>(
   styleSheet: StyleSheet,
   compiler: Compiler
 ): GeneratedStyle {
-  const generated = webStyle.generate(resolvedAttrs, styleSheet, compiler);
-  for (let i = 0; i < generated.levels.length; i++) {
-    const level = generated.levels[i];
-    if (level.isNew) styleSheet.registerName(level.componentId, level.name);
-  }
-  return generated;
+    throw new Error("STUB");
 }
 
 // Cached render inputs + style result: [prevProps, prevTheme, prevStyleSheet, prevCompiler,
@@ -156,39 +140,13 @@ function resolveContext<Props extends BaseObject>(
   props: ExecutionProps & Props,
   theme: DefaultTheme | undefined
 ): React.HTMLAttributes<Element> & ExecutionContext & Props {
-  const context: React.HTMLAttributes<Element> & ExecutionContext & Props = {
-    ...props,
-    // unset, add `props.className` back at the end so props always "wins"
-    className: undefined,
-    theme,
-  } as React.HTMLAttributes<Element> & ExecutionContext & Props;
-
-  const needsCopy = attrs.length > 1;
-  for (let i = 0; i < attrs.length; i++) {
-    const attrDef = attrs[i];
-    // Arity-2 attrs are post-compile (need access to resolved decls); they
-    // run later in `applyPostAttrsWeb`, not here.
-    if (isFunction(attrDef) && (attrDef as Function).length >= 2) continue;
-    const resolvedAttrDef = isFunction(attrDef)
-      ? (attrDef as unknown as (p: typeof context) => ExecutionProps & Partial<Props>)(
-          needsCopy ? { ...context } : context
-        )
-      : attrDef;
-
-    mergeAttrDict(context, props, resolvedAttrDef as Dict<unknown>);
-  }
-
-  if ('className' in props && typeof props.className === 'string') {
-    context.className = joinStrings(context.className, props.className);
-  }
-
-  return context;
+    throw new Error("STUB");
 }
 
 let seenUnknownProps: Set<string> | undefined;
 
 /** Per-render tracking of emitted class names and keyframe IDs for RSC dedup. */
-const getEmittedNames = createRSCCache(() => new Set<string>());
+const getEmittedNames = createRSCCache(() => { throw new Error("STUB"); });
 
 /**
  * Cache RegExp objects for :where() wrapping to avoid recompilation per
@@ -198,18 +156,11 @@ const getEmittedNames = createRSCCache(() => new Set<string>());
  */
 const whereRegExpCache = new Map<string, RegExp>();
 function getWhereRegExp(name: string): RegExp {
-  let re = whereRegExpCache.get(name);
-  if (!re) {
-    re = new RegExp('\\.' + name + '(?![a-zA-Z0-9_-])', 'g');
-    fifoSet(whereRegExpCache, name, re, TOO_MANY_CLASSES_LIMIT);
-  }
-  return re;
+    throw new Error("STUB");
 }
 
 function wrapLevelInWhere(levelCss: string, name: string): string {
-  const re = getWhereRegExp(name);
-  re.lastIndex = 0;
-  return levelCss.replace(re, ':where(.' + name + ')');
+    throw new Error("STUB");
 }
 
 /**
@@ -277,18 +228,7 @@ function mergeAttrDict<Props extends BaseObject>(
   props: ExecutionProps & Props,
   resolved: Dict<unknown>
 ): void {
-  for (const key in resolved) {
-    if (key === 'className') {
-      context.className = joinStrings(context.className, resolved[key] as string);
-    } else if (key === 'style') {
-      context.style = {
-        ...context.style,
-        ...(resolved[key] as React.CSSProperties),
-      };
-    } else if (!(key in props && (props as Dict<unknown>)[key] === undefined)) {
-      (context as unknown as Dict<unknown>)[key] = resolved[key];
-    }
-  }
+    throw new Error("STUB");
 }
 
 function applyPostAttrsWeb<Props extends BaseObject>(
@@ -298,118 +238,13 @@ function applyPostAttrsWeb<Props extends BaseObject>(
   plans: ReadonlyArray<PostAttrsPlan | null> | undefined,
   webStyle: WebStyle
 ): Dict<string> | null {
-  let popOverrides: Dict<string> | null = null;
-  let planIdx = 0;
-  // Lazy: only built when an attr without a static plan needs to invoke
-  // its callback at runtime (the fallback path).
-  let lazyState:
-    | {
-        source: Source;
-        ast: Root;
-        filled: ReadonlyArray<string> | null | undefined;
-      }
-    | null
-    | undefined = undefined;
-  let astAccessor: CompiledAst | null = null;
-
-  for (let i = 0; i < attrs.length; i++) {
-    const attr = attrs[i];
-    if (!isFunction(attr) || (attr as Function).length < 2) continue;
-
-    const plan = plans !== undefined ? plans[planIdx] : null;
-    planIdx++;
-
-    if (plan !== null && plan !== undefined) {
-      mergeAttrDict(context, props, plan.output);
-      if (plan.popped !== null) {
-        if (popOverrides === null) popOverrides = {};
-        plan.popped.forEach(key => {
-          (popOverrides as Dict<string>)[key] = 'unset';
-        });
-      }
-      continue;
-    }
-
-    // Runtime fallback for traces that bailed (props read, derived values,
-    // templated decls, etc.). Build the AST + filled state lazily;only
-    // pay this cost when we actually need to invoke the user's callback.
-    if (lazyState === undefined) {
-      const source = getSource(webStyle.rules);
-      lazyState = source ? { source, ast: source.ast, filled: undefined } : null;
-    }
-    if (lazyState === null) continue;
-    const state = lazyState;
-
-    if (astAccessor === null) {
-      const ensureFilled = (): ReadonlyArray<string> | null => {
-        if (state.filled !== undefined) return state.filled as ReadonlyArray<string> | null;
-        const src = state.source;
-        // Push-fill to keep these PACKED_ELEMENTS; `new Array(n)` stays
-        // HOLEY_ELEMENTS and infects the IC for `evaluateForFastPath`.
-        const n = src.interpolations.length;
-        const buf: string[] = [];
-        for (let i = 0; i < n; i++) buf.push('');
-        const fragBuf: (FastPathFragment | null)[] = [];
-        for (let i = 0; i < n; i++) fragBuf.push(null);
-        state.filled = evaluateForFastPath(
-          src,
-          context as ExecutionContext,
-          buf,
-          undefined,
-          fragBuf
-        );
-        return state.filled;
-      };
-      const theme = (context as { theme?: unknown }).theme;
-      // Per-render lookup cache: same key resolved once. Theme-path walks
-      // and AST decl scans alike skip on a cache hit. Pop's inline-style
-      // override is idempotent;the override is set on the first lookup
-      // and subsequent pops on the same key are cheap.
-      const cache = new Map<string, unknown>();
-      const lookup = (keyOrPath: string): unknown => {
-        let v: unknown = cache.get(keyOrPath);
-        if (v !== undefined || cache.has(keyOrPath)) return v;
-        if (keyOrPath.indexOf('.') !== -1) {
-          v = themeValue(theme, keyOrPath);
-        } else {
-          v = findBaseDecl(state.ast, ensureFilled(), keyOrPath);
-        }
-        cache.set(keyOrPath, v);
-        return v;
-      };
-      astAccessor = {
-        pop(keyOrPath: string, fallback?: unknown): unknown {
-          const v = lookup(keyOrPath);
-          if (keyOrPath.indexOf('.') === -1 && v !== undefined) {
-            if (popOverrides === null) popOverrides = {};
-            (popOverrides as Dict<string>)[keyOrPath] = 'unset';
-          }
-          return v !== undefined ? v : fallback;
-        },
-        peek(keyOrPath: string, fallback?: unknown): unknown {
-          const v = lookup(keyOrPath);
-          return v !== undefined ? v : fallback;
-        },
-      } as CompiledAst;
-    }
-
-    const resolved = (
-      attr as (p: ExecutionContext & Props, a: CompiledAst) => ExecutionProps & Partial<Props>
-    )({ ...context }, astAccessor);
-    mergeAttrDict(context, props, resolved as Dict<unknown>);
-  }
-
-  return popOverrides;
+    throw new Error("STUB");
 }
 
 function hasPostAttrsWeb<Props extends BaseObject>(
   attrs: Attrs<React.HTMLAttributes<Element> & Props>[]
 ): boolean {
-  for (let i = 0; i < attrs.length; i++) {
-    const a = attrs[i];
-    if (typeof a === 'function' && (a as Function).length >= 2) return true;
-  }
-  return false;
+    throw new Error("STUB");
 }
 
 /**
@@ -423,13 +258,7 @@ function buildPostAttrsPlans<Props extends BaseObject>(
   attrs: Attrs<React.HTMLAttributes<Element> & Props>[],
   rules: RuleSet<Props>
 ): ReadonlyArray<PostAttrsPlan | null> {
-  const plans: (PostAttrsPlan | null)[] = [];
-  for (let i = 0; i < attrs.length; i++) {
-    const a = attrs[i];
-    if (typeof a !== 'function' || (a as Function).length < 2) continue;
-    plans.push(tracePostAttr(a as (p: any, ast: CompiledAst) => any, rules));
-  }
-  return plans;
+    throw new Error("STUB");
 }
 
 function buildPropsForElement(
@@ -438,44 +267,7 @@ function buildPropsForElement(
   theme: DefaultTheme | undefined,
   shouldForwardProp: ((prop: string, el: WebTarget) => boolean) | undefined
 ): Dict<any> {
-  const out: Dict<any> = {};
-
-  for (const key in context) {
-    if (context[key] === undefined) {
-      continue;
-    }
-    if (
-      key[0] === '$' ||
-      key === 'as' ||
-      key === 'ref' || // React 19 ref-as-prop: the ref is re-attached explicitly below.
-      (key === 'theme' && context.theme === theme)
-    ) {
-      continue;
-    }
-    if (key === 'forwardedAs') {
-      out.as = context.forwardedAs;
-    } else if (!shouldForwardProp || shouldForwardProp(key, elementToBeCreated)) {
-      out[key] = context[key];
-
-      if (
-        __DEV__ &&
-        !shouldForwardProp &&
-        !isPropValid(key) &&
-        !(seenUnknownProps || (seenUnknownProps = new Set())).has(key) &&
-        isTag(elementToBeCreated) &&
-        !elementToBeCreated.includes('-')
-      ) {
-        seenUnknownProps.add(key);
-        warnOnce(
-          'unknown-prop',
-          `unknown prop "${key}" is being sent to the DOM, which will likely trigger a React console error. Use transient props (\`$\` prefix) to keep the prop in the component, or set a \`<StyleSheetManager shouldForwardProp={...}>\` filter.`,
-          key
-        );
-      }
-    }
-  }
-
-  return out;
+    throw new Error("STUB");
 }
 
 function useImpl<Props extends BaseObject>(
@@ -483,177 +275,7 @@ function useImpl<Props extends BaseObject>(
   props: ExecutionProps & Props,
   forwardedRef: Ref<Element> | undefined
 ) {
-  const {
-    attrs: componentAttrs,
-    webStyle,
-    foldedComponentIds,
-    styledComponentId,
-    target,
-  } = forwardedComponent;
-
-  const contextTheme = !IS_RSC ? React.useContext(ThemeContext) : undefined;
-  const ssc = useStyleSheetContext();
-  const shouldForwardProp = forwardedComponent.shouldForwardProp || ssc.shouldForwardProp;
-
-  if (__DEV__ && React.useDebugValue) {
-    React.useDebugValue(styledComponentId);
-  }
-
-  const theme = determineTheme(props, contextTheme) || (IS_RSC ? undefined : EMPTY_OBJECT);
-
-  let context: React.HTMLAttributes<Element> & ExecutionContext & Props;
-  let generatedClassName: string;
-  let generatedStyle: GeneratedStyle | null = null;
-  let popOverrides: Dict<string> | null = null;
-  const wantsPostAttrs = forwardedComponent.hasPostAttrs === true;
-
-  if (!__SERVER__ && !IS_RSC) {
-    const renderCacheRef = React.useRef<RenderCache | null>(null);
-    const prev = renderCacheRef.current;
-
-    if (
-      prev !== null &&
-      prev[1] === theme &&
-      prev[2] === ssc.styleSheet &&
-      prev[3] === ssc.compiler &&
-      prev[7] === webStyle &&
-      shallowEqual(prev[0], props, prev[4])
-    ) {
-      context = prev[5] as typeof context;
-      generatedClassName = prev[6];
-      popOverrides = prev[8];
-    } else {
-      context = resolveContext<Props>(componentAttrs, props, theme);
-      if (wantsPostAttrs) {
-        popOverrides = applyPostAttrsWeb<Props>(
-          context,
-          props,
-          componentAttrs,
-          forwardedComponent.postAttrsPlans,
-          webStyle
-        );
-      }
-      generatedClassName = useInjectedStyle(webStyle, context, ssc.styleSheet, ssc.compiler);
-
-      let propsKeyCount = 0;
-      for (const key in props) {
-        if (hasOwn.call(props, key)) propsKeyCount++;
-      }
-      renderCacheRef.current = [
-        props,
-        theme,
-        ssc.styleSheet,
-        ssc.compiler,
-        propsKeyCount,
-        context,
-        generatedClassName,
-        webStyle,
-        popOverrides,
-      ];
-    }
-  } else {
-    context = resolveContext<Props>(componentAttrs, props, theme);
-    if (wantsPostAttrs) {
-      popOverrides = applyPostAttrsWeb<Props>(
-        context,
-        props,
-        componentAttrs,
-        forwardedComponent.postAttrsPlans,
-        webStyle
-      );
-    }
-    if (IS_RSC) {
-      generatedStyle = rscFlush(webStyle, context, ssc.styleSheet, ssc.compiler);
-      generatedClassName = generatedStyle.className;
-    } else {
-      generatedClassName = useInjectedStyle(webStyle, context, ssc.styleSheet, ssc.compiler);
-    }
-  }
-
-  if (__DEV__ && React.useDebugValue) {
-    React.useDebugValue(generatedClassName);
-  }
-
-  if (__DEV__ && forwardedComponent.warnTooManyClasses) {
-    forwardedComponent.warnTooManyClasses(generatedClassName);
-  }
-
-  const elementToBeCreated: WebTarget = context.as || target;
-  const elementProps = buildPropsForElement(context, elementToBeCreated, theme, shouldForwardProp);
-
-  // Apply popped declarations as inline-style overrides; user-passed
-  // `style` keys win so explicit overrides aren't clobbered by the reset.
-  if (popOverrides !== null) {
-    elementProps.style = { ...popOverrides, ...(elementProps.style as object | undefined) };
-  }
-
-  let classString = joinStrings(foldedComponentIds, styledComponentId);
-  if (generatedClassName) {
-    classString += ' ' + generatedClassName;
-  }
-  if (context.className) {
-    classString += ' ' + context.className;
-  }
-
-  elementProps[
-    isTag(elementToBeCreated) && elementToBeCreated.includes('-') ? 'class' : 'className'
-  ] = classString;
-
-  if (forwardedRef) {
-    elementProps.ref = forwardedRef;
-  }
-
-  const element = createElement(elementToBeCreated, elementProps);
-
-  // RSC mode: emit this component's CSS (and its inheritance chain + keyframes)
-  // as an inline <style> tag. No `precedence`; server component output isn't
-  // hydrated, so no mismatch. Inline body styles come after the registry's
-  // <head> styles in source order, so extensions naturally win (#5672).
-  if (IS_RSC && generatedStyle) {
-    const emitted = getEmittedNames ? getEmittedNames() : null;
-    const levels = generatedStyle.levels;
-    const lastIdx = levels.length - 1;
-    let css = '';
-
-    for (let i = 0; i < levels.length; i++) {
-      const level = levels[i];
-      if (emitted && emitted.has(level.name)) continue;
-      if (level.rules.length === 0) continue;
-
-      let levelCss = joinRules(level.rules);
-      if (i !== lastIdx) {
-        // Base levels in an inheritance chain are wrapped in :where() so their
-        // specificity is zero, letting any extension override without !important.
-        levelCss = wrapLevelInWhere(levelCss, level.name);
-      }
-      css += levelCss;
-      if (emitted) emitted.add(level.name);
-    }
-
-    // Keyframes carried as pure data on `generatedStyle.keyframes`. Each entry
-    // already holds the compiled `@keyframes` rules; the per-render `emitted`
-    // set dedups by resolved name so duplicate refs across siblings collapse.
-    let kfCss = '';
-    const kfList = generatedStyle.keyframes;
-    for (let i = 0; i < kfList.length; i++) {
-      const compiled = kfList[i];
-      if (emitted && emitted.has(compiled.name)) continue;
-      kfCss += joinRules(compiled.rules);
-      if (emitted) emitted.add(compiled.name);
-    }
-
-    const combined = stripSplitter(kfCss + css);
-    if (combined) {
-      const styleElement = React.createElement('style', {
-        [SC_ATTR]: '',
-        key: 'sc-' + webStyle.componentId,
-        children: combined,
-      });
-      return React.createElement(React.Fragment, null, styleElement, element);
-    }
-  }
-
-  return element;
+    throw new Error("STUB");
 }
 
 function createStyledComponent<
@@ -665,118 +287,7 @@ function createStyledComponent<
   options: StyledOptions<'web', OuterProps>,
   rules: RuleSet<OuterProps>
 ): ReturnType<IStyledComponentFactory<'web', Target, OuterProps, Statics>> {
-  const isTargetStyledComp = isStyledComponent(target);
-  const styledComponentTarget = target as IStyledComponent<'web', OuterProps>;
-  const targetIsTag = isTag(target);
-  const isCompositeComponent = !targetIsTag;
-
-  const {
-    attrs = EMPTY_ARRAY,
-    componentId = generateId(options.displayName, options.parentComponentId),
-    displayName = targetIsTag
-      ? `styled.${target as string}`
-      : `Styled(${getComponentName(target as AnyComponent)})`,
-  } = options;
-
-  const styledComponentId =
-    options.displayName && options.componentId
-      ? escape(options.displayName) + '-' + options.componentId
-      : options.componentId || componentId;
-
-  const finalAttrs =
-    isTargetStyledComp && styledComponentTarget.attrs
-      ? styledComponentTarget.attrs.concat(attrs as unknown as Attrs<OuterProps>[]).filter(Boolean)
-      : (attrs as Attrs<OuterProps>[]);
-
-  let { shouldForwardProp } = options;
-
-  if (isTargetStyledComp && styledComponentTarget.shouldForwardProp) {
-    const shouldForwardPropFn = styledComponentTarget.shouldForwardProp;
-
-    if (options.shouldForwardProp) {
-      const passedShouldForwardPropFn = options.shouldForwardProp;
-
-      shouldForwardProp = (prop, elementToBeCreated) =>
-        shouldForwardPropFn(prop, elementToBeCreated) &&
-        passedShouldForwardPropFn(prop, elementToBeCreated);
-    } else {
-      shouldForwardProp = shouldForwardPropFn;
-    }
-  }
-
-  const webStyle = new WebStyle(
-    rules,
-    styledComponentId,
-    isTargetStyledComp ? styledComponentTarget.webStyle : undefined
-  );
-
-  /**
-   * React 19 ref-as-prop; no `React.forwardRef` wrapper. We shape the
-   * wrapper as a `React.memo` object directly (`{$$typeof, type, compare,
-   * …}`) rather than calling `React.memo(...)` and then mutating ten
-   * statics onto the result. The single object literal lets V8 use one
-   * hidden class for every styled component instead of walking a fresh
-   * transition chain per construction. `React.memo` lets the parent's
-   * re-render skip this component when props are shallow-equal; the
-   * internal render-cache inside `useImpl` is a layered fallback for
-   * cases memo doesn't catch (different prop refs with same values,
-   * theme/sheet shifts, dynamic-only components).
-   */
-  const RenderInner: {
-    (props: ExecutionProps & OuterProps & { ref?: Ref<Element> }): React.JSX.Element;
-    displayName?: string;
-  } = props => useImpl<OuterProps>(WrappedStyledComponent, props, props.ref);
-  RenderInner.displayName = displayName;
-
-  const hasPostAttrs = hasPostAttrsWeb(finalAttrs);
-  const foldedComponentIds = isTargetStyledComp
-    ? joinStrings(styledComponentTarget.foldedComponentIds, styledComponentTarget.styledComponentId)
-    : '';
-  const resolvedTarget: WebTarget = isTargetStyledComp ? styledComponentTarget.target : target;
-
-  let WrappedStyledComponent = {
-    $$typeof: REACT_MEMO_TYPE,
-    type: RenderInner,
-    compare: null,
-    // styled-component statics laid out in a fixed order. Same shape for
-    // every component → one hidden class for the whole population.
-    attrs: finalAttrs,
-    webStyle,
-    displayName,
-    shouldForwardProp,
-    hasPostAttrs,
-    // Static plan where possible; null slots fall back to runtime invocation.
-    postAttrsPlans: hasPostAttrs ? buildPostAttrsPlans(finalAttrs, rules) : undefined,
-    foldedComponentIds,
-    target: resolvedTarget,
-    styledComponentId,
-    // Shared toString: reads `this.styledComponentId` so a single function
-    // serves every styled component instead of allocating a per-component
-    // closure. ${StyledFoo} interpolation calls toString() with the styled
-    // component as `this`, so the lookup binds correctly.
-    toString: styledToString,
-  } as unknown as IStyledComponent<'web', any> & Statics;
-
-  if (__DEV__) {
-    checkDynamicCreation(displayName, styledComponentId);
-
-    WrappedStyledComponent.warnTooManyClasses = createWarnTooManyClasses(
-      displayName,
-      styledComponentId
-    );
-  }
-
-  if (isCompositeComponent) {
-    const compositeComponentTarget = target as AnyComponent;
-
-    hoist<typeof WrappedStyledComponent, typeof compositeComponentTarget>(
-      WrappedStyledComponent,
-      compositeComponentTarget,
-      HOIST_EXCLUDE as { [key in keyof OmitNever<IStyledStatics<'web', OuterProps>>]: true }
-    );
-  }
-
-  return WrappedStyledComponent;
+    throw new Error("STUB");
 }
 
 export default createStyledComponent;

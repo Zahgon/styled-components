@@ -91,7 +91,7 @@ function getPlatformOS(): 'ios' | 'android' | 'unknown' {
  * quotes opt the family out of generic resolution by definition.
  */
 export function isGenericFamily(name: string): boolean {
-  return GENERIC_KEYWORDS.has(name.toLowerCase());
+    throw new Error("STUB");
 }
 
 /**
@@ -105,12 +105,10 @@ export function isGenericFamily(name: string): boolean {
  * the browser resolves it via the user-agent stylesheet.
  */
 export function resolveGenericFamily(keyword: string): string {
-  const os = getPlatformOS();
-  const table = os === 'ios' ? IOS_GENERICS : ANDROID_GENERICS;
-  return table[keyword.toLowerCase()] ?? keyword;
+    throw new Error("STUB");
 }
 
 /** Test-only: reset the platform cache so subsequent calls re-detect. */
 export function __resetGenericFamilyCacheForTest(): void {
-  osCache = null;
+    throw new Error("STUB");
 }

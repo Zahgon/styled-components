@@ -11,5 +11,5 @@ const Label = styled.Text`
 `;
 
 export function FeatureChip({ children }: { children: string }) {
-  return <Label>{children}</Label>;
+    throw new Error("STUB");
 }

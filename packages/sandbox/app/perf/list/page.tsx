@@ -9,26 +9,11 @@ import { useAutoRun, useRenderTimer } from '../lib/use-render-timer';
 const ITEM_COUNT = 50;
 
 function formatTimestamp(iso: string): string {
-  const date = new Date(iso);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / 86400000);
-  if (diffDays === 0) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-  if (diffDays < 7) {
-    return date.toLocaleDateString([], { weekday: 'short' });
-  }
-  return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    throw new Error("STUB");
 }
 
 function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map(n => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
+    throw new Error("STUB");
 }
 
 interface ItemRowProps {
@@ -37,116 +22,47 @@ interface ItemRowProps {
 }
 
 function ItemRow({ item, onStarToggle }: ItemRowProps) {
-  return (
-    <Row $unread={!item.isRead}>
-      <UnreadDot $visible={!item.isRead} />
-      <Avatar>{getInitials(item.sender)}</Avatar>
-      <Content>
-        <TopLine>
-          <Sender $unread={!item.isRead}>{item.sender}</Sender>
-          <Timestamp>{formatTimestamp(item.timestamp)}</Timestamp>
-        </TopLine>
-        <Subject $unread={!item.isRead}>{item.title}</Subject>
-        <Preview>{item.preview}</Preview>
-      </Content>
-      <Actions>
-        <PriorityBadge $priority={item.priority}>{item.priority}</PriorityBadge>
-        <StarButton
-          $active={item.isStarred}
-          onClick={e => {
-            e.stopPropagation();
-            onStarToggle(item.id);
-          }}
-          aria-label={item.isStarred ? 'Unstar' : 'Star'}
-        >
-          {item.isStarred ? '★' : '☆'}
-        </StarButton>
-      </Actions>
-    </Row>
-  );
+    throw new Error("STUB");
 }
 
 const initialItems = generateListItems(ITEM_COUNT, 42);
 
 export default function ListPage() {
-  const [items, setItems] = useState(initialItems);
-  const { timings, markStart, clear } = useRenderTimer();
-
-  const shuffle = useCallback(() => {
-    markStart('Shuffle (unmount/remount)');
-    setItems(generateListItems(ITEM_COUNT));
-  }, [markStart]);
-
-  const { autoRun, start, stop } = useAutoRun(shuffle, 50);
-
-  const toggleRead = useCallback(() => {
-    markStart('Toggle Read (all items)');
-    setItems(prev => prev.map(item => ({ ...item, isRead: !item.isRead })));
-  }, [markStart]);
-
-  const toggleStar = useCallback((id: string) => {
-    setItems(prev =>
-      prev.map(item => (item.id === id ? { ...item, isStarred: !item.isStarred } : item))
-    );
-  }, []);
-
-  return (
-    <Page>
-      <Header>
-        <PageTitle>Inbox</PageTitle>
-        <Controls>
-          <ActionButton onClick={shuffle}>Shuffle</ActionButton>
-          <ActionButton onClick={toggleRead}>Toggle Read</ActionButton>
-        </Controls>
-      </Header>
-      <TimerDisplay
-        timings={timings}
-        onClear={clear}
-        autoRun={autoRun}
-        onAutoStart={start}
-        onAutoStop={stop}
-      />
-      <ListContainer>
-        {items.map(item => (
-          <ItemRow key={item.id} item={item} onStarToggle={toggleStar} />
-        ))}
-      </ListContainer>
-    </Page>
-  );
+    throw new Error("STUB");
 }
 
 const Page = styled.div`
   max-width: 900px;
   margin: 0 auto;
-  font-family: ${p => p.theme.typography.fontFamily};
+  font-family: ${p => { throw new Error("STUB"); }};
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${p => p.theme.spacing.medium};
+  margin-bottom: ${p => { throw new Error("STUB"); }};
 `;
 
 const PageTitle = styled.h1`
-  font-size: ${p => p.theme.typography.fontSize.large};
-  color: ${p => p.theme.colors.text};
+  font-size: ${p => { throw new Error("STUB"); }};
+  color: ${p => { throw new Error("STUB"); }};
   margin: 0;
   font-weight: 700;
 `;
 
 const Controls = styled.div`
   display: flex;
-  gap: ${p => p.theme.spacing.small};
+  gap: ${p => { throw new Error("STUB"); }};
 `;
 
 const ActionButton = styled.button`
-  background: ${p => p.theme.colors.primary};
+  background: ${p => { throw new Error("STUB"); }};
   color: #fff;
   border: none;
   border-radius: 6px;
   padding: 8px 16px;
-  font-size: ${p => p.theme.typography.fontSize.small};
+  font-size: ${p => { throw new Error("STUB"); }};
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.15s;
@@ -161,28 +77,28 @@ const ActionButton = styled.button`
 `;
 
 const ListContainer = styled.div`
-  border: 1px solid ${p => p.theme.colors.border};
+  border: 1px solid ${p => { throw new Error("STUB"); }};
   border-radius: 8px;
   overflow: hidden;
-  background: ${p => p.theme.colors.surface};
+  background: ${p => { throw new Error("STUB"); }};
 `;
 
 const Row = styled.div<{ $unread: boolean }>`
   display: flex;
   align-items: center;
-  gap: ${p => p.theme.spacing.medium};
+  gap: ${p => { throw new Error("STUB"); }};
   padding: 14px 16px;
-  border-bottom: 1px solid ${p => p.theme.colors.border};
+  border-bottom: 1px solid ${p => { throw new Error("STUB"); }};
   cursor: pointer;
   transition: background 0.1s;
-  background: ${p => (p.$unread ? p.theme.colors.background : p.theme.colors.surface)};
+  background: ${p => { throw new Error("STUB"); }};
 
   &:last-child {
     border-bottom: none;
   }
 
   &:hover {
-    background: ${p => p.theme.colors.border};
+    background: ${p => { throw new Error("STUB"); }};
   }
 `;
 
@@ -191,7 +107,7 @@ const UnreadDot = styled.div<{ $visible: boolean }>`
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: ${p => (p.$visible ? p.theme.colors.primary : 'transparent')};
+  background: ${p => { throw new Error("STUB"); }};
   transition: background 0.15s;
 `;
 
@@ -206,7 +122,7 @@ const Avatar = styled.div`
   font-size: 13px;
   font-weight: 700;
   color: #fff;
-  background: ${p => p.theme.colors.secondary};
+  background: ${p => { throw new Error("STUB"); }};
   user-select: none;
 `;
 
@@ -224,9 +140,9 @@ const TopLine = styled.div`
 `;
 
 const Sender = styled.span<{ $unread: boolean }>`
-  font-size: ${p => p.theme.typography.fontSize.small};
-  font-weight: ${p => (p.$unread ? '700' : '500')};
-  color: ${p => (p.$unread ? p.theme.colors.text : p.theme.colors.textMuted)};
+  font-size: ${p => { throw new Error("STUB"); }};
+  font-weight: ${p => { throw new Error("STUB"); }};
+  color: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -234,15 +150,15 @@ const Sender = styled.span<{ $unread: boolean }>`
 
 const Timestamp = styled.span`
   font-size: 11px;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
   flex-shrink: 0;
 `;
 
 const Subject = styled.div<{ $unread: boolean }>`
-  font-size: ${p => p.theme.typography.fontSize.medium};
-  font-weight: ${p => (p.$unread ? '600' : '400')};
-  color: ${p => (p.$unread ? p.theme.colors.text : p.theme.colors.textMuted)};
+  font-size: ${p => { throw new Error("STUB"); }};
+  font-weight: ${p => { throw new Error("STUB"); }};
+  color: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -250,8 +166,8 @@ const Subject = styled.div<{ $unread: boolean }>`
 `;
 
 const Preview = styled.div`
-  font-size: ${p => p.theme.typography.fontSize.small};
-  color: ${p => p.theme.colors.textMuted};
+  font-size: ${p => { throw new Error("STUB"); }};
+  color: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -266,11 +182,7 @@ const Actions = styled.div`
 
 const priorityStyles = css<{ $priority: 'low' | 'medium' | 'high' }>`
   ${p =>
-    p.$priority === 'high'
-      ? `background: ${p.theme.colors.danger}22; color: ${p.theme.colors.danger};`
-      : p.$priority === 'medium'
-        ? `background: ${p.theme.colors.warning}22; color: ${p.theme.colors.warning};`
-        : `background: ${p.theme.colors.success}22; color: ${p.theme.colors.success};`}
+    { throw new Error("STUB"); }}
 `;
 
 const PriorityBadge = styled.span<{ $priority: 'low' | 'medium' | 'high' }>`
@@ -290,13 +202,13 @@ const StarButton = styled.button<{ $active: boolean }>`
   cursor: pointer;
   font-size: 16px;
   line-height: 1;
-  color: ${p => (p.$active ? p.theme.colors.warning : p.theme.colors.border)};
+  color: ${p => { throw new Error("STUB"); }};
   transition:
     color 0.15s,
     transform 0.1s;
 
   &:hover {
-    color: ${p => p.theme.colors.warning};
+    color: ${p => { throw new Error("STUB"); }};
     transform: scale(1.2);
   }
 `;

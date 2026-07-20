@@ -8,115 +8,7 @@ const MIN_WIDTH = 180;
 const MAX_WIDTH = 720;
 
 export function ContainerQueriesHarness() {
-  return (
-    <>
-      <Demo>
-        <DemoTitle>
-          <DemoNum>1.</DemoNum> Headline scales with the container, not the viewport
-        </DemoTitle>
-        <DemoNote>
-          Drag the handle to resize the box. The font-size rule is <code>font-size: 11cqw</code> -
-          when <code>cqw</code> resolves against the wrapper (correct), the headline grows / shrinks
-          with the slider. If <code>cqw</code> falls back to viewport (broken), the text size
-          won&apos;t change as you drag.
-        </DemoNote>
-        <Resizable initialWidth={300}>
-          <UnitsWrapper>
-            <UnitsHeadline>BIG BOX. BIG TYPE.</UnitsHeadline>
-            <UnitsFootnote>font-size: 11cqw · padding: 4cqw</UnitsFootnote>
-          </UnitsWrapper>
-        </Resizable>
-      </Demo>
-
-      <Demo>
-        <DemoTitle>
-          <DemoNum>2.</DemoNum> Anonymous <code>@container</code> query against nearest
-        </DemoTitle>
-        <DemoNote>
-          The box starts wide and reads <strong>QUERY ACTIVE</strong> in green. Drag the handle left
-          below 360px and the anonymous <code>@container</code> query stops matching - the box turns
-          slate and reads <strong>QUERY IDLE</strong>. Cross back over 360px and it flips green
-          again. If the color stays put through the whole drag range, anonymous-query resolution is
-          broken.
-        </DemoNote>
-        <Resizable initialWidth={440} threshold={360}>
-          <AnonShell>
-            <AnonInner>
-              <AnonStatus>
-                <AnonOnSmall>QUERY IDLE</AnonOnSmall>
-                <AnonOnLarge>QUERY ACTIVE</AnonOnLarge>
-              </AnonStatus>
-              <AnonHint>
-                @container (min-width: 360px) {'{'} background: green {'}'}
-              </AnonHint>
-            </AnonInner>
-          </AnonShell>
-        </Resizable>
-      </Demo>
-
-      <Demo>
-        <DemoTitle>
-          <DemoNum>3.</DemoNum> Cross-component query via <code>${'${Component}'}</code>
-        </DemoTitle>
-        <DemoNote>
-          The card uses <code>@container ${'${ProductCard}'}</code> from descendants - naming the
-          wrapper styled-component directly, no string identifier in the CSS. The card starts wide
-          with the layout horizontal, the price big, and the badge green reading{' '}
-          <strong>QUERY ACTIVE</strong>. Drag below 420px and three things flip at once: layout
-          stacks vertically, price shrinks, badge turns slate reading <strong>QUERY IDLE</strong>.
-          If any of those three don&apos;t happen together, the named-component reference is broken.
-        </DemoNote>
-        <Resizable initialWidth={500} threshold={420}>
-          <ProductCard>
-            <ProductLayout>
-              <ProductBadge>
-                <ProductBadgeOff>QUERY IDLE</ProductBadgeOff>
-                <ProductBadgeOn>QUERY ACTIVE</ProductBadgeOn>
-              </ProductBadge>
-              <ProductPrice>$299</ProductPrice>
-              <ProductMeta>
-                <ProductLabel>per seat</ProductLabel>
-                <ProductPeriod>billed monthly</ProductPeriod>
-              </ProductMeta>
-            </ProductLayout>
-          </ProductCard>
-        </Resizable>
-      </Demo>
-
-      <Demo>
-        <DemoTitle>
-          <DemoNum>4.</DemoNum> Side-by-side: <code>cqw</code> vs viewport fallback
-        </DemoTitle>
-        <DemoNote>
-          Two siblings inside one resizable container. Both bars use the same rule:{' '}
-          <code>width: 10cqw</code>. The LEFT outer box declares{' '}
-          <code>container-type: inline-size</code>, so its bar scales with the surrounding box. The
-          RIGHT outer box doesn&apos;t, so <code>cqw</code> falls back to <code>vw</code> and the
-          bar inside stays a constant pixel width. As you drag, the left bar squishes along with its
-          parent; the right bar refuses to shrink - it eventually overflows its parent because its
-          width is anchored to the browser window, not the container.
-        </DemoNote>
-        <Resizable initialWidth={500}>
-          <SanityRow>
-            <SanityColFluid>
-              <ScopedWrapper>
-                <ScaleBar />
-                <BarLabel>scales with drag</BarLabel>
-              </ScopedWrapper>
-              <SanityCaption>container-type: inline-size ✓</SanityCaption>
-            </SanityColFluid>
-            <SanityColFixed>
-              <UnscopedWrapper>
-                <ScaleBar />
-                <BarLabel>fixed (vw fallback)</BarLabel>
-              </UnscopedWrapper>
-              <SanityCaption>no container-type</SanityCaption>
-            </SanityColFixed>
-          </SanityRow>
-        </Resizable>
-      </Demo>
-    </>
-  );
+    throw new Error("STUB");
 }
 
 // ───────────────────────────────────────────────────────────────────
@@ -131,67 +23,7 @@ interface ResizableProps {
 }
 
 function Resizable({ initialWidth, threshold, children }: ResizableProps) {
-  const [width, setWidth] = useState(initialWidth);
-  const draggingRef = useRef<{ startX: number; startW: number } | null>(null);
-
-  const onPointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-      draggingRef.current = { startX: e.clientX, startW: width };
-    },
-    [width]
-  );
-
-  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!draggingRef.current) return;
-    const delta = e.clientX - draggingRef.current.startX;
-    const next = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, draggingRef.current.startW + delta));
-    setWidth(next);
-  }, []);
-
-  const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-    draggingRef.current = null;
-  }, []);
-
-  // Pause text selection during drag (defensive - pointer capture should suffice).
-  useEffect(() => {
-    const onSelectStart = (e: Event) => {
-      if (draggingRef.current) e.preventDefault();
-    };
-    document.addEventListener('selectstart', onSelectStart);
-    return () => document.removeEventListener('selectstart', onSelectStart);
-  }, []);
-
-  const aboveThreshold = threshold !== undefined && width >= threshold;
-
-  return (
-    <ResizableShell>
-      <ResizableTrack style={{ width }}>
-        <Stage>{children}</Stage>
-        <Handle
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          aria-label="Drag to resize container"
-        >
-          <HandleGrip />
-        </Handle>
-      </ResizableTrack>
-      <ResizableMeta>
-        <Readout>
-          <ReadoutLabel>WIDTH</ReadoutLabel>
-          <ReadoutValue>{width}px</ReadoutValue>
-        </Readout>
-        {threshold !== undefined && (
-          <Verdict $pass={aboveThreshold}>
-            {aboveThreshold ? `≥ ${threshold}px - query ACTIVE` : `< ${threshold}px - query IDLE`}
-          </Verdict>
-        )}
-      </ResizableMeta>
-    </ResizableShell>
-  );
+    throw new Error("STUB");
 }
 
 // ───────────────────────────────────────────────────────────────────
@@ -347,7 +179,7 @@ const Verdict = styled.div<{ $pass: boolean }>`
   text-transform: uppercase;
   padding: 4px 10px;
   border-radius: 999px;
-  background: ${p => (p.$pass ? '#16a34a' : '#6b7280')};
+  background: ${p => { throw new Error("STUB"); }};
   color: white;
 `;
 

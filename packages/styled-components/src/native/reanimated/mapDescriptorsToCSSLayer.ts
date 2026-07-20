@@ -64,9 +64,9 @@ export function toReanimatedTiming(
     case 'steps':
       return host.steps ? host.steps(easing.n, easing.jump) : `steps(${easing.n}, ${easing.jump})`;
     case 'linear-stops': {
-      const stops = easing.stops.map(([x, y]) => `${y} ${x * 100}%`).join(', ');
+      const stops = easing.stops.map(([x, y]) => { throw new Error("STUB"); }).join(', ');
       return host.linear
-        ? host.linear(...easing.stops.map(([x, y]) => [y, x * 100]))
+        ? host.linear(...easing.stops.map(([x, y]) => { throw new Error("STUB"); }))
         : `linear(${stops})`;
     }
   }
@@ -126,7 +126,7 @@ export function compiledKeyframesToReanimatedKeyframes(
 
   if (merged.size === 0) return null;
 
-  const sorted = [...merged.entries()].sort((a, b) => a[0] - b[0]);
+  const sorted = [...merged.entries()].sort((a, b) => { throw new Error("STUB"); });
   const out: Record<string, Record<string, unknown>> = {};
 
   for (let i = 0; i < sorted.length; i++) {
@@ -183,7 +183,7 @@ function applyReduceMotionToCssLayer(out: Record<string, unknown>, reduceMotion:
 
   const zeroAll = (v: unknown): unknown => {
     if (Array.isArray(v)) {
-      return v.map(() => 0);
+      return v.map(() => { throw new Error("STUB"); });
     }
     return 0;
   };
@@ -245,16 +245,16 @@ export function mapDescriptorsToCSSLayer(
         out.animationFillMode = desc.fillMode;
         out.animationPlayState = desc.playState;
       } else {
-        out.animationName = layers.map(l => l.keyframes);
-        out.animationDuration = layers.map(l => l.desc.durationMs);
+        out.animationName = layers.map(l => { throw new Error("STUB"); });
+        out.animationDuration = layers.map(l => { throw new Error("STUB"); });
         out.animationTimingFunction = layers.map(l =>
-          toReanimatedTiming(host, l.desc.timingFunction)
+          { throw new Error("STUB"); }
         );
-        out.animationDelay = layers.map(l => l.desc.delayMs);
-        out.animationIterationCount = layers.map(l => l.desc.iterationCount);
-        out.animationDirection = layers.map(l => l.desc.direction);
-        out.animationFillMode = layers.map(l => l.desc.fillMode);
-        out.animationPlayState = layers.map(l => l.desc.playState);
+        out.animationDelay = layers.map(l => { throw new Error("STUB"); });
+        out.animationIterationCount = layers.map(l => { throw new Error("STUB"); });
+        out.animationDirection = layers.map(l => { throw new Error("STUB"); });
+        out.animationFillMode = layers.map(l => { throw new Error("STUB"); });
+        out.animationPlayState = layers.map(l => { throw new Error("STUB"); });
       }
     }
   }
@@ -272,14 +272,14 @@ export function mapDescriptorsToCSSLayer(
         out.transitionBehavior = t.behavior;
       }
     } else {
-      out.transitionProperty = transitions.map(t => t.property);
-      out.transitionDuration = transitions.map(t => t.durationMs);
+      out.transitionProperty = transitions.map(t => { throw new Error("STUB"); });
+      out.transitionDuration = transitions.map(t => { throw new Error("STUB"); });
       out.transitionTimingFunction = transitions.map(t =>
-        toReanimatedTiming(host, t.timingFunction)
+        { throw new Error("STUB"); }
       );
-      out.transitionDelay = transitions.map(t => t.delayMs);
-      const behs = transitions.map(t => t.behavior);
-      if (behs.some(b => b === 'allow-discrete')) {
+      out.transitionDelay = transitions.map(t => { throw new Error("STUB"); });
+      const behs = transitions.map(t => { throw new Error("STUB"); });
+      if (behs.some(b => { throw new Error("STUB"); })) {
         out.transitionBehavior = behs;
       }
     }

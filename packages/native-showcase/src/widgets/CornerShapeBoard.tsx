@@ -91,28 +91,5 @@ const TileLabel = styled.Text`
 `;
 
 export function CornerShapeBoard() {
-  return (
-    <Stack>
-      <Section>
-        <SectionTitle>round vs squircle</SectionTitle>
-        <Caption>same radius; the crescents at each corner are the smoothing delta (iOS)</Caption>
-        <OverlapStage>
-          <RoundSquare />
-          <SquircleSquare />
-        </OverlapStage>
-      </Section>
-      <Section>
-        <SectionTitle>superellipse() and unsupported contours</SectionTitle>
-        <Caption>superellipse(2) maps to the Apple curve; scoop warns and stays default</Caption>
-        <Row>
-          <SuperellipseTile>
-            <TileLabel>se(2)</TileLabel>
-          </SuperellipseTile>
-          <ScoopTile>
-            <TileLabel>scoop</TileLabel>
-          </ScoopTile>
-        </Row>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

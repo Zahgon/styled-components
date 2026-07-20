@@ -64,42 +64,42 @@ const PRE = {
 };
 
 console.log('\n=== staticColorFunctionToHex (parse + convert, pre-tokenized) ===');
-bench('oklch literal', 500_000, () => staticColorFunctionToHex(PRE.oklchLiteral));
-bench('oklch percent', 500_000, () => staticColorFunctionToHex(PRE.oklchPercent));
-bench('oklab literal', 500_000, () => staticColorFunctionToHex(PRE.oklabLiteral));
-bench('lab', 500_000, () => staticColorFunctionToHex(PRE.lab));
-bench('lch', 500_000, () => staticColorFunctionToHex(PRE.lch));
-bench('hsl (no deg)', 500_000, () => staticColorFunctionToHex(PRE.hslNamed));
-bench('hsl (with deg)', 500_000, () => staticColorFunctionToHex(PRE.hslDeg));
-bench('hsla (legacy comma)', 500_000, () => staticColorFunctionToHex(PRE.hslAlpha));
-bench('hwb', 500_000, () => staticColorFunctionToHex(PRE.hwb));
-bench('rgb (comma)', 500_000, () => staticColorFunctionToHex(PRE.rgb));
-bench('rgb (modern slash)', 500_000, () => staticColorFunctionToHex(PRE.rgbModern));
-bench('color(srgb …)', 500_000, () => staticColorFunctionToHex(PRE.colorSrgb));
-bench('color(display-p3 …)', 500_000, () => staticColorFunctionToHex(PRE.colorP3));
-bench('color(xyz …)', 500_000, () => staticColorFunctionToHex(PRE.colorXyz));
+bench('oklch literal', 500_000, () => { throw new Error("STUB"); });
+bench('oklch percent', 500_000, () => { throw new Error("STUB"); });
+bench('oklab literal', 500_000, () => { throw new Error("STUB"); });
+bench('lab', 500_000, () => { throw new Error("STUB"); });
+bench('lch', 500_000, () => { throw new Error("STUB"); });
+bench('hsl (no deg)', 500_000, () => { throw new Error("STUB"); });
+bench('hsl (with deg)', 500_000, () => { throw new Error("STUB"); });
+bench('hsla (legacy comma)', 500_000, () => { throw new Error("STUB"); });
+bench('hwb', 500_000, () => { throw new Error("STUB"); });
+bench('rgb (comma)', 500_000, () => { throw new Error("STUB"); });
+bench('rgb (modern slash)', 500_000, () => { throw new Error("STUB"); });
+bench('color(srgb …)', 500_000, () => { throw new Error("STUB"); });
+bench('color(display-p3 …)', 500_000, () => { throw new Error("STUB"); });
+bench('color(xyz …)', 500_000, () => { throw new Error("STUB"); });
 
 console.log('\n=== color-mix (the bigger workload) ===');
 bench('color-mix in srgb (named operands)', 200_000, () =>
-  staticColorFunctionToHex(PRE.colorMixSrgb)
+  { throw new Error("STUB"); }
 );
-bench('color-mix in srgb (with %)', 200_000, () => staticColorFunctionToHex(PRE.colorMixSrgbPct));
-bench('color-mix in oklab', 200_000, () => staticColorFunctionToHex(PRE.colorMixOklab));
-bench('color-mix in oklch (polar)', 200_000, () => staticColorFunctionToHex(PRE.colorMixOklch));
-bench('color-mix in lch (polar)', 200_000, () => staticColorFunctionToHex(PRE.colorMixLch));
+bench('color-mix in srgb (with %)', 200_000, () => { throw new Error("STUB"); });
+bench('color-mix in oklab', 200_000, () => { throw new Error("STUB"); });
+bench('color-mix in oklch (polar)', 200_000, () => { throw new Error("STUB"); });
+bench('color-mix in lch (polar)', 200_000, () => { throw new Error("STUB"); });
 bench('color-mix in hsl (cylindrical sRGB)', 200_000, () =>
-  staticColorFunctionToHex(PRE.colorMixHsl)
+  { throw new Error("STUB"); }
 );
-bench('color-mix in display-p3', 200_000, () => staticColorFunctionToHex(PRE.colorMixDisplayP3));
-bench('color-mix in xyz', 200_000, () => staticColorFunctionToHex(PRE.colorMixXyz));
+bench('color-mix in display-p3', 200_000, () => { throw new Error("STUB"); });
+bench('color-mix in xyz', 200_000, () => { throw new Error("STUB"); });
 bench('color-mix w/ none channels (carry-fwd)', 200_000, () =>
-  staticColorFunctionToHex(PRE.colorMixNone)
+  { throw new Error("STUB"); }
 );
 
 console.log('\n=== math fns (pre-tokenized) ===');
-bench('calc(10px + 20px)', 500_000, () => resolveStaticMathFunction(PRE.calcSimple));
-bench('calc(100% / 2 + 8px)', 500_000, () => resolveStaticMathFunction(PRE.calcNested));
-bench('clamp(10px, 50%, 400px)', 500_000, () => resolveStaticMathFunction(PRE.clamp));
-bench('min(100px, 50%)', 500_000, () => resolveStaticMathFunction(PRE.minMax));
+bench('calc(10px + 20px)', 500_000, () => { throw new Error("STUB"); });
+bench('calc(100% / 2 + 8px)', 500_000, () => { throw new Error("STUB"); });
+bench('clamp(10px, 50%, 400px)', 500_000, () => { throw new Error("STUB"); });
+bench('min(100px, 50%)', 500_000, () => { throw new Error("STUB"); });
 
 console.log('\nDone.');

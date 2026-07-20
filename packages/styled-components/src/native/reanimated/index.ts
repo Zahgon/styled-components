@@ -72,62 +72,7 @@ function wrapTarget(target: NativeTarget): NativeTarget {
 const reanimatedAdapter: AnimationAdapter = {
   id: 'reanimated',
   useAnimatedStyle(input: AnimatedStyleInput): AnimatedStyleOutput {
-    const { compiled, resolved, target, env } = input;
-
-    const hasStartingTransition =
-      compiled.startingStyle !== undefined && compiled.transitions !== undefined;
-
-    const [startingPass, setStartingPass] = React.useState(0);
-
-    React.useLayoutEffect(() => {
-      if (!hasStartingTransition) {
-        setStartingPass(0);
-        return;
-      }
-      setStartingPass(0);
-      const id = requestAnimationFrame(() => {
-        setStartingPass(1);
-      });
-      return () => cancelAnimationFrame(id);
-    }, [hasStartingTransition]);
-
-    const mergeStartingOverlay = hasStartingTransition && startingPass === 0;
-
-    const flatResolved = React.useMemo(
-      () => mergeReanimatedResolvedStyle(resolved, compiled, env, mergeStartingOverlay),
-      [resolved, compiled, env, mergeStartingOverlay]
-    );
-
-    // Hooks always run unconditionally;`compiled` can change shape
-    // between renders (dynamic CSS), so the early-bail must come AFTER
-    // any hook call to keep call order stable.
-    const cssLayerProps = React.useMemo(
-      () =>
-        mapDescriptorsToCSSLayer(reanimated, compiled.animations, compiled.transitions, {
-          keyframes: compiled.keyframes,
-          env,
-          reduceMotion: env.media.reduceMotion,
-        }),
-      [compiled.animations, compiled.transitions, compiled.keyframes, env]
-    );
-    const merged = React.useMemo(
-      () => ({ ...flatResolved, ...cssLayerProps }),
-      [flatResolved, cssLayerProps]
-    );
-
-    if (
-      compiled.transitions === undefined &&
-      compiled.animations === undefined &&
-      compiled.startingStyle === undefined
-    ) {
-      return passthroughOutput(input);
-    }
-
-    return {
-      style: merged,
-      elementType: wrapTarget(target),
-      invalidateCache: mergeStartingOverlay,
-    };
+      throw new Error("STUB");
   },
 };
 

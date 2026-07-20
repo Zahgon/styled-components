@@ -101,22 +101,5 @@ const FlowingBar = styled.View`
 `;
 
 export function PropertyRegistration() {
-  return (
-    <Stack>
-      <Section>
-        <SectionTitle>Typed initial values</SectionTitle>
-        <Caption>{"@property --bar-width { syntax: '<percentage>'; initial-value: 62% }"}</Caption>
-        <RegisteredBar />
-        <FallbackBar />
-      </Section>
-      <Section>
-        <SectionTitle>inherits: false vs inherits: true</SectionTitle>
-        <Caption>parent sets both to 100%; only the `inherits: true` registration hears it</Caption>
-        <LoudParent>
-          <PinnedBar />
-          <FlowingBar />
-        </LoudParent>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

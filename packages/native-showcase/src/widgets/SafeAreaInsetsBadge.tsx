@@ -70,65 +70,9 @@ const Hint = styled.Text`
 `;
 
 function px(n: number) {
-  return `${Math.round(n)}px`;
+    throw new Error("STUB");
 }
 
 export function SafeAreaInsetsBadge() {
-  const [outer, setOuter] = useState<{ w: number; h: number } | null>(null);
-  const [inner, setInner] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
-
-  const onFloaterLayout = useCallback((e: LayoutChangeEvent) => {
-    const { width, height } = e.nativeEvent.layout;
-    setOuter({ w: width, h: height });
-  }, []);
-
-  const onInnerLayout = useCallback((e: LayoutChangeEvent) => {
-    const { x, y, width, height } = e.nativeEvent.layout;
-    setInner({ x, y, w: width, h: height });
-  }, []);
-
-  const measured =
-    outer && inner
-      ? {
-          top: inner.y,
-          left: inner.x,
-          right: Math.max(0, outer.w - inner.x - inner.w),
-          bottom: Math.max(0, outer.h - inner.y - inner.h),
-        }
-      : null;
-
-  return (
-    <>
-      <Stage>
-        <Floater onLayout={onFloaterLayout}>
-          <FloaterInner onLayout={onInnerLayout}>
-            <Title>Pinned with env() insets</Title>
-            <Sub>Padding comes only from `env()` values in this styled rule.</Sub>
-          </FloaterInner>
-        </Floater>
-      </Stage>
-      <Readout>
-        <Row>
-          <Key>top</Key>
-          <Val>{measured ? px(measured.top) : ' - '}</Val>
-        </Row>
-        <Row>
-          <Key>right</Key>
-          <Val>{measured ? px(measured.right) : ' - '}</Val>
-        </Row>
-        <Row>
-          <Key>bottom</Key>
-          <Val>{measured ? px(measured.bottom) : ' - '}</Val>
-        </Row>
-        <Row>
-          <Key>left</Key>
-          <Val>{measured ? px(measured.left) : ' - '}</Val>
-        </Row>
-        <Hint>
-          Numbers are the padding applied around the inner block (from layout), matching what
-          `env(safe-area-inset-*)` resolved to on this view - not a second data source.
-        </Hint>
-      </Readout>
-    </>
-  );
+    throw new Error("STUB");
 }

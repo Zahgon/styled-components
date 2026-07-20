@@ -52,17 +52,7 @@ function makeTableRows(count: number, seed?: number) {
   const regions = ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1'];
   const rowStatuses = ['healthy', 'degraded', 'deploying', 'offline'] as const;
   const rand = seed !== undefined ? mulberry32(seed) : Math.random;
-  return Array.from({ length: count }, (_, i) => ({
-    id: `row-${i}`,
-    service: services[i % services.length],
-    version: `v${1 + (i % 4)}.${i % 10}.${i % 3}`,
-    region: regions[i % regions.length],
-    status: rowStatuses[i % rowStatuses.length],
-    rps: Math.floor(rand() * 5000),
-    p99: Math.floor(rand() * 800),
-    errorPct: (rand() * 5).toFixed(2),
-    updated: `${i * 2}m ago`,
-  }));
+  return Array.from({ length: count }, (_, i) => { throw new Error("STUB"); });
 }
 
 interface DashboardData {
@@ -82,165 +72,22 @@ function freshData(seed?: number): DashboardData {
 const initialData = freshData(42);
 
 export default function DashboardPage() {
-  const [activeNav, setActiveNav] = useState('/perf/dashboard');
-  const [data, setData] = useState<DashboardData>(initialData);
-  const { timings, markStart, clear } = useRenderTimer();
-
-  function refresh() {
-    markStart('Refresh Dashboard');
-    setData(freshData());
-  }
-
-  const { autoRun, start, stop } = useAutoRun(refresh, 50);
-
-  return (
-    <Shell>
-      <Sidebar>
-        <SidebarBrand>
-          <BrandIcon>◈</BrandIcon>
-          <BrandName>Nexus</BrandName>
-        </SidebarBrand>
-        <SidebarNav>
-          {NAV_ITEMS.map(item => (
-            <NavItem
-              key={item.href}
-              href={item.href}
-              $active={activeNav === item.href}
-              onClick={() => setActiveNav(item.href)}
-            >
-              <NavIcon>{item.icon}</NavIcon>
-              {item.label}
-            </NavItem>
-          ))}
-        </SidebarNav>
-        <SidebarFooter>
-          <UserAvatar>EJ</UserAvatar>
-          <UserInfo>
-            <UserName>Evan Jacobs</UserName>
-            <UserRole>Admin</UserRole>
-          </UserInfo>
-        </SidebarFooter>
-      </Sidebar>
-
-      <Content>
-        <Header>
-          <HeaderLeft>
-            <PageTitle>Overview</PageTitle>
-            <Breadcrumb>
-              <BreadcrumbItem>Nexus</BreadcrumbItem>
-              <BreadcrumbSep>/</BreadcrumbSep>
-              <BreadcrumbItem $current>Overview</BreadcrumbItem>
-            </Breadcrumb>
-          </HeaderLeft>
-          <HeaderRight>
-            <HeaderMeta>
-              <MetaItem>Last updated: just now</MetaItem>
-              <MetaDot />
-              <MetaItem>8 services</MetaItem>
-            </HeaderMeta>
-            <RefreshButton onClick={refresh}>Refresh Dashboard</RefreshButton>
-          </HeaderRight>
-        </Header>
-
-        <TimerDisplay
-          timings={timings}
-          onClear={clear}
-          autoRun={autoRun}
-          onAutoStart={start}
-          onAutoStop={stop}
-        />
-
-        <StatsGrid>
-          {data.stats.map(stat => (
-            <StatCard key={stat.id} $status={stat.status}>
-              <StatLabel>{stat.label}</StatLabel>
-              <StatValue>{stat.value.toLocaleString()}</StatValue>
-              <StatChange $positive={stat.change >= 0}>
-                {stat.change >= 0 ? '↑' : '↓'} {Math.abs(stat.change).toFixed(1)}%
-              </StatChange>
-              <StatIndicator $status={stat.status} />
-            </StatCard>
-          ))}
-        </StatsGrid>
-
-        <TwoCol>
-          <TableSection>
-            <SectionHeader>
-              <SectionTitle>Services</SectionTitle>
-              <SectionCount>{data.tableRows.length} total</SectionCount>
-            </SectionHeader>
-            <TableWrapper>
-              <Table>
-                <thead>
-                  <TableRow>
-                    {TABLE_HEADERS.map(h => (
-                      <TableHead key={h}>{h}</TableHead>
-                    ))}
-                  </TableRow>
-                </thead>
-                <tbody>
-                  {data.tableRows.map(row => (
-                    <TableRow key={row.id} $clickable>
-                      <TableCell>
-                        <ServiceName>{row.service}</ServiceName>
-                      </TableCell>
-                      <TableCell>
-                        <VersionTag>{row.version}</VersionTag>
-                      </TableCell>
-                      <TableCell>{row.region}</TableCell>
-                      <TableCell>
-                        <RowStatusBadge $status={row.status}>{row.status}</RowStatusBadge>
-                      </TableCell>
-                      <TableCell $numeric>{row.rps.toLocaleString()}</TableCell>
-                      <TableCell $numeric>{row.p99}</TableCell>
-                      <TableCell $numeric>{row.errorPct}%</TableCell>
-                      <TableCell>{row.updated}</TableCell>
-                    </TableRow>
-                  ))}
-                </tbody>
-              </Table>
-            </TableWrapper>
-          </TableSection>
-
-          <ActivitySection>
-            <SectionHeader>
-              <SectionTitle>Activity</SectionTitle>
-              <SectionCount>{data.activity.length} recent</SectionCount>
-            </SectionHeader>
-            <ActivityList>
-              {data.activity.map(item => (
-                <ActivityEntry key={item.id}>
-                  <ActivityAvatar>{item.user[0]}</ActivityAvatar>
-                  <ActivityBody>
-                    <ActivityText>
-                      <ActivityUser>{item.user}</ActivityUser> {item.action}
-                    </ActivityText>
-                    <ActivityTime>{new Date(item.timestamp).toLocaleTimeString()}</ActivityTime>
-                  </ActivityBody>
-                  <StatusBadge $status={item.status}>{item.status}</StatusBadge>
-                </ActivityEntry>
-              ))}
-            </ActivityList>
-          </ActivitySection>
-        </TwoCol>
-      </Content>
-    </Shell>
-  );
+    throw new Error("STUB");
 }
 
 const Shell = styled.div`
   display: flex;
   min-height: 100vh;
-  background: ${p => p.theme.colors.background};
-  font-family: ${p => p.theme.typography.fontFamily};
+  background: ${p => { throw new Error("STUB"); }};
+  font-family: ${p => { throw new Error("STUB"); }};
   margin: calc(-1 * ${theme.spacing.large});
 `;
 
 const Sidebar = styled.aside`
   width: 220px;
   flex-shrink: 0;
-  background: ${p => p.theme.colors.surface};
-  border-right: 1px solid ${p => p.theme.colors.border};
+  background: ${p => { throw new Error("STUB"); }};
+  border-right: 1px solid ${p => { throw new Error("STUB"); }};
   display: flex;
   flex-direction: column;
 `;
@@ -250,18 +97,18 @@ const SidebarBrand = styled.div`
   align-items: center;
   gap: 10px;
   padding: 20px 16px 16px;
-  border-bottom: 1px solid ${p => p.theme.colors.border};
+  border-bottom: 1px solid ${p => { throw new Error("STUB"); }};
 `;
 
 const BrandIcon = styled.span`
   font-size: 20px;
-  color: ${p => p.theme.colors.primary};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const BrandName = styled.span`
   font-size: 16px;
   font-weight: 700;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   letter-spacing: -0.02em;
 `;
 
@@ -273,30 +120,28 @@ const SidebarNav = styled.nav`
   gap: 2px;
 `;
 
-const NavItem = styled(Link).attrs<{ $active: boolean }>(({ $active }) => ({
-  'aria-current': $active ? 'page' : undefined,
-}))`
+const NavItem = styled(Link).attrs<{ $active: boolean }>(({ $active }) => { throw new Error("STUB"); })`
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 13px;
-  font-weight: ${p => (p.$active ? 600 : 400)};
-  color: ${p => (p.$active ? p.theme.colors.primary : p.theme.colors.textMuted)};
-  background: ${p => (p.$active ? p.theme.colors.background : 'transparent')};
+  font-weight: ${p => { throw new Error("STUB"); }};
+  color: ${p => { throw new Error("STUB"); }};
+  background: ${p => { throw new Error("STUB"); }};
   text-decoration: none;
   transition:
     background 0.12s,
     color 0.12s;
 
   &:hover {
-    background: ${p => p.theme.colors.background};
-    color: ${p => p.theme.colors.text};
+    background: ${p => { throw new Error("STUB"); }};
+    color: ${p => { throw new Error("STUB"); }};
   }
 
   &[aria-current='page'] {
-    border-left: 2px solid ${p => p.theme.colors.primary};
+    border-left: 2px solid ${p => { throw new Error("STUB"); }};
     padding-left: 8px;
   }
 `;
@@ -313,14 +158,14 @@ const SidebarFooter = styled.div`
   align-items: center;
   gap: 10px;
   padding: 16px;
-  border-top: 1px solid ${p => p.theme.colors.border};
+  border-top: 1px solid ${p => { throw new Error("STUB"); }};
 `;
 
 const UserAvatar = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: ${p => p.theme.colors.primary};
+  background: ${p => { throw new Error("STUB"); }};
   color: white;
   font-size: 12px;
   font-weight: 700;
@@ -337,7 +182,7 @@ const UserInfo = styled.div`
 const UserName = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -345,7 +190,7 @@ const UserName = styled.div`
 
 const UserRole = styled.div`
   font-size: 11px;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const Content = styled.div`
@@ -368,7 +213,7 @@ const HeaderLeft = styled.div``;
 const PageTitle = styled.h1`
   font-size: 22px;
   font-weight: 700;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   margin: 0 0 4px;
 `;
 
@@ -380,12 +225,12 @@ const Breadcrumb = styled.div`
 
 const BreadcrumbItem = styled.span<{ $current?: boolean }>`
   font-size: 12px;
-  color: ${p => (p.$current ? p.theme.colors.textMuted : p.theme.colors.primary)};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const BreadcrumbSep = styled.span`
   font-size: 12px;
-  color: ${p => p.theme.colors.border};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const HeaderRight = styled.div`
@@ -403,18 +248,18 @@ const HeaderMeta = styled.div`
 
 const MetaItem = styled.span`
   font-size: 12px;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const MetaDot = styled.span`
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: ${p => p.theme.colors.border};
+  background: ${p => { throw new Error("STUB"); }};
 `;
 
 const RefreshButton = styled.button`
-  background: ${p => p.theme.colors.primary};
+  background: ${p => { throw new Error("STUB"); }};
   color: white;
   border: none;
   border-radius: 6px;
@@ -448,8 +293,8 @@ const statusColors = {
 } as const;
 
 const StatCard = styled.div<{ $status: string }>`
-  background: ${p => p.theme.colors.surface};
-  border: 1px solid ${p => p.theme.colors.border};
+  background: ${p => { throw new Error("STUB"); }};
+  border: 1px solid ${p => { throw new Error("STUB"); }};
   border-radius: 8px;
   padding: 16px;
   position: relative;
@@ -459,7 +304,7 @@ const StatCard = styled.div<{ $status: string }>`
 const StatLabel = styled.div`
   font-size: 12px;
   font-weight: 500;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 8px;
@@ -468,7 +313,7 @@ const StatLabel = styled.div`
 const StatValue = styled.div`
   font-size: 24px;
   font-weight: 700;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   margin-bottom: 6px;
   letter-spacing: -0.02em;
 `;
@@ -476,7 +321,7 @@ const StatValue = styled.div`
 const StatChange = styled.div<{ $positive: boolean }>`
   font-size: 12px;
   font-weight: 500;
-  color: ${p => (p.$positive ? p.theme.colors.success : p.theme.colors.danger)};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const StatIndicator = styled.div<{ $status: string }>`
@@ -486,10 +331,8 @@ const StatIndicator = styled.div<{ $status: string }>`
   width: 4px;
   height: 100%;
   background: ${p => {
-    const key = p.$status as keyof typeof statusColors;
-    const colorKey = statusColors[key] ?? 'textMuted';
-    return p.theme.colors[colorKey as keyof typeof p.theme.colors];
-  }};
+    throw new Error("STUB");
+}};
 `;
 
 const TwoCol = styled.div`
@@ -500,8 +343,8 @@ const TwoCol = styled.div`
 `;
 
 const TableSection = styled.div`
-  background: ${p => p.theme.colors.surface};
-  border: 1px solid ${p => p.theme.colors.border};
+  background: ${p => { throw new Error("STUB"); }};
+  border: 1px solid ${p => { throw new Error("STUB"); }};
   border-radius: 8px;
   overflow: hidden;
 `;
@@ -511,19 +354,19 @@ const SectionHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid ${p => p.theme.colors.border};
+  border-bottom: 1px solid ${p => { throw new Error("STUB"); }};
 `;
 
 const SectionTitle = styled.h2`
   font-size: 14px;
   font-weight: 600;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   margin: 0;
 `;
 
 const SectionCount = styled.span`
   font-size: 12px;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const TableWrapper = styled.div`
@@ -537,20 +380,14 @@ const Table = styled.table`
 `;
 
 const TableRow = styled.tr<{ $clickable?: boolean }>`
-  border-bottom: 1px solid ${p => p.theme.colors.border};
+  border-bottom: 1px solid ${p => { throw new Error("STUB"); }};
 
   &:last-child {
     border-bottom: none;
   }
 
   ${p =>
-    p.$clickable &&
-    css`
-      cursor: pointer;
-      &:hover td {
-        background: ${p.theme.colors.background};
-      }
-    `}
+    { throw new Error("STUB"); }}
 `;
 
 const TableHead = styled.th`
@@ -558,19 +395,19 @@ const TableHead = styled.th`
   text-align: left;
   font-size: 11px;
   font-weight: 600;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  background: ${p => p.theme.colors.background};
+  background: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
 `;
 
 const TableCell = styled.td<{ $numeric?: boolean }>`
   padding: 10px 12px;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   white-space: nowrap;
-  text-align: ${p => (p.$numeric ? 'right' : 'left')};
-  font-variant-numeric: ${p => (p.$numeric ? 'tabular-nums' : 'normal')};
+  text-align: ${p => { throw new Error("STUB"); }};
+  font-variant-numeric: ${p => { throw new Error("STUB"); }};
 `;
 
 const ServiceName = styled.span`
@@ -582,29 +419,29 @@ const ServiceName = styled.span`
 const VersionTag = styled.span`
   font-size: 11px;
   font-family: ui-monospace, 'SF Mono', monospace;
-  color: ${p => p.theme.colors.textMuted};
-  background: ${p => p.theme.colors.background};
-  border: 1px solid ${p => p.theme.colors.border};
+  color: ${p => { throw new Error("STUB"); }};
+  background: ${p => { throw new Error("STUB"); }};
+  border: 1px solid ${p => { throw new Error("STUB"); }};
   border-radius: 4px;
   padding: 1px 5px;
 `;
 
 const rowStatusStyles = {
   healthy: css`
-    background: ${(p: any) => p.theme.colors.success}22;
-    color: ${(p: any) => p.theme.colors.success};
+    background: ${(p: any) => { throw new Error("STUB"); }}22;
+    color: ${(p: any) => { throw new Error("STUB"); }};
   `,
   degraded: css`
-    background: ${(p: any) => p.theme.colors.warning}22;
-    color: ${(p: any) => p.theme.colors.warning};
+    background: ${(p: any) => { throw new Error("STUB"); }}22;
+    color: ${(p: any) => { throw new Error("STUB"); }};
   `,
   deploying: css`
-    background: ${(p: any) => p.theme.colors.accent}22;
-    color: ${(p: any) => p.theme.colors.accent};
+    background: ${(p: any) => { throw new Error("STUB"); }}22;
+    color: ${(p: any) => { throw new Error("STUB"); }};
   `,
   offline: css`
-    background: ${(p: any) => p.theme.colors.danger}22;
-    color: ${(p: any) => p.theme.colors.danger};
+    background: ${(p: any) => { throw new Error("STUB"); }}22;
+    color: ${(p: any) => { throw new Error("STUB"); }};
   `,
 };
 
@@ -615,12 +452,12 @@ const RowStatusBadge = styled.span<{ $status: string }>`
   border-radius: 4px;
   padding: 2px 6px;
   text-transform: capitalize;
-  ${p => rowStatusStyles[p.$status as keyof typeof rowStatusStyles] ?? rowStatusStyles.offline}
+  ${p => { throw new Error("STUB"); }}
 `;
 
 const ActivitySection = styled.div`
-  background: ${p => p.theme.colors.surface};
-  border: 1px solid ${p => p.theme.colors.border};
+  background: ${p => { throw new Error("STUB"); }};
+  border: 1px solid ${p => { throw new Error("STUB"); }};
   border-radius: 8px;
   overflow: hidden;
 `;
@@ -636,7 +473,7 @@ const ActivityEntry = styled.li`
   align-items: flex-start;
   gap: 10px;
   padding: 12px 16px;
-  border-bottom: 1px solid ${p => p.theme.colors.border};
+  border-bottom: 1px solid ${p => { throw new Error("STUB"); }};
 
   &:last-child {
     border-bottom: none;
@@ -647,7 +484,7 @@ const ActivityAvatar = styled.div`
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: ${p => p.theme.colors.secondary};
+  background: ${p => { throw new Error("STUB"); }};
   color: white;
   font-size: 11px;
   font-weight: 700;
@@ -664,24 +501,21 @@ const ActivityBody = styled.div`
 
 const ActivityText = styled.div`
   font-size: 13px;
-  color: ${p => p.theme.colors.text};
+  color: ${p => { throw new Error("STUB"); }};
   margin-bottom: 2px;
 `;
 
 const ActivityUser = styled.span`
   font-weight: 600;
-  color: ${p => p.theme.colors.primary};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const ActivityTime = styled.div`
   font-size: 11px;
-  color: ${p => p.theme.colors.textMuted};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
-const StatusBadge = styled.span.attrs<{ $status: string }>(({ $status }) => ({
-  role: 'status',
-  'aria-label': $status,
-}))`
+const StatusBadge = styled.span.attrs<{ $status: string }>(({ $status }) => { throw new Error("STUB"); })`
   flex-shrink: 0;
   font-size: 10px;
   font-weight: 600;
@@ -691,27 +525,6 @@ const StatusBadge = styled.span.attrs<{ $status: string }>(({ $status }) => ({
   letter-spacing: 0.04em;
   align-self: center;
   ${p => {
-    switch (p.$status) {
-      case 'ok':
-        return css`
-          background: ${p.theme.colors.success}22;
-          color: ${p.theme.colors.success};
-        `;
-      case 'warning':
-        return css`
-          background: ${p.theme.colors.warning}22;
-          color: ${p.theme.colors.warning};
-        `;
-      case 'critical':
-        return css`
-          background: ${p.theme.colors.danger}22;
-          color: ${p.theme.colors.danger};
-        `;
-      default:
-        return css`
-          background: ${p.theme.colors.border};
-          color: ${p.theme.colors.textMuted};
-        `;
-    }
-  }}
+        throw new Error("STUB");
+    }}
 `;

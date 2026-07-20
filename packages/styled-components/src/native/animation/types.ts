@@ -271,12 +271,12 @@ export function setAnimationAdapter(adapter: AnimationAdapter | undefined): void
 
 /** The currently registered animation adapter, or `undefined` if none. */
 export function getAnimationAdapter(): AnimationAdapter | undefined {
-  return activeAdapter;
+    throw new Error("STUB");
 }
 
 /** Test utility: clears the active adapter. */
 export function resetAnimationAdapter(): void {
-  activeAdapter = undefined;
+    throw new Error("STUB");
 }
 
 /** Convenience: pass-through adapter response when nothing should animate. */

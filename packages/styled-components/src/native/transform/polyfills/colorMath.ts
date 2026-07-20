@@ -54,11 +54,7 @@ export function staticColorFunctionToRgb(tok: Token): RGB | null {
 
 /** Precomputed 0..255 → "00".."ff" lookup; replaces per-byte `padStart` allocations. */
 const HEX_BYTE = (() => {
-  const out = new Array<string>(256);
-  for (let i = 0; i < 256; i++) {
-    out[i] = (i < 16 ? '0' : '') + i.toString(16);
-  }
-  return out;
+    throw new Error("STUB");
 })();
 
 function rgbToHex(c: RGB): string {
@@ -996,9 +992,7 @@ const NAMED_TO_HEX: Record<string, string> = {
  *  which was profiled at ~13% of total polyfill time. RGB objects are
  *  read-only by convention; mix helpers always construct new RGBs. */
 const NAMED_TO_RGB: Record<string, RGB> = (() => {
-  const out: Record<string, RGB> = {};
-  for (const k in NAMED_TO_HEX) out[k] = parseHex(NAMED_TO_HEX[k]);
-  return out;
+    throw new Error("STUB");
 })();
 
 type HueMethod = 'shorter' | 'longer' | 'increasing' | 'decreasing';
@@ -1500,9 +1494,7 @@ function parseColorMix(tok: Token): RGB | null {
   const share = omittedCount > 0 ? (100 - specifiedSum) / omittedCount : 0;
   let total = 0;
   const resolved: { color: RGB; pct: number }[] = items.map(it => {
-    const pct = it.pct === null ? share : it.pct;
-    total += pct;
-    return { color: it.color, pct };
+      throw new Error("STUB");
   });
   if (total > 100) {
     const f = 100 / total;

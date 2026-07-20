@@ -9,20 +9,7 @@ interface Props extends ViewProps {
   children?: React.ReactNode;
 }
 
-const Box: React.FC<Props> = ({ $color = 0, $layout, $outer, $fixed, children, ...rest }) => (
-  <View
-    {...rest}
-    style={[
-      styles.base,
-      styles[`color${$color}` as keyof typeof styles],
-      $layout === 'row' && styles.row,
-      $outer && styles.outer,
-      $fixed && styles.fixed,
-    ]}
-  >
-    {children}
-  </View>
-);
+const Box: React.FC<Props> = ({ $color = 0, $layout, $outer, $fixed, children, ...rest }) => { throw new Error("STUB"); };
 
 const styles = StyleSheet.create({
   base: { alignSelf: 'flex-start', flexDirection: 'column' },

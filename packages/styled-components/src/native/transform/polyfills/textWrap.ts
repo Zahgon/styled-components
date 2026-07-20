@@ -15,15 +15,7 @@ const MODES = new Set(['wrap', 'nowrap']);
 const STYLES = new Set(['auto', 'balance', 'stable', 'pretty']);
 
 function warnIosTextWrapBalancePretty(style: string): void {
-  if (!__DEV__) return;
-  if (getReactNativePlatformOS() !== 'ios') return;
-  warnOnce(
-    'native-text-wrap-ios',
-    '`text-wrap: ' +
-      style +
-      '` uses Android-only line-breaking controls. iOS keeps its default line breaking.',
-    style
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -33,58 +25,16 @@ function warnIosTextWrapBalancePretty(style: string): void {
  * because the user-observed behavior matches the intent.
  */
 function applyTextWrapNowrap(out: Dict<any>): void {
-  out.numberOfLines = 1;
-  out.ellipsizeMode = 'clip';
+    throw new Error("STUB");
 }
 
 /** `balance`/`pretty` map to Android's `textBreakStrategy`; `stable` has no native equivalent. */
 function applyTextWrapStyle(out: Dict<any>, style: string | null): void {
-  if (style === 'balance') {
-    out.textBreakStrategy = 'balanced';
-    if (__DEV__) warnIosTextWrapBalancePretty(style);
-  } else if (style === 'pretty') {
-    out.textBreakStrategy = 'highQuality';
-    if (__DEV__) warnIosTextWrapBalancePretty(style);
-  } else if (style === 'stable') {
-    if (__DEV__) {
-      warnOnce(
-        'native-text-wrap-stable',
-        '`text-wrap: stable` is ignored on React Native because iOS and Android do not expose reflow stability controls.'
-      );
-    }
-  }
+    throw new Error("STUB");
 }
 
 function textWrapShorthand(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  let mode: string | null = null;
-  let style: string | null = null;
-
-  while (!stream.eof()) {
-    const t = stream.consume();
-    if (!t || t.kind !== TokenKind.Ident) return null;
-    const name = t.name;
-    if (name === undefined) return null;
-    if (MODES.has(name)) {
-      if (mode !== null) return null;
-      mode = name;
-    } else if (STYLES.has(name)) {
-      if (style !== null) return null;
-      style = name;
-    } else {
-      return null;
-    }
-  }
-  if (mode === null && style === null) return null;
-
-  const value = mode !== null && style !== null ? mode + ' ' + style : mode !== null ? mode : style;
-  // Browser ships text-wrap end-to-end; the Text prop lifts and the
-  // platform-limitation warns are native-only.
-  if (__NATIVE_WEB__) return { textWrap: value };
-  const out: Dict<any> = { textWrap: value };
-  if (mode === 'nowrap') applyTextWrapNowrap(out);
-  applyTextWrapStyle(out, style);
-  return out;
+    throw new Error("STUB");
 }
 
 /**
@@ -92,16 +42,7 @@ function textWrapShorthand(tokens: Token[]): Dict<any> | null {
  * `nowrap` value is mirrored to `numberOfLines: 1` for RN's Text lift.
  */
 function textWrapModeLonghand(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const name = t.name;
-  if (name === undefined || !MODES.has(name)) return null;
-  if (__NATIVE_WEB__) return { textWrapMode: name };
-  const out: Dict<any> = { textWrapMode: name };
-  // Same nowrap approximation as the shorthand path, applied silently.
-  if (name === 'nowrap') applyTextWrapNowrap(out);
-  return out;
+    throw new Error("STUB");
 }
 
 /**
@@ -111,15 +52,7 @@ function textWrapModeLonghand(tokens: Token[]): Dict<any> | null {
  * at all (warns once).
  */
 function textWrapStyleLonghand(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const name = t.name;
-  if (name === undefined || !STYLES.has(name)) return null;
-  if (__NATIVE_WEB__) return { textWrapStyle: name };
-  const out: Dict<any> = { textWrapStyle: name };
-  applyTextWrapStyle(out, name);
-  return out;
+    throw new Error("STUB");
 }
 
 register('textWrap', textWrapShorthand);

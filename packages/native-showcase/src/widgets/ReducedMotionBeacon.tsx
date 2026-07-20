@@ -31,8 +31,8 @@ const Dot = styled.View<{ $expanded: boolean }>`
   height: 24px;
   border-radius: ${t.radius.pill}px;
   background-color: ${t.colors.accent};
-  transform: scale(${p => (p.$expanded ? 4 : 1)});
-  opacity: ${p => (p.$expanded ? 1 : 0.4)};
+  transform: scale(${p => { throw new Error("STUB"); }});
+  opacity: ${p => { throw new Error("STUB"); }};
   transition:
     transform 1600ms cubic-bezier(0.37, 0, 0.63, 1),
     opacity 1600ms cubic-bezier(0.37, 0, 0.63, 1);
@@ -45,25 +45,5 @@ const Caption = styled.Text`
 `;
 
 export function ReducedMotionBeacon() {
-  const reduce = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const [expanded, setExpanded] = useState(false);
-
-  useEffect(() => {
-    if (reduce) return;
-    const id = setInterval(() => setExpanded(e => !e), 2400);
-    return () => clearInterval(id);
-  }, [reduce]);
-
-  return (
-    <>
-      <Stage>
-        <Dot $expanded={expanded && !reduce} />
-      </Stage>
-      <Caption>
-        {reduce
-          ? 'reduce-motion is on. The beacon stays steady.'
-          : 'Beacon pulses smoothly. Toggle reduce-motion in OS settings to settle it.'}
-      </Caption>
-    </>
-  );
+    throw new Error("STUB");
 }

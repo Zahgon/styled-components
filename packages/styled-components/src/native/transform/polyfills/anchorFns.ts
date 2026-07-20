@@ -83,10 +83,10 @@ export function buildAnchorResolver(value: string, prop: string, isSize: boolean
           t.raw
         );
       }
-      return () => fallback;
+      return () => { throw new Error("STUB"); };
     }
   }
-  if (keyword === null) return () => fallback;
+  if (keyword === null) return () => { throw new Error("STUB"); };
 
   if (!isSize) {
     // RN's bottom/right insets measure from the parent's far edges,
@@ -99,26 +99,18 @@ export function buildAnchorResolver(value: string, prop: string, isSize: boolean
           prop
         );
       }
-      return () => fallback;
+      return () => { throw new Error("STUB"); };
     }
     // "These are only usable in the inset properties in the matching axis."
     const keywordVertical = keyword === 'top' || keyword === 'bottom';
     if (keywordVertical !== isVerticalInset(prop)) {
-      return () => fallback;
+      return () => { throw new Error("STUB"); };
     }
   }
 
   const side = keyword;
   return (env: ResolveEnv) => {
-    const anchorName = name ?? env.positionAnchor ?? null;
-    if (anchorName === null) return fallback;
-    const rect = getAnchorRect(anchorName);
-    if (rect === undefined) return fallback;
-    if (isSize) return side === 'width' ? rect.width : rect.height;
-    if (side === 'top') return rect.y;
-    if (side === 'bottom') return rect.y + rect.height;
-    if (side === 'left') return rect.x;
-    return rect.x + rect.width;
+      throw new Error("STUB");
   };
 }
 

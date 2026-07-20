@@ -10,20 +10,7 @@ import { type PropsWithChildren } from 'react';
  * silently falls back to its first (light) argument.
  */
 export default function Root({ children }: PropsWithChildren) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="color-scheme" content="light dark" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <ScrollViewStyleReset />
-        <style dangerouslySetInnerHTML={{ __html: webFontSmoothing }} />
-      </head>
-      <body>{children}</body>
-    </html>
-  );
+    throw new Error("STUB");
 }
 
 // Grayscale anti-aliasing for text on web. Browsers default to

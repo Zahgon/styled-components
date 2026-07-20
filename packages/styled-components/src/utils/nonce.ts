@@ -13,7 +13,7 @@ let cached: string | undefined | false = false;
 
 /** @internal Reset the nonce cache (for testing only). */
 export function resetNonceCache() {
-  cached = false;
+    throw new Error("STUB");
 }
 
 export default function getNonce(): string | undefined {

@@ -100,14 +100,7 @@ function describeTransform(value: any): string {
     '[' +
     value
       .map(entry => {
-        if (!entry || typeof entry !== 'object') return String(entry);
-        for (const k in entry) {
-          const v = entry[k];
-          // Animated values / interpolations have characteristic methods.
-          const isAnim = v && typeof v === 'object' && typeof v.interpolate === 'function';
-          return `${k}:${isAnim ? '<anim>' : JSON.stringify(v)}`;
-        }
-        return '?';
+          throw new Error("STUB");
       })
       .join(' ') +
     ']'
@@ -336,7 +329,7 @@ function framesAllowNativeDriver(frames: NormalizedFrame[]): boolean {
 }
 
 // Baked-curve timings must drive progress linearly; RN defaults to easeInOut.
-const LINEAR_EASING = (t: number): number => t;
+const LINEAR_EASING = (t: number): number => { throw new Error("STUB"); };
 
 /** ~60fps frame budget. Used to size sample counts so the resampled curve
  *  carries at least one stop per displayed frame. */
@@ -808,7 +801,7 @@ function startTiming(
     toValue: 1,
     duration,
     delay,
-    easing: useNative ? LINEAR_EASING : (t: number) => evaluateEasing(easing, t),
+    easing: useNative ? LINEAR_EASING : (t: number) => { throw new Error("STUB"); },
     useNativeDriver: useNativeDriverOnHost,
   });
   scratch.running.add(handle);
@@ -817,25 +810,7 @@ function startTiming(
   // reversing-shortening-factor against `old_timing(t)` per spec.
   state.activeEasing = easing;
   handle.start((result?: { finished: boolean }) => {
-    scratch.running.delete(handle);
-    // A newer transition may have replaced state.active mid-flight; only
-    // clear it when this completion belongs to the still-current handle.
-    const wasActive = state.active === handle;
-    if (wasActive) {
-      state.active = null;
-      // Settled transition resets the factor: the next change starts a
-      // fresh cycle from a rested state.
-      state.reversingFactor = 1;
-    }
-    if (debugEnabled) dbg('timing-end', prop, `finished=${result?.finished ?? '?'}`);
-    // `transitionend` fires once per completing property after the
-    // timing reaches its endpoint. Interrupted transitions
-    // (`result.finished === false`, or a stale completion arriving
-    // after a newer timing took over the same prop) do not dispatch;
-    // the transition is "cancelled" instead.
-    if (onTransitionEnd !== undefined && wasActive && result?.finished === true) {
-      onTransitionEnd({ propertyName: prop, elapsedTime: (duration + delay) / 1000 });
-    }
+      throw new Error("STUB");
   });
 }
 
@@ -1075,12 +1050,8 @@ function applyTransitions(
           const flipMs = t.delayMs + t.durationMs / 2;
           const flipTimeout = setTimeout(
             () => {
-              if (localState.discrete) {
-                localState.discrete.shown = next;
-                localState.discrete.flipTimeout = null;
-              }
-              requestRerender();
-            },
+                  throw new Error("STUB");
+              },
             Math.max(0, flipMs)
           );
           state.discrete = { flipTimeout, shown: state.prev };
@@ -1182,7 +1153,7 @@ function stripOverriddenKeys(style: any, overrides: Record<string, unknown>): an
   if (typeof style === 'function') {
     // Pseudo-state callbacks: wrap so the override keys are stripped
     // from whatever the callback returns at render time.
-    return (state: any) => stripOverriddenKeys(style(state), overrides);
+    return (state: any) => { throw new Error("STUB"); };
   }
   if (typeof style !== 'object') return style;
   let cloned: Record<string, any> | null = null;
@@ -1225,7 +1196,7 @@ function resolveKeyframes(
       out.push(nf);
     }
   }
-  out.sort((a, b) => a.offset - b.offset);
+  out.sort((a, b) => { throw new Error("STUB"); });
   return out.length > 0 ? out : null;
 }
 
@@ -1452,7 +1423,7 @@ function buildSegmentedInterpolation(
     if (
       first &&
       values.every(
-        v => typeof v.value === 'string' && parseUnitString(v.value)?.unit === first.unit
+        v => { throw new Error("STUB"); }
       )
     ) {
       sharedUnit = first.unit;
@@ -1644,12 +1615,12 @@ function collectFrameEntries(
     }
   }
   if (baseVal !== undefined) {
-    const has0 = out.some(f => f.offset === 0);
-    const has1 = out.some(f => f.offset === 1);
+    const has0 = out.some(f => { throw new Error("STUB"); });
+    const has1 = out.some(f => { throw new Error("STUB"); });
     if (!has0) out.push({ offset: 0, value: baseVal });
     if (!has1) out.push({ offset: 1, value: baseVal });
   }
-  out.sort((a, b) => a.offset - b.offset);
+  out.sort((a, b) => { throw new Error("STUB"); });
   return out;
 }
 
@@ -2121,10 +2092,8 @@ function startKeyframeAnimation(
 
   const handle: AnimationHandle = {
     stop: () => {
-      try {
-        body.stop?.();
-      } catch {}
-    },
+          throw new Error("STUB");
+      },
   };
   scratch.running.add(handle);
   animS.handle = handle;
@@ -2138,34 +2107,7 @@ function startKeyframeAnimation(
   animS.startedAt = Date.now();
   animS.delayMs = delay;
   body.start((result?: { finished: boolean }) => {
-    scratch.running.delete(handle);
-    const wasActive = animS.handle === handle;
-    if (wasActive) animS.handle = null;
-    // `CompositeAnimation.stop()` (pause) unwinds synchronously with
-    // `{ finished: false }`. That callback must not mark the slot
-    // `finished` or the next `animation-play-state: running` pass can
-    // never restart (`!animS.finished` guard). Stale completions after a
-    // superseding `startKeyframeAnimation` see `wasActive === false` and
-    // are ignored here too. Only `{ finished: true }` while this handle
-    // was still current ends a finite iteration chain.
-    if (wasActive && result && result.finished === true) {
-      animS.finished = true;
-      // Fill-mode `none` and `backwards` drop overrides after the
-      // animation ends; `forwards` and `both` keep the final values.
-      if (desc.fillMode === 'none' || desc.fillMode === 'backwards') {
-        animS.overrides = {};
-      }
-      // `animationend` fires once when the animation completes
-      // successfully. Interrupted animations
-      // (`result.finished === false`, or a stale completion arriving
-      // after a newer animation took over the same slot) do not
-      // dispatch; that is "cancel" / `animationcancel`, which we don't
-      // yet surface.
-      if (onAnimationEnd !== undefined) {
-        onAnimationEnd({ animationName: desc.name, elapsedTime: totalElapsedSec });
-      }
-    }
-    if (debugEnabled) dbg('anim-end', animS.name, `finished=${result?.finished ?? '?'}`);
+      throw new Error("STUB");
   });
 
   if (debugEnabled) {
@@ -2384,7 +2326,7 @@ function applyAnimations(
           };
           if (typeof pv.stopAnimation === 'function') {
             pv.stopAnimation((value: number) => {
-              if (Number.isFinite(value)) animS.pausedAt = Math.min(1, Math.max(0, value));
+                throw new Error("STUB");
             });
           } else if (typeof pv.__getValue === 'function') {
             try {
@@ -2440,153 +2382,7 @@ function applyAnimations(
 const animatedAdapter: AnimationAdapter = {
   id: 'animated',
   useAnimatedStyle(input: AnimatedStyleInput): AnimatedStyleOutput {
-    const { compiled, resolved, target, env } = input;
-
-    // No animation work to do;bail without paying for refs/effects.
-    // The hook order rule still holds: `useImpl` calls this hook
-    // unconditionally on the slow path, but the slow path is fixed at
-    // construction.
-    const hasTransition = compiled.transitions !== undefined;
-    const hasAnimation = compiled.animations !== undefined;
-    const hasStarting = compiled.startingStyle !== undefined;
-
-    const scratchRef = React.useRef<AdapterScratch | null>(null);
-    if (scratchRef.current === null) scratchRef.current = createScratch();
-    const scratch = scratchRef.current;
-
-    // Scroll progress timelines in scope (published by styled scroll
-    // containers). Read unconditionally for stable hook order.
-    const scrollTimelines = React.useContext(ScrollTimelineContext);
-
-    // Tick counter: bumped from setTimeout callbacks (e.g. allow-discrete
-    // 50%-flip) so the hook re-runs and the override picks up the new
-    // shown value. The render isn't otherwise driven by React, since
-    // RN's Animated.timing path commits via the native animated graph.
-    const [, setTick] = React.useState(0);
-    const requestRerenderRef = React.useRef<() => void>(() => {});
-    requestRerenderRef.current = () => setTick(t => t + 1);
-
-    // scratchRef.current is component-scoped and never reassigned, so
-    // the cleanup runs exactly once on unmount with stable deps.
-    React.useEffect(() => () => disposeScratch(scratchRef.current!), []);
-
-    if (!hasTransition && !hasAnimation && !hasStarting) {
-      return passthroughOutput(input);
-    }
-
-    // Resolve sentinel-laden values in baseValues at render time so
-    // the adapter diffs against actual values, not raw sentinel
-    // templates. Without this, transitions on values that include
-    // theme tokens (`${t.colors.x}`, `${t.space.lg}`) never animate
-    // because the adapter sees a constant sentinel string across
-    // renders even when the resolved value differs.
-    const resolvedBaseValues =
-      compiled.baseValues !== undefined && compiled.resolvers !== undefined
-        ? applyResolvers(compiled.baseValues, compiled.resolvers, env)
-        : compiled.baseValues;
-
-    if (debugEnabled) {
-      dbg(
-        'render',
-        compiled.transitions ? `transitions=${compiled.transitions.length}` : '',
-        compiled.animations ? `animations=${compiled.animations.length}` : '',
-        hasStarting ? 'starting' : '',
-        `baseKeys=${resolvedBaseValues ? Object.keys(resolvedBaseValues).join(',') : '∅'}`,
-        `reduceMotion=${env.media.reduceMotion}`
-      );
-    }
-
-    const firstMount = !scratch.mounted;
-    if (firstMount) scratch.mounted = true;
-    let resolvedStartingStyle: Dict<any> | undefined;
-    if (firstMount && hasStarting && compiled.startingStyle) {
-      resolvedStartingStyle = compiled.startingStyleResolvers
-        ? applyResolvers(compiled.startingStyle, compiled.startingStyleResolvers, env)
-        : compiled.startingStyle;
-    }
-
-    let outStyle = resolved;
-    if (hasTransition && compiled.transitions) {
-      outStyle = applyTransitions(
-        scratch,
-        compiled.transitions,
-        resolved,
-        resolvedBaseValues,
-        env.media.reduceMotion,
-        firstMount,
-        resolvedStartingStyle,
-        () => requestRerenderRef.current(),
-        input.onTransitionEnd
-      );
-    }
-
-    if (hasAnimation && compiled.animations && compiled.keyframes.length > 0) {
-      outStyle = applyAnimations(
-        scratch,
-        compiled.animations,
-        compiled.keyframes,
-        outStyle,
-        resolvedBaseValues,
-        env,
-        env.media.reduceMotion,
-        scrollTimelines,
-        input.viewSubject ?? null,
-        input.onAnimationEnd
-      );
-    }
-
-    const isAnimating = hasTransition || hasAnimation;
-
-    let isolate3d = false;
-    if (isAnimating && scratch.anims) {
-      for (let i = 0; !isolate3d && i < scratch.anims.length; i++) {
-        const kinds = scratch.anims[i].transformKinds;
-        if (kinds) {
-          for (let k = 0; k < kinds.length; k++) {
-            if (kinds[k] === 'rotateX' || kinds[k] === 'rotateY' || kinds[k] === 'rotateZ') {
-              isolate3d = true;
-              break;
-            }
-          }
-        }
-      }
-    }
-    if (isAnimating && !isolate3d) {
-      for (const [, p] of scratch.props) {
-        const kinds = p.transformKinds;
-        if (kinds) {
-          for (let k = 0; k < kinds.length; k++) {
-            if (kinds[k] === 'rotateX' || kinds[k] === 'rotateY' || kinds[k] === 'rotateZ') {
-              isolate3d = true;
-              break;
-            }
-          }
-        }
-        if (isolate3d) break;
-      }
-    }
-
-    let invalidateCache = false;
-    if (hasTransition) {
-      for (const [, p] of scratch.props) {
-        if (p.discrete !== undefined) {
-          invalidateCache = true;
-          break;
-        }
-      }
-    }
-    if (scratch.scrollRebuilt) {
-      invalidateCache = true;
-      scratch.scrollRebuilt = false;
-    }
-
-    const out: AnimatedStyleOutput = {
-      style: outStyle,
-      elementType: isAnimating ? wrapTarget(target) : target,
-      isolate3d,
-    };
-    if (invalidateCache) out.invalidateCache = true;
-    return out;
+      throw new Error("STUB");
   },
 };
 

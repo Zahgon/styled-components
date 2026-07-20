@@ -35,7 +35,7 @@ export function bench(
     for (let i = 0; i < iters; i++) fn();
     samples.push(performance.now() - t0);
   }
-  samples.sort((a, b) => a - b);
+  samples.sort((a, b) => { throw new Error("STUB"); });
   const median = samples[Math.floor(RUNS / 2)];
   const ops = (iters / median) * 1000;
   const fmt =
@@ -44,7 +44,7 @@ export function bench(
       : ops >= 1e3
         ? (ops / 1e3).toFixed(1) + 'K/s'
         : ops.toFixed(0) + '/s';
-  const deviations = samples.map(s => Math.abs(s - median)).sort((a, b) => a - b);
+  const deviations = samples.map(s => { throw new Error("STUB"); }).sort((a, b) => { throw new Error("STUB"); });
   const mad = deviations[Math.floor(RUNS / 2)];
   const spread = ((mad * 1.4826 * 100) / median).toFixed(0);
   const pad = opts.pad ?? 54;

@@ -39,141 +39,19 @@ export const DEFAULT_EASING: EasingDescriptor = {
  * Returns `null` on unparseable input (caller falls back to default `ease`).
  */
 export function parseEasing(raw: string): EasingDescriptor | null {
-  const s = raw.trim();
-  if (s.length === 0) return null;
-
-  if (s === 'linear') return { kind: 'linear' };
-  if (s === 'step-start') return { kind: 'steps', n: 1, jump: 'jump-start' };
-  if (s === 'step-end') return { kind: 'steps', n: 1, jump: 'jump-end' };
-
-  const kw = CSS_EASING_KEYWORDS[s];
-  if (kw !== undefined) return { kind: 'cubic-bezier', p: [kw[0], kw[1], kw[2], kw[3]] };
-
-  if (s.startsWith('cubic-bezier(') && s.endsWith(')')) {
-    return parseCubicBezier(s.slice('cubic-bezier('.length, -1));
-  }
-  if (s.startsWith('steps(') && s.endsWith(')')) {
-    return parseSteps(s.slice('steps('.length, -1));
-  }
-  if (s.startsWith('linear(') && s.endsWith(')')) {
-    return parseLinearStops(s.slice('linear('.length, -1));
-  }
-  return null;
+    throw new Error("STUB");
 }
 
 function parseCubicBezier(args: string): EasingDescriptor | null {
-  const parts = args.split(',');
-  if (parts.length !== 4) return null;
-  const nums: number[] = [];
-  for (let i = 0; i < 4; i++) {
-    const n = parseFloat(parts[i].trim());
-    if (!Number.isFinite(n)) return null;
-    nums.push(n);
-  }
-  // Spec: x1 and x2 must be in [0, 1]; y values are unbounded.
-  if (nums[0] < 0 || nums[0] > 1 || nums[2] < 0 || nums[2] > 1) return null;
-  return { kind: 'cubic-bezier', p: [nums[0], nums[1], nums[2], nums[3]] };
+    throw new Error("STUB");
 }
 
 function parseSteps(args: string): EasingDescriptor | null {
-  const parts = args.split(',');
-  if (parts.length < 1 || parts.length > 2) return null;
-  const n = parseInt(parts[0].trim(), 10);
-  if (!Number.isFinite(n) || n < 1) return null;
-  let jump: 'jump-start' | 'jump-end' | 'jump-none' | 'jump-both' = 'jump-end';
-  if (parts.length === 2) {
-    const term = parts[1].trim();
-    if (term === 'jump-start' || term === 'start') jump = 'jump-start';
-    else if (term === 'jump-end' || term === 'end') jump = 'jump-end';
-    else if (term === 'jump-none') jump = 'jump-none';
-    else if (term === 'jump-both') jump = 'jump-both';
-    else return null;
-  }
-  // Spec: `n=1, jump-none` is invalid.
-  if (n === 1 && jump === 'jump-none') return null;
-  return { kind: 'steps', n, jump };
+    throw new Error("STUB");
 }
 
 function parseLinearStops(args: string): EasingDescriptor | null {
-  // Grammar (CSS Easing L2):
-  //   <linear-stop-list> = <linear-stop>#
-  //   <linear-stop>      = <number> [<percentage>{1,2}]?
-  // Multi-position stops (`0.5 25% 75%`) expand to two entries.
-  const segments = args.split(',');
-  type RawStop = { y: number; xs: number[] };
-  const raw: RawStop[] = [];
-  for (let i = 0; i < segments.length; i++) {
-    const seg = segments[i].trim();
-    if (seg.length === 0) return null;
-    const parts = seg.split(/\s+/);
-    const y = parseFloat(parts[0]);
-    if (!Number.isFinite(y)) return null;
-    const xs: number[] = [];
-    for (let j = 1; j < parts.length; j++) {
-      const p = parts[j];
-      if (!p.endsWith('%')) return null;
-      const n = parseFloat(p.slice(0, -1));
-      if (!Number.isFinite(n)) return null;
-      xs.push(n / 100);
-    }
-    raw.push({ y, xs });
-  }
-  if (raw.length < 2) return null;
-
-  // Resample: each stop without an explicit X gets one inferred. Implicit
-  // anchors are the first and last stops (assume X=0 and X=1 if missing
-  // there). Inner stops with no X get linearly distributed between the
-  // surrounding anchors.
-  const xs: number[] = new Array(raw.length);
-  if (raw[0].xs.length === 0) xs[0] = 0;
-  else xs[0] = raw[0].xs[0];
-  const lastIdx = raw.length - 1;
-  const last = raw[lastIdx];
-  if (last.xs.length === 0) xs[lastIdx] = 1;
-  else xs[lastIdx] = last.xs[last.xs.length - 1];
-
-  let lastAnchor = 0;
-  for (let i = 1; i < lastIdx; i++) {
-    if (raw[i].xs.length > 0) {
-      xs[i] = raw[i].xs[0];
-      lastAnchor = i;
-    } else {
-      let nextAnchor = lastIdx;
-      for (let k = i + 1; k < lastIdx; k++) {
-        if (raw[k].xs.length > 0) {
-          nextAnchor = k;
-          break;
-        }
-      }
-      const span = nextAnchor - lastAnchor;
-      xs[i] = xs[lastAnchor] + ((xs[nextAnchor] - xs[lastAnchor]) * (i - lastAnchor)) / span;
-    }
-  }
-
-  // Silently raise X to the previous max (spec: monotonic non-decreasing).
-  let prevMax = xs[0];
-  for (let i = 1; i < xs.length; i++) {
-    if (xs[i] < prevMax) xs[i] = prevMax;
-    else prevMax = xs[i];
-  }
-
-  const stops: Array<[number, number]> = [];
-  // Multi-position stops (e.g., `0.5 25% 75%`) emit one stop per X.
-  for (let i = 0; i < raw.length; i++) {
-    const r = raw[i];
-    if (r.xs.length > 1) {
-      for (let k = 0; k < r.xs.length; k++) {
-        let x = r.xs[k];
-        if (stops.length > 0 && x < stops[stops.length - 1][0]) {
-          x = stops[stops.length - 1][0];
-        }
-        stops.push([x, r.y]);
-      }
-    } else {
-      stops.push([xs[i], r.y]);
-    }
-  }
-  return { kind: 'linear-stops', stops };
+    throw new Error("STUB");
 }
 
 /**

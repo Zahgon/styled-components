@@ -59,7 +59,7 @@ const TYPE_STATICS: Record<symbol, Record<string, boolean>> = {
 type OmniComponent = AnyComponent;
 
 function getStatics(component: OmniComponent) {
-  return '$$typeof' in component ? TYPE_STATICS[component['$$typeof']] : REACT_STATICS;
+    throw new Error("STUB");
 }
 
 const defineProperty = Object.defineProperty;
@@ -90,49 +90,5 @@ export default function hoistNonReactStatics<
   S extends OmniComponent,
   C extends ExcludeList = {},
 >(targetComponent: T, sourceComponent: S, excludelist?: C | undefined) {
-  if (typeof sourceComponent !== 'string') {
-    // don't hoist over string (html) components
-
-    // React 19 ref-as-prop means styled components are plain functions;
-    // `getPrototypeOf(fn)` returns Function.prototype, which has no statics
-    // worth hoisting (`length`/`name`/`apply`/`bind`/…). Skipping it avoids
-    // an extra pass through KNOWN_STATICS per styled-component creation.
-    const inheritedComponent = getPrototypeOf(sourceComponent);
-    if (
-      inheritedComponent &&
-      inheritedComponent !== objectPrototype &&
-      inheritedComponent !== functionPrototype
-    ) {
-      hoistNonReactStatics(targetComponent, inheritedComponent, excludelist);
-    }
-
-    const keys: (string | symbol)[] = (
-      getOwnPropertyNames(sourceComponent) as (string | symbol)[]
-    ).concat(getOwnPropertySymbols(sourceComponent));
-
-    const targetStatics = getStatics(targetComponent);
-    const sourceStatics = getStatics(sourceComponent);
-
-    for (let i = 0; i < keys.length; ++i) {
-      const key = keys[i] as string;
-      if (
-        !(key in KNOWN_STATICS) &&
-        !(excludelist && excludelist[key]) &&
-        !(sourceStatics && key in sourceStatics) &&
-        !(targetStatics && key in targetStatics)
-      ) {
-        // Key came from `getOwnPropertyNames` above, so the descriptor exists.
-        const descriptor = getOwnPropertyDescriptor(sourceComponent, key)!;
-
-        try {
-          // Avoid failures from read-only properties
-          defineProperty(targetComponent, key, descriptor);
-        } catch (e) {
-          /* ignore */
-        }
-      }
-    }
-  }
-
-  return targetComponent as T & NonReactStatics<S, C>;
+    throw new Error("STUB");
 }

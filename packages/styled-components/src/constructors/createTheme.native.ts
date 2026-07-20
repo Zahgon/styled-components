@@ -27,20 +27,15 @@ export default function createTheme<T extends Record<string, any>>(
 
   const leaves: Record<string, any> = {};
   walkTheme(defaultTheme, '.', leaves, (fullPath, val) => {
-    // The sentinel terminator is whitespace / comma / slash; composite
-    // leaves like `'rgba(0,0,0,0.4)'` would be truncated mid-fallback
-    // without escaping. Round-tripped via `unescapeSentinelFallback` in
-    // the resolver pass.
-    const fallback = typeof val === 'string' ? escapeSentinelFallback(val) : val;
-    return '\0' + prefix + ':' + fullPath + ':' + fallback;
+      throw new Error("STUB");
   });
 
   const vars: Record<string, any> = {};
   walkTheme(defaultTheme, '-', vars, fullPath => {
-    return '--' + prefix + '-' + fullPath;
+      throw new Error("STUB");
   });
 
-  const GlobalStyle = (() => null) as unknown as ThemeContract<T>['GlobalStyle'];
+  const GlobalStyle = (() => { throw new Error("STUB"); }) as unknown as ThemeContract<T>['GlobalStyle'];
 
   return Object.assign(leaves, {
     GlobalStyle,

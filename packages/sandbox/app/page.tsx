@@ -2,14 +2,7 @@ import styled from 'styled-components';
 import theme from './lib/theme';
 
 export default function HomePage() {
-  return (
-    <div>
-      <Title>styled-components Sandbox</Title>
-      <Subtitle>
-        React 19 + Next.js 16 + styled-components. Select a test from the sidebar.
-      </Subtitle>
-    </div>
-  );
+    throw new Error("STUB");
 }
 
 const Title = styled.h1`

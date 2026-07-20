@@ -70,35 +70,5 @@ const AddButton = styled.Text`
 `;
 
 export function TreeCountingStaircase() {
-  const [segments, setSegments] = useState(3);
-
-  return (
-    <Stack>
-      <Section>
-        <SectionTitle>sibling-index() staircase</SectionTitle>
-        <Caption>width: calc(sibling-index() * 13%)</Caption>
-        <Ladder>
-          <Step />
-          <Step />
-          <Step />
-          <Step />
-          <Step />
-        </Ladder>
-      </Section>
-      <Section>
-        <SectionTitle>sibling-count() divider</SectionTitle>
-        <Caption>width: calc(94% / sibling-count())</Caption>
-        <SegmentRow>
-          {Array.from({ length: segments }, (_, i) => (
-            <Segment key={i} />
-          ))}
-        </SegmentRow>
-        <Pressable onPress={() => setSegments(n => (n >= 6 ? 2 : n + 1))}>
-          <AddButton>
-            {segments} segments; tap to {segments >= 6 ? 'reset' : 'add one'}
-          </AddButton>
-        </Pressable>
-      </Section>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

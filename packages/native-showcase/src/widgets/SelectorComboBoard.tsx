@@ -109,7 +109,7 @@ const LegendItem = styled.View`
 const LegendSwatch = styled.View<{ $color: string }>`
   width: 14px;
   height: 14px;
-  background-color: ${p => p.$color};
+  background-color: ${p => { throw new Error("STUB"); }};
 `;
 
 const LegendText = styled.Text`
@@ -120,70 +120,5 @@ const LegendText = styled.Text`
 `;
 
 export function SelectorComboBoard() {
-  return (
-    <Stack>
-      <Legend>
-        <LegendItem>
-          <LegendSwatch $color={PROBE_OFF} />
-          <LegendText>OFF</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <LegendSwatch $color={DESC_ON} />
-          <LegendText>DESCENDANT FIRES</LegendText>
-        </LegendItem>
-        <LegendItem>
-          <LegendSwatch $color={CHILD_ON} />
-          <LegendText>CHILD FIRES</LegendText>
-        </LegendItem>
-      </Legend>
-
-      <Row>
-        <PlainRowContainer>
-          <DescendantProbe />
-          <ChildProbe />
-        </PlainRowContainer>
-        <LabelsRowFlush>
-          <ProbeLabel>{'${Card} &'}</ProbeLabel>
-          <ProbeLabel>{'${Card} > &'}</ProbeLabel>
-        </LabelsRowFlush>
-        <Markdown variant="hint">
-          {'1. Standalone - no `${Card}` ancestor. Both probes stay OFF.'}
-        </Markdown>
-      </Row>
-
-      <Row>
-        <Card>
-          <DescendantProbe />
-          <ChildProbe />
-        </Card>
-        <LabelsRow>
-          <ProbeLabel>{'${Card} &'}</ProbeLabel>
-          <ProbeLabel>{'${Card} > &'}</ProbeLabel>
-        </LabelsRow>
-        <Markdown variant="hint">
-          {
-            '2. Direct child of `${Card}` - both probes light up. Descendant and child rules both fire.'
-          }
-        </Markdown>
-      </Row>
-
-      <Row>
-        <Card>
-          <StyledWrapper>
-            <DescendantProbe />
-            <ChildProbe />
-          </StyledWrapper>
-        </Card>
-        <LabelsRow>
-          <ProbeLabel>{'${Card} &'}</ProbeLabel>
-          <ProbeLabel>{'${Card} > &'}</ProbeLabel>
-        </LabelsRow>
-        <Markdown variant="hint">
-          {
-            '3. `${Card}` → styled wrapper → probes. Wrapper becomes the immediate parent: child rule stops firing while descendant still matches.'
-          }
-        </Markdown>
-      </Row>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

@@ -49,7 +49,7 @@ const LR_RE = /\b(left|right)\b/g;
 /** Swap whole-word `left` ↔ `right` occurrences in a single pass. */
 function swapDirectionKeyword(value: string): string {
   if (value.indexOf('left') === -1 && value.indexOf('right') === -1) return value;
-  return value.replace(LR_RE, m => (m === 'left' ? 'right' : 'left'));
+  return value.replace(LR_RE, m => { throw new Error("STUB"); });
 }
 
 /**
@@ -70,7 +70,7 @@ function tokenizeShorthand(value: string): string[] {
     }
   }
   if (start < value.length) tokens.push(value.substring(start));
-  return tokens.filter(t => t.length > 0);
+  return tokens.filter(t => { throw new Error("STUB"); });
 }
 
 /**

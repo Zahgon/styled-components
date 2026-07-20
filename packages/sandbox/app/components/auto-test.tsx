@@ -25,68 +25,11 @@ interface Result {
 }
 
 function hexToRgb(hex: string): string {
-  let h = hex.slice(1);
-  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
-  const n = parseInt(h, 16);
-  return 'rgb(' + ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255) + ')';
+    throw new Error("STUB");
 }
 
 export function runCheck(check: TestCheck): Result {
-  if (check.type === 'count') {
-    const found = document.querySelectorAll(check.ref).length;
-    const expected = Number(check.expected);
-    const pass = found === expected;
-    return { label: check.label, pass, detail: 'found ' + found + ' (expected ' + expected + ')' };
-  }
-
-  const el = check.ref.startsWith('[')
-    ? document.querySelector(check.ref)
-    : document.querySelector('[data-testid="' + check.ref + '"]');
-
-  if (!el) {
-    return { label: check.label, pass: false, detail: 'element not found' };
-  }
-
-  if (check.type === 'exists') {
-    return { label: check.label, pass: true, detail: 'found' };
-  }
-
-  if (check.type === 'element') {
-    const actual = el.tagName.toLowerCase();
-    const pass = actual === (check.expected || '').toLowerCase();
-    return { label: check.label, pass, detail: actual };
-  }
-
-  if (check.type === 'attr') {
-    const actual = el.getAttribute(check.prop || '') || '';
-    const pass = actual === check.expected;
-    return { label: check.label, pass, detail: actual || '(empty)' };
-  }
-
-  if (check.type === 'attr-absent') {
-    const present = el.hasAttribute(check.prop || '');
-    return {
-      label: check.label,
-      pass: !present,
-      detail: present ? 'present: ' + el.getAttribute(check.prop || '') : 'absent',
-    };
-  }
-
-  // style check (or style-not: pass when value does NOT match)
-  const actual = getComputedStyle(el)
-    .getPropertyValue(check.prop || '')
-    .trim();
-  let resolved = check.expectedVar
-    ? getComputedStyle(document.documentElement).getPropertyValue(check.expectedVar).trim()
-    : check.expected || '';
-  // Normalize hex to rgb so comparisons work against getComputedStyle output
-  if (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(resolved)) {
-    resolved = hexToRgb(resolved);
-  }
-  const expected = resolved.toLowerCase();
-  const matches = actual.toLowerCase() === expected || actual.toLowerCase().includes(expected);
-  const pass = check.type === 'style-not' ? !matches : matches;
-  return { label: check.label, pass, detail: actual };
+    throw new Error("STUB");
 }
 
 /**
@@ -94,36 +37,11 @@ export function runCheck(check: TestCheck): Result {
  * Renders a colored checkmark or X after running checks post-hydration.
  */
 export function TestStatus({ checks }: { checks: TestCheck[] }) {
-  const [results, setResults] = useState<Result[] | null>(null);
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      const out: Result[] = [];
-      for (let i = 0; i < checks.length; i++) {
-        out.push(runCheck(checks[i]));
-      }
-      setResults(out);
-    });
-  }, [checks]);
-
-  if (!results) return null;
-
-  const allPass = results.every(r => r.pass);
-
-  return (
-    <Indicator
-      $pass={allPass}
-      title={results
-        .map(r => (r.pass ? '\u2713' : '\u2717') + ' ' + r.label + ': ' + r.detail)
-        .join('\n')}
-    >
-      {allPass ? '\u2713' : '\u2717'}
-    </Indicator>
-  );
+    throw new Error("STUB");
 }
 
 const Indicator = styled.span<{ $pass: boolean }>`
-  color: ${p => (p.$pass ? p.theme.colors.success : p.theme.colors.danger)};
+  color: ${p => { throw new Error("STUB"); }};
   font-weight: 700;
   margin-left: 8px;
   font-size: 18px;

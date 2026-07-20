@@ -75,11 +75,7 @@ export default class WebStyle {
   private keyframesBuffer: CompiledKeyframes[] | undefined;
 
   constructor(rules: RuleSet<any>, componentId: string, baseStyle?: WebStyle | undefined) {
-    this.rules = rules;
-    this.componentId = componentId;
-    this.baseHash = phash(SEED, componentId);
-    this.baseStyle = baseStyle;
-    StyleSheet.registerId(componentId);
+      throw new Error("STUB");
   }
 
   /**
@@ -91,161 +87,15 @@ export default class WebStyle {
     styleSheet: StyleSheet,
     compiler: Compiler
   ): GeneratedStyle {
-    const baseGenerated = this.baseStyle
-      ? this.baseStyle.generate(executionContext, styleSheet, compiler)
-      : null;
-
-    if (this.resolvedSource === undefined) {
-      let source = getSource(this.rules);
-      if (source === undefined) {
-        // Hand-built RuleSet (e.g. `css([...])` array literal): synthesize
-        // the Source lazily on first render so construction stays cheap.
-        if (synthesizeSourceForRuleSet(this.rules)) source = getSource(this.rules);
-      }
-      this.resolvedSource = source ?? null;
-    }
-    const source = this.resolvedSource;
-    let css = '';
-    let fastFilled: ReadonlyArray<string> | null = null;
-    let name: string | undefined;
-    let interpKey: string | undefined;
-
-    let fastFragments: (FastPathFragment | null)[] | null = null;
-    if (source !== null) {
-      if (this.filledBuffer === undefined) {
-        // Pre-fill via push so V8 keeps these PACKED_ELEMENTS. `new Array(n)`
-        // stays HOLEY_ELEMENTS even after every slot is overwritten, which
-        // infects the IC for the per-slot reads in `evaluateForFastPath` and
-        // the fragments scan below. See NativeStyle.ts for the same pattern.
-        const n = source.interpolations.length;
-        const buf: string[] = [];
-        for (let i = 0; i < n; i++) buf.push('');
-        this.filledBuffer = buf;
-      }
-      if (this.fragmentsBuffer === undefined) {
-        const n = source.interpolations.length;
-        const buf: (FastPathFragment | null)[] = [];
-        for (let i = 0; i < n; i++) buf.push(null);
-        this.fragmentsBuffer = buf;
-      }
-      if (this.keyframesBuffer === undefined) {
-        this.keyframesBuffer = [];
-      } else {
-        this.keyframesBuffer.length = 0;
-      }
-      const filled = evaluateForFastPath(
-        source,
-        executionContext,
-        this.filledBuffer,
-        compiler,
-        this.fragmentsBuffer,
-        this.keyframesBuffer
-      );
-      if (filled !== null) {
-        fastFilled = filled;
-        fastFragments = hasAnyFragment(this.fragmentsBuffer) ? this.fragmentsBuffer : null;
-        interpKey = buildInterpKey(filled, fastFragments, compiler.hash);
-        name = this.interpKeyCache && this.interpKeyCache.get(interpKey);
-        if (name === undefined) {
-          css = buildHashCSS(source.strings, filled, fastFragments);
-        }
-      }
-    }
-
-    if (name === undefined && fastFilled === null) {
-      // Defensive: every constructor input path attaches a Source. A miss
-      // here means a hand-built styles input bypassed `css()`; render no CSS.
-      if (__DEV__) {
-        warnOnce(
-          'no-styles',
-          'this component has no usable styles. Define styles with the css helper or a tagged template (e.g. styled.div`...`).',
-          this.componentId
-        );
-      }
-    }
-
-    const localKf =
-      this.keyframesBuffer && this.keyframesBuffer.length > 0 ? this.keyframesBuffer : null;
-    const baseKf =
-      baseGenerated && baseGenerated.keyframes.length > 0 ? baseGenerated.keyframes : null;
-    let keyframes: CompiledKeyframes[];
-    if (baseKf !== null) {
-      keyframes = localKf !== null ? baseKf.concat(localKf) : baseKf.slice();
-    } else if (localKf !== null) {
-      keyframes = localKf.slice();
-    } else {
-      keyframes = EMPTY_KEYFRAMES;
-    }
-
-    if (name === undefined && !css) {
-      // Fresh levels array so siblings don't share a mutable reference.
-      return {
-        className: baseGenerated ? baseGenerated.className : '',
-        levels: baseGenerated ? baseGenerated.levels.slice() : [],
-        keyframes,
-      };
-    }
-
-    if (name === undefined) {
-      // No-plugin path keys directly on `css` so V8's cached string hash
-      // applies; with plugins prepend `compiler.hash` to disambiguate.
-      if (!this.cssKeyCache) this.cssKeyCache = new Map();
-      const cssKey = compiler.hash ? compiler.hash + css : css;
-      name = this.cssKeyCache.get(cssKey);
-      if (!name) {
-        name = generateName(phash(phash(this.baseHash, compiler.hash), css) >>> 0);
-        fifoSet(this.cssKeyCache, cssKey, name, MAX_DYNAMIC_NAME_CACHE);
-      }
-      if (interpKey !== undefined) {
-        if (!this.interpKeyCache) this.interpKeyCache = new Map();
-        fifoSet(this.interpKeyCache, interpKey, name, MAX_DYNAMIC_NAME_CACHE);
-      }
-    }
-
-    const isNew = !styleSheet.hasNameForId(this.componentId, name);
-    let rules: string[];
-    if (!isNew) {
-      rules = EMPTY_RULES;
-    } else if (source !== null && fastFilled !== null) {
-      const fast = compiler.emit(source, fastFilled, '.' + name, this.componentId, fastFragments);
-      if (fast !== null) {
-        rules = fast;
-      } else {
-        // AST-direct emit bailed (e.g. structural char in a substitution);
-        // fall back to the string-input emit on the joined CSS.
-        if (!css) css = buildHashCSS(source.strings, fastFilled, fastFragments);
-        rules = compiler.compile(css, '.' + name, undefined, this.componentId);
-      }
-    } else {
-      rules = compiler.compile(css, '.' + name, undefined, this.componentId);
-    }
-
-    const levels = baseGenerated ? baseGenerated.levels.slice() : [];
-    levels.push({ componentId: this.componentId, name, rules, isNew });
-
-    return {
-      className: joinStrings(baseGenerated ? baseGenerated.className : '', name),
-      levels,
-      keyframes,
-    };
+      throw new Error("STUB");
   }
 
   inject(styleSheet: StyleSheet, generated: GeneratedStyle): string {
-    // Keyframes first so they sort before the component CSS within their
-    // (lower) group ID; group IDs were claimed at Keyframes construction time.
-    flushKeyframes(styleSheet, generated.keyframes);
-    const levels = generated.levels;
-    for (let i = 0; i < levels.length; i++) {
-      const level = levels[i];
-      if (level.isNew) {
-        styleSheet.insertRules(level.componentId, level.name, level.rules);
-      }
-    }
-    return generated.className;
+      throw new Error("STUB");
   }
 
   /** Compute the inheritance plan and write any new rules to the sheet in one call. */
   flush(executionContext: ExecutionContext, styleSheet: StyleSheet, compiler: Compiler): string {
-    return this.inject(styleSheet, this.generate(executionContext, styleSheet, compiler));
+      throw new Error("STUB");
   }
 }

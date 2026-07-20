@@ -2,19 +2,7 @@ import styled from 'styled-components';
 import { HintText } from '../../components/test-ui';
 
 export default function PageB() {
-  return (
-    <Card>
-      <h2>Page B</h2>
-      <Text>
-        Another route under the same layout. Try navigating rapidly between all three tabs &mdash;
-        the gradient and top border should never flicker or disappear.
-      </Text>
-      <HintText>
-        If broken: styles flash or disappear during rapid navigation. The layout&apos;s{' '}
-        <code>createGlobalStyle</code> should stay mounted across all child route transitions.
-      </HintText>
-    </Card>
-  );
+    throw new Error("STUB");
 }
 
 const Card = styled.div`

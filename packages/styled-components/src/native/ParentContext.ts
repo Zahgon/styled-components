@@ -130,5 +130,5 @@ export { EMPTY_SIBLINGS };
 export const ParentContext = React.createContext<ParentContextValue>(DEFAULT_PARENT_CONTEXT);
 
 export function useParentContext(): ParentContextValue {
-  return React.useContext(ParentContext);
+    throw new Error("STUB");
 }

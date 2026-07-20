@@ -7,9 +7,7 @@ let reverseRegister: Map<number, string> = new Map();
 let nextFreeGroup = 1;
 
 export const resetGroupIds = () => {
-  groupIDRegister = new Map();
-  reverseRegister = new Map();
-  nextFreeGroup = 1;
+    throw new Error("STUB");
 };
 
 export const groupForId = (id: string): number => {

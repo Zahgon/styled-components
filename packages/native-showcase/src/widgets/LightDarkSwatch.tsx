@@ -72,22 +72,5 @@ const MediaBody = styled.Text`
 `;
 
 export function LightDarkSwatch() {
-  return (
-    <>
-      <Row>
-        <FunctionSwatch>
-          <FunctionTitle>light-dark()</FunctionTitle>
-          <FunctionBody>One declaration; the function picks the branch.</FunctionBody>
-        </FunctionSwatch>
-        <MediaSwatch>
-          <MediaTitle>@media</MediaTitle>
-          <MediaBody>Two CSS branches; media query gates which fires.</MediaBody>
-        </MediaSwatch>
-      </Row>
-      <Hint>
-        Both branches follow the OS color scheme. In the iOS simulator press ⇧⌘A to toggle, or flip
-        Settings → Developer → Dark Appearance.
-      </Hint>
-    </>
-  );
+    throw new Error("STUB");
 }

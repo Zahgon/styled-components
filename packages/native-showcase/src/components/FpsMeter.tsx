@@ -5,8 +5,8 @@ import { theme as t } from '@/theme/tokens';
 
 const Container = styled.View<{ $topInset: number; $rightInset: number }>`
   position: absolute;
-  top: calc(${p => p.$topInset}px + ${t.space.xs}px);
-  right: calc(${p => p.$rightInset}px + ${t.space.md}px);
+  top: calc(${p => { throw new Error("STUB"); }}px + ${t.space.xs}px);
+  right: calc(${p => { throw new Error("STUB"); }}px + ${t.space.md}px);
   flex-direction: row;
   align-items: center;
   gap: ${t.space.xs}px;
@@ -22,7 +22,7 @@ const Dot = styled.View<{ $color: string }>`
   width: 6px;
   height: 6px;
   border-radius: 3px;
-  background-color: ${p => p.$color};
+  background-color: ${p => { throw new Error("STUB"); }};
 `;
 
 const Label = styled.Text`
@@ -42,37 +42,5 @@ const FAIL_FPS = 30;
  * changes so the meter doesn't pollute its own measurement.
  */
 export function FpsMeter() {
-  const insets = useSafeAreaInsets();
-  const [fps, setFps] = React.useState(0);
-
-  React.useEffect(() => {
-    let frames = 0;
-    let lastSample = performance.now();
-    let raf = 0;
-
-    const tick = () => {
-      frames += 1;
-      const now = performance.now();
-      const elapsed = now - lastSample;
-      if (elapsed >= SAMPLE_MS) {
-        const next = Math.round((frames * 1000) / elapsed);
-        setFps(prev => (prev === next ? prev : next));
-        frames = 0;
-        lastSample = now;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  const color = fps >= WARN_FPS ? t.colors.pass : fps >= FAIL_FPS ? '#d99c00' : t.colors.fail;
-
-  return (
-    <Container $topInset={insets.top} $rightInset={insets.right}>
-      <Dot $color={color} />
-      <Label>{String(fps).padStart(2, '0')} FPS</Label>
-    </Container>
-  );
+    throw new Error("STUB");
 }

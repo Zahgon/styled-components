@@ -10,14 +10,5 @@ const hasOwn = Object.prototype.hasOwnProperty;
  * across platforms.
  */
 export default function shallowEqual(prev: object, next: object, prevKeyCount: number): boolean {
-  const a = prev as Record<string, unknown>;
-  const b = next as Record<string, unknown>;
-  let nextKeyCount = 0;
-  for (const key in b) {
-    if (hasOwn.call(b, key)) {
-      nextKeyCount++;
-      if (a[key] !== b[key]) return false;
-    }
-  }
-  return nextKeyCount === prevKeyCount;
+    throw new Error("STUB");
 }

@@ -131,119 +131,39 @@ export function collapseIdenticalCommas(value: string): string {
 }
 
 function isLengthPercentageToken(t: Token): boolean {
-  if (t.kind === TokenKind.Function) {
-    return t.name === 'calc' || t.name === 'min' || t.name === 'max' || t.name === 'clamp';
-  }
-  return (
-    t.kind === TokenKind.Length ||
-    t.kind === TokenKind.Percent ||
-    // CSS accepts unitless zero anywhere a length is allowed; non-zero
-    // numbers are not <length-percentage>.
-    (t.kind === TokenKind.Number && t.value === 0)
-  );
+    throw new Error("STUB");
 }
 
 function isNonNegativeLengthPercentageToken(t: Token): boolean {
-  return isLengthPercentageToken(t) && (t.value === undefined || t.value >= 0);
+    throw new Error("STUB");
 }
 
 function isIdent(t: Token, values: ReadonlySet<string>): boolean {
-  return t.kind === TokenKind.Ident && t.name !== undefined && values.has(t.name);
+    throw new Error("STUB");
 }
 
 function positionAxis(t: Token): 'horizontal' | 'vertical' | 'center' | null {
-  if (t.kind !== TokenKind.Ident || t.name === undefined) return null;
-  if (HORIZONTAL_POSITION_KEYWORDS.has(t.name)) return 'horizontal';
-  if (VERTICAL_POSITION_KEYWORDS.has(t.name)) return 'vertical';
-  return t.name === 'center' ? 'center' : null;
+    throw new Error("STUB");
 }
 
 function isValidTwoTokenPosition(first: Token, second: Token): boolean {
-  const firstIsLp = isLengthPercentageToken(first);
-  const secondIsLp = isLengthPercentageToken(second);
-  if (firstIsLp) {
-    const secondAxis = positionAxis(second);
-    return secondIsLp || secondAxis === 'vertical' || secondAxis === 'center';
-  }
-  if (secondIsLp) {
-    const firstAxis = positionAxis(first);
-    return firstAxis === 'horizontal' || firstAxis === 'center';
-  }
-
-  const firstAxis = positionAxis(first);
-  const secondAxis = positionAxis(second);
-  if (firstAxis === null || secondAxis === null) return false;
-  if (firstAxis === 'center' || secondAxis === 'center') return true;
-  return firstAxis !== secondAxis;
+    throw new Error("STUB");
 }
 
 function isValidEdgeOffsetPosition(tokens: Token[]): boolean {
-  let sawHorizontal = false;
-  let sawVertical = false;
-  for (let i = 0; i < tokens.length; i++) {
-    const axis = positionAxis(tokens[i]);
-    if (axis === 'center') {
-      if (!sawHorizontal) {
-        sawHorizontal = true;
-      } else if (!sawVertical) {
-        sawVertical = true;
-      } else {
-        return false;
-      }
-      continue;
-    }
-    if (axis === null) return false;
-    if (axis === 'horizontal') {
-      if (sawHorizontal) return false;
-      sawHorizontal = true;
-    } else {
-      if (sawVertical) return false;
-      sawVertical = true;
-    }
-    const next = tokens[i + 1];
-    if (next !== undefined && isLengthPercentageToken(next)) i++;
-  }
-  return sawHorizontal && sawVertical;
+    throw new Error("STUB");
 }
 
 function isValidBackgroundPositionLayer(layer: string): boolean {
-  const tokens = tokenize(layer);
-  const len = tokens.length;
-  if (len === 0 || len > 4) return false;
-  if (len === 1) {
-    return isLengthPercentageToken(tokens[0]) || isIdent(tokens[0], POSITION_KEYWORDS);
-  }
-  if (len === 2) return isValidTwoTokenPosition(tokens[0], tokens[1]);
-  return isValidEdgeOffsetPosition(tokens);
+    throw new Error("STUB");
 }
 
 function isValidBackgroundSizeLayer(layer: string): boolean {
-  const tokens = tokenize(layer);
-  const len = tokens.length;
-  if (len === 0 || len > 2) return false;
-  if (len === 1) {
-    const t = tokens[0];
-    return isNonNegativeLengthPercentageToken(t) || isIdent(t, SIZE_KEYWORDS);
-  }
-  for (let i = 0; i < len; i++) {
-    const t = tokens[i];
-    if (!isNonNegativeLengthPercentageToken(t) && (t.kind !== TokenKind.Ident || t.name !== 'auto'))
-      return false;
-  }
-  return true;
+    throw new Error("STUB");
 }
 
 function isValidBackgroundRepeatLayer(layer: string): boolean {
-  const tokens = tokenize(layer);
-  const len = tokens.length;
-  if (len === 0 || len > 2) return false;
-  if (len === 1) {
-    const t = tokens[0];
-    return isIdent(t, SINGLE_REPEAT_KEYWORDS) || isIdent(t, TWO_VALUE_REPEAT_KEYWORDS);
-  }
-  return (
-    isIdent(tokens[0], TWO_VALUE_REPEAT_KEYWORDS) && isIdent(tokens[1], TWO_VALUE_REPEAT_KEYWORDS)
-  );
+    throw new Error("STUB");
 }
 
 function everyLayer(value: string, validate: (layer: string) => boolean): boolean {

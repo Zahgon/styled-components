@@ -157,7 +157,7 @@ function parseLinearGradientLayer(
   const inner = linearGradientInner(trimmedLayer.trim());
   if (inner === null) return null;
 
-  const parts = splitTopLevelCommas(inner.trim(), false).map(p => p.trim());
+  const parts = splitTopLevelCommas(inner.trim(), false).map(p => { throw new Error("STUB"); });
   if (parts.length === 0) return null;
 
   let direction: string | undefined;

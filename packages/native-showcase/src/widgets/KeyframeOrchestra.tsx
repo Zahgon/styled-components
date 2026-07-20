@@ -114,7 +114,7 @@ const SpinBox = styled.View<{ $play: boolean }>`
   height: 24px;
   background-color: ${t.colors.ink};
   animation: spin 1200ms linear infinite;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 // ── 2. Breathe pulse (scale+opacity, 3-stop, ease-in-out) ──
@@ -139,7 +139,7 @@ const BreatheDot = styled.View<{ $play: boolean }>`
   border-radius: ${t.radius.pill}px;
   background-color: ${t.colors.pass};
   animation: breathe 2s ease-in-out infinite;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 // ── 3. Jelly squash-and-stretch (volume-preserving scaleX/Y, 7-stop) ──
@@ -186,7 +186,7 @@ const JellyBall = styled.View<{ $play: boolean }>`
   border-radius: ${t.radius.pill}px;
   background-color: ${t.colors.fail};
   animation: jelly 1.6s infinite;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 // ── 3b. Drift (multi-arg translate(x, y) + scale(x, y) shorthand) ──
@@ -216,7 +216,7 @@ const DriftBox = styled.View<{ $play: boolean }>`
   border-radius: 3px;
   background-color: ${t.colors.accent};
   animation: drift 2.4s ease-in-out infinite;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 // ── 4. 3D card flip (rotateY + scaleX pinch + opacity crossfade, alternate) ──
@@ -252,7 +252,7 @@ const FlipCard = styled.View<{ $play: boolean }>`
   border-radius: 4px;
   background-color: ${t.colors.ink};
   animation: cardFlip 1.8s ease-in-out infinite alternate;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 // ── 5. Color wave (backgroundColor, 5-stop, linear) ──
@@ -279,7 +279,7 @@ const ColorBar = styled.View<{ $play: boolean }>`
   border-radius: ${t.radius.pill}px;
   background-color: ${t.colors.pass};
   animation: colorWave 3s linear infinite;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 // ── 6. Stagger in/out cycle (delay + fill-mode: both) ──
@@ -300,12 +300,12 @@ const StaggerBarIn = styled.View<{ $play: boolean; $i: number }>`
     }
   }
   height: 6px;
-  width: ${p => 100 - p.$i * 12}%;
+  width: ${p => { throw new Error("STUB"); }}%;
   border-radius: ${t.radius.pill}px;
   background-color: ${t.colors.ink};
   opacity: 1;
-  animation: slideIn 500ms ease-out ${p => p.$i * 150}ms both;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation: slideIn 500ms ease-out ${p => { throw new Error("STUB"); }}ms both;
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 const StaggerBarOut = styled.View<{ $play: boolean; $i: number }>`
@@ -320,12 +320,12 @@ const StaggerBarOut = styled.View<{ $play: boolean; $i: number }>`
     }
   }
   height: 6px;
-  width: ${p => 100 - p.$i * 12}%;
+  width: ${p => { throw new Error("STUB"); }}%;
   border-radius: ${t.radius.pill}px;
   background-color: ${t.colors.ink};
   opacity: 1;
-  animation: slideOut 500ms ease-in ${p => p.$i * 150}ms both;
-  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation: slideOut 500ms ease-in ${p => { throw new Error("STUB"); }}ms both;
+  animation-play-state: ${p => { throw new Error("STUB"); }};
 `;
 
 const STAGGER_BARS = 4;
@@ -348,116 +348,15 @@ interface RowProps {
 }
 
 function Row({ label, feature, children }: RowProps) {
-  return (
-    <RowFrame>
-      <LabelCol>
-        <Label>{label}</Label>
-        <Feature>{feature}</Feature>
-      </LabelCol>
-      {children}
-    </RowFrame>
-  );
+    throw new Error("STUB");
 }
 
 function Block({ label, feature, children }: RowProps) {
-  return (
-    <BlockFrame>
-      <BlockHeader>
-        <LabelCol>
-          <Label>{label}</Label>
-          <Feature>{feature}</Feature>
-        </LabelCol>
-      </BlockHeader>
-      {children}
-    </BlockFrame>
-  );
+    throw new Error("STUB");
 }
 
 // ── Main widget ──
 
 export function KeyframeOrchestra() {
-  const [playing, setPlaying] = useState(true);
-  const [staggerDir, setStaggerDir] = useState<'in' | 'out'>('in');
-  const [staggerKey, setStaggerKey] = useState(0);
-  const env = useMediaEnv();
-  const active = playing && !env.reduceMotion;
-
-  useEffect(() => {
-    if (!active) return;
-    const wait = STAGGER_ANIM_MS + STAGGER_HOLD_MS;
-    const id = setTimeout(() => {
-      setStaggerDir(d => {
-        const next = d === 'in' ? 'out' : 'in';
-        if (next === 'in') setStaggerKey(k => k + 1);
-        return next;
-      });
-    }, wait);
-    return () => clearTimeout(id);
-  }, [staggerDir, staggerKey, active]);
-
-  const toggle = () => {
-    if (!playing) {
-      setStaggerDir('in');
-      setStaggerKey(k => k + 1);
-    }
-    setPlaying(p => !p);
-  };
-
-  const StaggerBar = staggerDir === 'in' ? StaggerBarIn : StaggerBarOut;
-
-  return (
-    <Stack>
-      <ControlRow onPress={toggle} accessibilityRole="button">
-        <ControlLabel>{active ? 'pause all' : 'play all'}</ControlLabel>
-      </ControlRow>
-
-      <Row label="spin" feature="infinite · linear · from/to">
-        <CellFrame>
-          <SpinBox $play={active} />
-        </CellFrame>
-      </Row>
-
-      <Row label="breathe" feature="scale + opacity · 3-stop · ease-in-out">
-        <CellFrame>
-          <BreatheDot $play={active} />
-        </CellFrame>
-      </Row>
-
-      <Row label="jelly" feature="squash + stretch · scaleX/Y + translateY · 7-stop">
-        <JellyStage>
-          <JellyBall $play={active} />
-        </JellyStage>
-      </Row>
-
-      <Row label="drift" feature="translate(x, y) + scale(x, y) shorthand · 4-stop">
-        <CellFrame>
-          <DriftBox $play={active} />
-        </CellFrame>
-      </Row>
-
-      <Row label="card flip" feature="rotateY + scaleX + opacity · 5-stop · alternate">
-        <CellFrame>
-          <FlipCard $play={active} />
-        </CellFrame>
-      </Row>
-
-      <Block label="color wave" feature="background-color · 5-stop · linear">
-        <ColorBar $play={active} />
-      </Block>
-
-      <Block label="stagger cascade" feature="delay + fill-mode: both · in/out cycle">
-        <StaggerGroup key={staggerKey}>
-          {[0, 1, 2, 3].map(i => (
-            <StaggerBar key={i} $play={active} $i={i} />
-          ))}
-        </StaggerGroup>
-      </Block>
-
-      <Caption>
-        {env.reduceMotion
-          ? 'Reduce-motion is on - animations skip to their final state.'
-          : 'Pure CSS @keyframes - no Animated API at the component layer. All native-thread.'}
-      </Caption>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

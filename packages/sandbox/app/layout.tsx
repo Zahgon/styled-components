@@ -31,19 +31,5 @@ const Content = styled.div`
 `;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body suppressHydrationWarning>
-        <StyledComponentsRegistry>
-          <CustomThemeProvider>
-            <Sidebar />
-            <Content>{children}</Content>
-          </CustomThemeProvider>
-        </StyledComponentsRegistry>
-      </body>
-    </html>
-  );
+    throw new Error("STUB");
 }

@@ -51,39 +51,9 @@ interface ThemedRowProps {
 }
 
 function ThemedRow({ label, override }: ThemedRowProps) {
-  const swatches = (
-    <Row>
-      <Swatch>
-        <SwatchLabel>accent</SwatchLabel>
-      </Swatch>
-      <Swatch>
-        <SwatchLabel>accent</SwatchLabel>
-      </Swatch>
-      <Swatch>
-        <SwatchLabel>accent</SwatchLabel>
-      </Swatch>
-    </Row>
-  );
-  return (
-    <>
-      <RowLabel>{label}</RowLabel>
-      {override ? <ThemeProvider theme={override}>{swatches}</ThemeProvider> : swatches}
-    </>
-  );
+    throw new Error("STUB");
 }
 
 export function ThemeOverrides() {
-  return (
-    <Stack>
-      <ThemedRow label="default · root theme" />
-      <ThemedRow
-        label="forest · accent overridden in this subtree"
-        override={{ colors: { accent: '#1f7a52' } }}
-      />
-      <ThemedRow
-        label="ember · different override, same Swatch component"
-        override={{ colors: { accent: '#c8243a' } }}
-      />
-    </Stack>
-  );
+    throw new Error("STUB");
 }

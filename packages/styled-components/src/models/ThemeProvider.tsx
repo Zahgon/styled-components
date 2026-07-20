@@ -40,9 +40,9 @@ type Props = {
 export const ThemeContext = !IS_RSC
   ? React.createContext<DefaultTheme | undefined>(undefined)
   : ({
-      Provider: ({ children }: { children: React.ReactNode; value?: DefaultTheme }) => children,
+      Provider: ({ children }: { children: React.ReactNode; value?: DefaultTheme }) => { throw new Error("STUB"); },
       Consumer: ({ children }: { children: (theme?: DefaultTheme) => React.ReactNode }) =>
-        children(undefined),
+        { throw new Error("STUB"); },
     } as React.Context<DefaultTheme | undefined>);
 
 export const ThemeConsumer = ThemeContext.Consumer;
@@ -135,7 +135,7 @@ export default function ThemeProvider(props: Props): React.JSX.Element | null {
 
   const outerTheme = React.useContext(ThemeContext);
   const themeContext = React.useMemo(
-    () => mergeTheme(props.theme, outerTheme),
+    () => { throw new Error("STUB"); },
     [props.theme, outerTheme]
   );
 

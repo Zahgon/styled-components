@@ -5,21 +5,7 @@ import { usePathname } from 'next/navigation';
 import styled from 'styled-components';
 
 export default function NavClient() {
-  const pathname = usePathname();
-
-  return (
-    <Nav>
-      {[
-        { href: '/global-style-test', label: 'Home' },
-        { href: '/global-style-test/page-a', label: 'Page A' },
-        { href: '/global-style-test/page-b', label: 'Page B' },
-      ].map(({ href, label }) => (
-        <NavLink key={href} href={href} $active={pathname === href}>
-          {label}
-        </NavLink>
-      ))}
-    </Nav>
-  );
+    throw new Error("STUB");
 }
 
 const Nav = styled.nav`
@@ -34,15 +20,15 @@ const NavLink = styled(Link)<{ $active: boolean }>`
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
-  color: ${p => (p.$active ? '#fff' : 'var(--sc-colors-text, #111827)')};
+  color: ${p => { throw new Error("STUB"); }};
   background: ${p =>
-    p.$active ? 'var(--sc-colors-primary, #0070f3)' : 'var(--sc-colors-surface, #f9fafb)'};
+    { throw new Error("STUB"); }};
   border: 1px solid
-    ${p => (p.$active ? 'var(--sc-colors-primary, #0070f3)' : 'var(--sc-colors-border, #e5e7eb)')};
+    ${p => { throw new Error("STUB"); }};
   transition: background 0.15s;
 
   &:hover {
     background: ${p =>
-      p.$active ? 'var(--sc-colors-primary, #0070f3)' : 'var(--sc-colors-border, #e5e7eb)'};
+      { throw new Error("STUB"); }};
   }
 `;

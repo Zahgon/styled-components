@@ -33,30 +33,7 @@ type Props = {
  * (function props can't cross the server→client boundary).
  */
 export function DedupCountBadge(props: Props) {
-  const [count, setCount] = useState<number | null>(null);
-  const { tagId, ruleNeedle } = props;
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      const c =
-        tagId !== undefined
-          ? document.querySelectorAll('style[data-styled-global="' + tagId + '"]').length
-          : countSheetRuleOccurrences(ruleNeedle!);
-      setCount(c);
-    });
-  }, [tagId, ruleNeedle]);
-
-  if (count === null) {
-    return <Badge $ok={true}>Counting…</Badge>;
-  }
-
-  const ok = count === props.expected;
-  return (
-    <Badge $ok={ok} title={props.title}>
-      {ok ? '✓' : '✗'} {count} of {props.expected} expected {props.unit}
-      {count === 1 ? '' : 's'}
-    </Badge>
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -67,20 +44,7 @@ export function DedupCountBadge(props: Props) {
  * carries this id."
  */
 function countSheetRuleOccurrences(needle: string): number {
-  let count = 0;
-  const tags = document.querySelectorAll<HTMLStyleElement>('style[data-styled]');
-  for (const tag of Array.from(tags)) {
-    const sheet = tag.sheet;
-    if (!sheet) continue;
-    try {
-      for (let i = 0; i < sheet.cssRules.length; i++) {
-        if (sheet.cssRules[i].cssText.includes(needle)) count++;
-      }
-    } catch {
-      // cross-origin or otherwise inaccessible sheet; skip
-    }
-  }
-  return count;
+    throw new Error("STUB");
 }
 
 const Badge = styled.div<{ $ok: boolean }>`
@@ -91,8 +55,8 @@ const Badge = styled.div<{ $ok: boolean }>`
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
-  background: ${p => (p.$ok ? 'rgba(22, 163, 74, 0.12)' : 'rgba(220, 38, 38, 0.12)')};
-  color: ${p => (p.$ok ? '#16a34a' : '#dc2626')};
-  border: 1px solid ${p => (p.$ok ? '#16a34a' : '#dc2626')};
+  background: ${p => { throw new Error("STUB"); }};
+  color: ${p => { throw new Error("STUB"); }};
+  border: 1px solid ${p => { throw new Error("STUB"); }};
   font-family: monospace;
 `;

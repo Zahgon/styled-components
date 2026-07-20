@@ -171,30 +171,5 @@ const VARIANTS: ReadonlyArray<Variant> = [
 ];
 
 export function AttributeVariants() {
-  const [pressed, setPressed] = useState<string | null>(null);
-  return (
-    <Stack>
-      {VARIANTS.map(v => {
-        const isPressed = pressed === v.id;
-        return (
-          <VariantRow key={v.id}>
-            <Pill
-              {...v.attrs}
-              aria-pressed={isPressed}
-              onPress={() => setPressed(p => (p === v.id ? null : v.id))}
-              accessibilityRole="button"
-            >
-              <PillLabel {...v.attrs} aria-pressed={isPressed}>
-                {v.label}
-              </PillLabel>
-            </Pill>
-            <Selector>
-              {v.selector}
-              {isPressed ? "[aria-pressed='true']" : ''}
-            </Selector>
-          </VariantRow>
-        );
-      })}
-    </Stack>
-  );
+    throw new Error("STUB");
 }

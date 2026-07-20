@@ -71,50 +71,5 @@ const ARABIC_MULTI =
   'الاقتطاع متعدد الأسطر، تركض هذه الفقرة طويلا عن قصد حتى ينتهي السطر الثاني في منتصف الكلمة، ويقرر وضع التجاوز ما إذا كانت الحافة الزائدة ستظهر كثلاث نقاط أم كقص مفاجئ.';
 
 export function TextOverflowBoard() {
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Each card is the same width; the only CSS difference is the \`text-overflow\` value. \`ellipsis\` ends with a Unicode \`…\`; \`clip\` ends abruptly at the box edge.`}
-      </InlineMarkdown>
-      <Group>
-        <Tag>text-wrap: nowrap · ellipsis</Tag>
-        <Frame>
-          <SingleLineEllipsis>{SINGLE}</SingleLineEllipsis>
-        </Frame>
-      </Group>
-      <Group>
-        <Tag>text-wrap: nowrap · clip</Tag>
-        <Frame>
-          <SingleLineClip>{SINGLE}</SingleLineClip>
-        </Frame>
-      </Group>
-      <Group>
-        <Tag>line-clamp: 2 · ellipsis</Tag>
-        <Frame>
-          <ClampEllipsis>{MULTI}</ClampEllipsis>
-        </Frame>
-      </Group>
-      <Group>
-        <Tag>line-clamp: 2 · clip</Tag>
-        <Frame>
-          <ClampClip>{MULTI}</ClampClip>
-        </Frame>
-      </Group>
-      <Group>
-        <Tag>Arabic script · single line · ellipsis lands on the visual left</Tag>
-        <Frame>
-          <SingleLineEllipsis>{ARABIC_SINGLE}</SingleLineEllipsis>
-        </Frame>
-      </Group>
-      <Group>
-        <Tag>Arabic script · line-clamp: 2 · ellipsis lands on the visual left</Tag>
-        <Frame>
-          <ClampEllipsis>{ARABIC_MULTI}</ClampEllipsis>
-        </Frame>
-      </Group>
-      <Markdown variant="hint">
-        {`The ellipsis follows the script direction, not the paragraph direction. Latin content overflows on the right, Arabic content overflows on the left. Without \`text-wrap: nowrap\` or \`line-clamp\` the text wraps and there is nothing to overflow. Web builds pass the declaration to the browser.`}
-      </Markdown>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

@@ -55,23 +55,5 @@ const Desktop = styled(Bar)`
 `;
 
 export function MediaRangeBars() {
-  return (
-    <>
-      <Phone>
-        <Tag>(width &lt; 600px)</Tag>
-        <Title>Phone</Title>
-        <Sub>Single column. Compact spacing.</Sub>
-      </Phone>
-      <Tablet>
-        <Tag>(600px ≤ width ≤ 1100px)</Tag>
-        <Title>Tablet</Title>
-        <Sub>Mid range. Two-column comfort.</Sub>
-      </Tablet>
-      <Desktop>
-        <Tag>(width ≥ 1100px)</Tag>
-        <Title>Desktop</Title>
-        <Sub>Full width. Generous gutters.</Sub>
-      </Desktop>
-    </>
-  );
+    throw new Error("STUB");
 }

@@ -13,28 +13,7 @@ const ClientDedupGlobalStyle = createGlobalStyle`
 `;
 
 export function ClientDedupSection() {
-  return (
-    <Stack>
-      <ClientDedupGlobalStyle />
-      <ClientDedupGlobalStyle />
-      <ClientDedupGlobalStyle />
-      <DedupCountBadge
-        ruleNeedle={NEEDLE}
-        expected={1}
-        unit={
-          <>
-            occurrence of <code>{NEEDLE}</code> in CSSOM rules
-          </>
-        }
-        title={'matches against ' + NEEDLE + ' inside style[data-styled] sheets'}
-      />
-      <Marker data-client-dedup-marker>
-        Dotted blue outline ⇒ <code>ClientDedupGlobalStyle</code> applied. Badge above ⇒ the rule
-        appears exactly once across styled-components sheets (client path uses CSSOM{' '}
-        <code>insertRule</code>, distinct from the RSC <code>React.cache</code> path).
-      </Marker>
-    </Stack>
-  );
+    throw new Error("STUB");
 }
 
 const Stack = styled.div`

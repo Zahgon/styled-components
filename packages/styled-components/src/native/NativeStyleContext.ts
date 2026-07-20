@@ -113,5 +113,5 @@ export const NativeStyleContext =
   React.createContext<NativeStyleContextValue>(DEFAULT_NATIVE_STYLE);
 
 export function useNativeStyleContext(): NativeStyleContextValue {
-  return React.useContext(NativeStyleContext);
+    throw new Error("STUB");
 }

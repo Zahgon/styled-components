@@ -16,17 +16,7 @@ export default class WebGlobalStyle<Props extends object> {
   instanceRules: Map<string, InstanceEntry> = new Map();
 
   constructor(rules: RuleSet<Props>, componentId: string) {
-    this.rules = rules;
-    this.componentId = componentId;
-    this.isStatic = isStaticRules(rules);
-
-    // Synthesize a Source if the rules array predates `css(...)` (synthetic
-    // / test fixtures). No-op when source is already attached.
-    synthesizeSourceForRuleSet(rules);
-
-    // Pre-register the shared group so global styles defined before
-    // components always appear before them in the stylesheet.
-    StyleSheet.registerId(this.componentId);
+      throw new Error("STUB");
   }
 
   removeStyles(instance: string, styleSheet: StyleSheet): void {

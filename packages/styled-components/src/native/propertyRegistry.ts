@@ -28,11 +28,10 @@ export function getCssPropertyRegistration(name: string): CssPropertyRegistratio
 
 /** Cheap gate for the inherits-aware lookup path. */
 export function hasNonInheritedRegistrations(): boolean {
-  return anyNonInherited;
+    throw new Error("STUB");
 }
 
 /** Test-only: clear all registrations. */
 export function resetCssPropertiesForTest(): void {
-  registry.clear();
-  anyNonInherited = false;
+    throw new Error("STUB");
 }

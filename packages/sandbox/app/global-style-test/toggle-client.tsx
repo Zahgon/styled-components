@@ -37,100 +37,7 @@ const PHASE_COLORS: Record<Phase, string> = {
 };
 
 export default function ToggleClient() {
-  const [phase, setPhase] = useState<Phase>('idle');
-  const [showStyles, setShowStyles] = useState(false);
-  const [results, setResults] = useState<CheckResult[]>([]);
-
-  useEffect(() => {
-    const r: CheckResult[] = [];
-
-    // Phase 1: Check initial state (gradient, no outline)
-    const t1 = setTimeout(() => {
-      const bg = getComputedStyle(document.body).backgroundImage;
-      r.push({ label: 'Gradient present (initial)', pass: bg.includes('linear-gradient') });
-
-      const outline = getComputedStyle(document.body).outlineStyle;
-      r.push({ label: 'No outline (initial)', pass: outline === 'none' || outline === '' });
-
-      setPhase('mounting');
-      setShowStyles(true);
-    }, 400);
-
-    // Phase 2: Verify mounted state
-    const t2 = setTimeout(() => {
-      setPhase('mounted');
-    }, 800);
-
-    const t3 = setTimeout(() => {
-      const outline = getComputedStyle(document.body).outlineStyle;
-      r.push({ label: 'Outline applied (mounted)', pass: outline === 'solid' });
-
-      const overflow = getComputedStyle(document.body).overflow;
-      r.push({ label: 'Scroll locked (mounted)', pass: overflow === 'hidden' });
-
-      const bg = getComputedStyle(document.body).backgroundImage;
-      r.push({ label: 'Gradient persists (mounted)', pass: bg.includes('linear-gradient') });
-
-      setPhase('unmounting');
-      setShowStyles(false);
-    }, 1800);
-
-    // Phase 3: Verify unmounted state
-    const t4 = setTimeout(() => {
-      setPhase('unmounted');
-    }, 2200);
-
-    const t5 = setTimeout(() => {
-      const outline = getComputedStyle(document.body).outlineStyle;
-      r.push({ label: 'Outline removed (unmounted)', pass: outline === 'none' || outline === '' });
-
-      const overflow = getComputedStyle(document.body).overflow;
-      r.push({ label: 'Scroll restored (unmounted)', pass: overflow !== 'hidden' });
-
-      const bg = getComputedStyle(document.body).backgroundImage;
-      r.push({ label: 'Gradient persists (unmounted)', pass: bg.includes('linear-gradient') });
-
-      setResults(r);
-      setPhase('done');
-    }, 2800);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
-      clearTimeout(t5);
-    };
-  }, []);
-
-  const passed = results.filter(r => r.pass).length;
-
-  return (
-    <Card>
-      <Heading>Conditional mount/unmount - automated test</Heading>
-
-      <PhaseBar $color={PHASE_COLORS[phase]}>
-        <PhaseDot $color={PHASE_COLORS[phase]} $animate={phase !== 'done' && phase !== 'idle'} />
-        {PHASE_LABELS[phase]}
-      </PhaseBar>
-
-      {showStyles && <BodyLockStyles />}
-
-      {phase === 'done' && (
-        <ResultsBox $allPass={passed === results.length}>
-          <ResultTitle>
-            {passed}/{results.length} passing
-          </ResultTitle>
-          {results.map((r, i) => (
-            <ResultRow key={i}>
-              <ResultIcon $pass={r.pass}>{r.pass ? '\u2713' : '\u2717'}</ResultIcon>
-              {r.label}
-            </ResultRow>
-          ))}
-        </ResultsBox>
-      )}
-    </Card>
-  );
+    throw new Error("STUB");
 }
 
 const Card = styled.div`
@@ -159,9 +66,9 @@ const PhaseBar = styled.div<{ $color: string }>`
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: ${p => p.$color};
-  background: ${p => p.$color}12;
-  border: 1px solid ${p => p.$color}30;
+  color: ${p => { throw new Error("STUB"); }};
+  background: ${p => { throw new Error("STUB"); }}12;
+  border: 1px solid ${p => { throw new Error("STUB"); }}30;
   margin-bottom: 16px;
 `;
 
@@ -169,8 +76,8 @@ const PhaseDot = styled.span<{ $color: string; $animate: boolean }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${p => p.$color};
-  animation: ${p => (p.$animate ? pulse : 'none')} 0.8s ease-in-out infinite;
+  background: ${p => { throw new Error("STUB"); }};
+  animation: ${p => { throw new Error("STUB"); }} 0.8s ease-in-out infinite;
 `;
 
 const fadeIn = keyframes`
@@ -183,9 +90,9 @@ const ResultsBox = styled.div<{ $allPass: boolean }>`
   border-radius: 8px;
   border: 1px solid
     ${p =>
-      p.$allPass ? 'var(--sc-colors-success, #16a34a)' : 'var(--sc-colors-danger, #dc2626)'}40;
+      { throw new Error("STUB"); }}40;
   background: ${p =>
-    p.$allPass ? 'var(--sc-colors-success, #16a34a)' : 'var(--sc-colors-danger, #dc2626)'}08;
+    { throw new Error("STUB"); }}08;
   animation: ${fadeIn} 0.3s ease-in;
 `;
 
@@ -207,6 +114,6 @@ const ResultRow = styled.div`
 
 const ResultIcon = styled.span<{ $pass: boolean }>`
   color: ${p =>
-    p.$pass ? 'var(--sc-colors-success, #16a34a)' : 'var(--sc-colors-danger, #dc2626)'};
+    { throw new Error("STUB"); }};
   font-weight: 700;
 `;

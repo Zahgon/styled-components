@@ -13,106 +13,29 @@ import { TokenStream } from '../tokenStream';
  */
 
 function dimToCss(t: Token): string {
-  const v = tokenToValue(t);
-  if (typeof v === 'number') return v === 0 ? '0' : v + 'px';
-  return String(v);
+    throw new Error("STUB");
 }
 
 function warn3DDrop(code: string, prop: string): void {
-  if (!__DEV__) return;
-  warnOnce(
-    code,
-    '`' +
-      prop +
-      ': x y z` is only partially supported on React Native. iOS and Android use the X and Y values and ignore Z.',
-    prop + '-3d'
-  );
+    throw new Error("STUB");
 }
 
 function translateShorthand(tokens: Token[], rawValue: string): Dict<any> | null {
-  const stream = new TokenStream(withoutSlashes(tokens));
-  const x = consumeDimensionLike(stream);
-  if (x === null) return null;
-  if (stream.eof()) {
-    if (__NATIVE_WEB__) return { translate: rawValue };
-    return { transform: 'translateX(' + dimToCss(x) + ')' };
-  }
-  const y = consumeDimensionLike(stream);
-  if (y === null) return null;
-  if (stream.eof()) {
-    if (__NATIVE_WEB__) return { translate: rawValue };
-    return { transform: 'translate(' + dimToCss(x) + ', ' + dimToCss(y) + ')' };
-  }
-  const z = consumeDimensionLike(stream);
-  if (z === null || !stream.eof()) return null;
-  // Browser ships the standalone property (and the 3-arg `translate()`
-  // function does not exist in CSS, so lowering would drop the whole
-  // transform there). RN's processTransform supports the 3-arg
-  // `translate(x, y, z)` form (parses to `{ translate: [x, y, z] }`),
-  // so Z survives on native.
-  if (__NATIVE_WEB__) return { translate: rawValue };
-  return {
-    transform: 'translate(' + dimToCss(x) + ', ' + dimToCss(y) + ', ' + dimToCss(z) + ')',
-  };
+    throw new Error("STUB");
 }
 
 const ROTATE_AXIS = new Set(['x', 'y', 'z']);
 
 function rotateShorthand(tokens: Token[], rawValue: string): Dict<any> | null {
-  const stream = new TokenStream(withoutSlashes(tokens));
-  const first = stream.peek();
-  if (!first) return null;
-
-  if (first.kind === TokenKind.Ident && first.name !== undefined && ROTATE_AXIS.has(first.name)) {
-    const axis = first.name;
-    stream.consume();
-    const angle = stream.consume();
-    if (!angle || angle.kind !== TokenKind.Angle || !stream.eof()) return null;
-    if (__NATIVE_WEB__) return { rotate: rawValue };
-    return { transform: 'rotate' + axis.toUpperCase() + '(' + angle.raw + ')' };
-  }
-
-  const angle = stream.consume();
-  if (!angle || angle.kind !== TokenKind.Angle || !stream.eof()) return null;
-  if (__NATIVE_WEB__) return { rotate: rawValue };
-  return { transform: 'rotate(' + angle.raw + ')' };
+    throw new Error("STUB");
 }
 
 function consumeNumericFactor(stream: TokenStream): number | null {
-  const t = stream.consume();
-  if (!t) return null;
-  if (t.kind === TokenKind.Number) return t.value!;
-  if (t.kind === TokenKind.Percent) return t.value! / 100;
-  return null;
+    throw new Error("STUB");
 }
 
 function scaleShorthand(tokens: Token[], rawValue: string): Dict<any> | null {
-  const stream = new TokenStream(withoutSlashes(tokens));
-  const xv = consumeNumericFactor(stream);
-  if (xv === null) return null;
-  if (stream.eof()) {
-    if (__NATIVE_WEB__) return { scale: rawValue };
-    return { transform: 'scale(' + xv + ')' };
-  }
-
-  const yv = consumeNumericFactor(stream);
-  if (yv === null) return null;
-  // RN's processTransform string parser routes `scale(x, y)` through its
-  // default case where the comma-string fails the typeof === 'number'
-  // invariant. Emit scaleX + scaleY individually so RN's array form
-  // accepts the values.
-  if (stream.eof()) {
-    if (__NATIVE_WEB__) return { scale: rawValue };
-    return { transform: 'scaleX(' + xv + ') scaleY(' + yv + ')' };
-  }
-
-  const zv = consumeNumericFactor(stream);
-  if (zv === null || !stream.eof()) return null;
-  // Browser keeps Z natively via the standalone property; the Z-drop is
-  // a native-only compromise.
-  if (__NATIVE_WEB__) return { scale: rawValue };
-  warn3DDrop('native-scale-3d', 'scale');
-  return { transform: 'scaleX(' + xv + ') scaleY(' + yv + ')' };
+    throw new Error("STUB");
 }
 
 register('translate', translateShorthand);
@@ -135,25 +58,7 @@ const TRANSFORM_BOX_VALUES = new Set([
 ]);
 
 function transformBoxHandler(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const value = t.name;
-  if (value === undefined || !TRANSFORM_BOX_VALUES.has(value)) return null;
-
-  // Browser honors transform-box; the fixed-pivot limitation is native-only.
-  if (__NATIVE_WEB__) return { transformBox: value };
-
-  if (__DEV__) {
-    warnOnce(
-      'native-transform-box-unsupported',
-      '`transform-box: ' +
-        value +
-        '` is ignored on React Native because transforms use the view center as their reference box. Use `transform-origin` to move the pivot.',
-      value
-    );
-  }
-  return {};
+    throw new Error("STUB");
 }
 
 register('transformBox', transformBoxHandler);
@@ -184,29 +89,7 @@ register('transformBox', transformBoxHandler);
 export const PERSPECTIVE_SENTINEL_KEY = '__sc_perspective';
 
 function perspectiveHandler(tokens: Token[], rawValue: string): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || !stream.eof()) return null;
-
-  if (t.kind === TokenKind.Ident && t.name === 'none') {
-    // Browser ships the standalone property; sentinel intermediates are
-    // native-only and must never reach rn-web output.
-    if (__NATIVE_WEB__) return { perspective: 'none' };
-    return { [PERSPECTIVE_SENTINEL_KEY]: 'none' };
-  }
-  if (t.kind === TokenKind.Length) {
-    const v = t.value;
-    if (v === undefined || v < 0) return null;
-    if (__NATIVE_WEB__) return { perspective: rawValue };
-    const clamped = v < 1 ? 1 : v;
-    return { [PERSPECTIVE_SENTINEL_KEY]: 'perspective(' + clamped + 'px)' };
-  }
-  // Bare zero is a <number>, not a length; only >=0px lengths are valid; reject.
-  if (t.kind === TokenKind.Number && t.value === 0) {
-    if (__NATIVE_WEB__) return { perspective: rawValue };
-    return { [PERSPECTIVE_SENTINEL_KEY]: 'perspective(1px)' };
-  }
-  return null;
+    throw new Error("STUB");
 }
 
 register('perspective', perspectiveHandler);
@@ -219,22 +102,7 @@ register('perspective', perspectiveHandler);
  * passes through on rn-web for the browser to interpret.
  */
 function perspectiveOriginHandler(tokens: Token[]): Dict<any> | null {
-  if (tokens.length === 0) return null;
-  if (__NATIVE_WEB__) {
-    let raw = '';
-    for (let i = 0; i < tokens.length; i++) {
-      if (i !== 0) raw += ' ';
-      raw += tokens[i].raw;
-    }
-    return { perspectiveOrigin: raw };
-  }
-  if (__DEV__) {
-    warnOnce(
-      'native-perspective-origin-unsupported',
-      "`perspective-origin` is ignored on React Native. The vanishing point stays at the parent's center on iOS and Android."
-    );
-  }
-  return {};
+    throw new Error("STUB");
 }
 
 register('perspectiveOrigin', perspectiveOriginHandler);
@@ -246,23 +114,7 @@ register('perspectiveOrigin', perspectiveOriginHandler);
  * 3D transforms appear without preserve-3d.
  */
 function transformStyleHandler(tokens: Token[]): Dict<any> | null {
-  const stream = new TokenStream(tokens);
-  const t = stream.consume();
-  if (!t || t.kind !== TokenKind.Ident || !stream.eof()) return null;
-  const value = t.name;
-  if (value !== 'flat' && value !== 'preserve-3d') return null;
-
-  // Browser honors transform-style; the flatten limitation is native-only.
-  if (__NATIVE_WEB__) return { transformStyle: value };
-
-  if (__DEV__ && value === 'preserve-3d') {
-    warnOnce(
-      'native-transform-style-preserve-3d',
-      "`transform-style: preserve-3d` is ignored on React Native because iOS and Android expose no matching style property; descendants of a 3D-transformed element composite into the parent's 2D plane. Animated 3D transforms (`rotateX` / `rotateY` / `rotateZ`) are already isolated automatically.",
-      value
-    );
-  }
-  return {};
+    throw new Error("STUB");
 }
 
 register('transformStyle', transformStyleHandler);

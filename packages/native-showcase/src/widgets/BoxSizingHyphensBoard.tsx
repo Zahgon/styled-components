@@ -97,50 +97,5 @@ const SOFT_HYPHENATED =
   'Anti­dis­es­tab­lish­men­tar­i­an­ism breaks only at the soft hyphens you authored.';
 
 export function BoxSizingHyphensBoard() {
-  return (
-    <Stack>
-      <Section>
-        <SectionTitle>box-sizing</SectionTitle>
-        <Group>
-          <Tag>box-sizing: border-box · width: 200px · padding: md · border: 4px</Tag>
-          <BorderBoxCard>
-            <Inner />
-          </BorderBoxCard>
-        </Group>
-        <Group>
-          <Tag>box-sizing: content-box · same declarations</Tag>
-          <ContentBoxCard>
-            <Inner />
-          </ContentBoxCard>
-        </Group>
-        <InlineMarkdown variant="brief">
-          {`Both cards declare \`width: 200px\` with identical padding + border. Under \`border-box\` the card stays 200px wide and squeezes the inner red bar; under \`content-box\` padding + border land outside the declared 200px, so the card grows wider.`}
-        </InlineMarkdown>
-      </Section>
-      <Section>
-        <SectionTitle>hyphens</SectionTitle>
-        <Group>
-          <Tag>hyphens: auto · system breaks long words</Tag>
-          <NarrowColumn>
-            <Hyphenated>{LONG_WORDS}</Hyphenated>
-          </NarrowColumn>
-        </Group>
-        <Group>
-          <Tag>hyphens: none · no breaks even with soft hyphens</Tag>
-          <NarrowColumn>
-            <NoHyphens>{SOFT_HYPHENATED}</NoHyphens>
-          </NarrowColumn>
-        </Group>
-        <Group>
-          <Tag>hyphens: manual · breaks only at U+00AD soft-hyphens</Tag>
-          <NarrowColumn>
-            <ManualHyphens>{SOFT_HYPHENATED}</ManualHyphens>
-          </NarrowColumn>
-        </Group>
-      </Section>
-      <Markdown variant="hint">
-        {`Android breaks long words automatically using the system hyphenator. iOS has no equivalent API in this release, so \`hyphens: auto\` behaves like \`manual\`: words break only where you embedded a soft hyphen (U+00AD) in the text. rn-web hands the keyword to the browser.`}
-      </Markdown>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

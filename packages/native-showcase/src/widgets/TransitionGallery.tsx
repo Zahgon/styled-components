@@ -45,14 +45,14 @@ const OpacityCell = styled.View<{ $on: boolean }>`
   width: 56px;
   height: 24px;
   background-color: ${t.colors.ink};
-  opacity: ${p => (p.$on ? 0.25 : 1)};
+  opacity: ${p => { throw new Error("STUB"); }};
   transition: opacity 320ms ease-in-out;
 `;
 
 const BackgroundCell = styled.View<{ $on: boolean }>`
   width: 56px;
   height: 24px;
-  background-color: ${p => (p.$on ? t.colors.pass : t.colors.fail)};
+  background-color: ${p => { throw new Error("STUB"); }};
   transition: background-color 320ms ease-in-out;
 `;
 
@@ -61,7 +61,7 @@ const ColorCell = styled.Text<{ $on: boolean }>`
   font-family: ${t.fontFamily.monoStrong};
   font-size: ${t.fontSize.monoSm}px;
   text-align: center;
-  color: ${p => (p.$on ? t.colors.pass : t.colors.fail)};
+  color: ${p => { throw new Error("STUB"); }};
   transition: color 320ms ease-in-out;
 `;
 
@@ -69,7 +69,7 @@ const BorderColorCell = styled.View<{ $on: boolean }>`
   width: 56px;
   height: 24px;
   background-color: ${t.colors.bg};
-  border: ${t.borderWidth.heavy}px solid ${p => (p.$on ? t.colors.pass : t.colors.fail)};
+  border: ${t.borderWidth.heavy}px solid ${p => { throw new Error("STUB"); }};
   transition: border-color 320ms ease-in-out;
 `;
 
@@ -77,7 +77,7 @@ const RadiusCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${t.colors.ink};
-  border-radius: ${p => (p.$on ? 12 : 0)}px;
+  border-radius: ${p => { throw new Error("STUB"); }}px;
   transition: border-radius 320ms ease-in-out;
 `;
 
@@ -85,7 +85,7 @@ const TransformScaleCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${t.colors.ink};
-  transform: scale(${p => (p.$on ? 1.6 : 1)});
+  transform: scale(${p => { throw new Error("STUB"); }});
   transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
 `;
 
@@ -93,7 +93,7 @@ const TransformRotateCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${t.colors.ink};
-  transform: rotate(${p => (p.$on ? 45 : 0)}deg);
+  transform: rotate(${p => { throw new Error("STUB"); }}deg);
   transition: transform 320ms ease-in-out;
 `;
 
@@ -101,7 +101,7 @@ const TransformTranslateCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${t.colors.ink};
-  transform: translateX(${p => (p.$on ? 24 : 0)}px);
+  transform: translateX(${p => { throw new Error("STUB"); }}px);
   transition: transform 320ms ease-out;
 `;
 
@@ -110,7 +110,7 @@ const TransformCompoundCell = styled.View<{ $on: boolean }>`
   height: 24px;
   background-color: ${t.colors.ink};
   transform: ${p =>
-    p.$on ? 'translateX(24px) rotate(45deg) scale(1.4)' : 'translateX(0px) rotate(0deg) scale(1)'};
+    { throw new Error("STUB"); }};
   transition: transform 320ms ease-in-out;
 `;
 
@@ -118,19 +118,19 @@ const TransformDisjointCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${t.colors.ink};
-  transform: ${p => (p.$on ? 'rotate(45deg) scale(0.8)' : 'translateX(20px) translateY(-8px)')};
+  transform: ${p => { throw new Error("STUB"); }};
   transition: transform 320ms ease-in-out;
 `;
 
 const WidthCell = styled.View<{ $on: boolean }>`
-  width: ${p => (p.$on ? 56 : 24)}px;
+  width: ${p => { throw new Error("STUB"); }}px;
   height: 24px;
   background-color: ${t.colors.ink};
   transition: width 320ms ease-out;
 `;
 
 const PaddingCell = styled.View<{ $on: boolean }>`
-  padding-left: ${p => (p.$on ? 24 : 0)}px;
+  padding-left: ${p => { throw new Error("STUB"); }}px;
   background-color: ${t.colors.bg};
   border: ${t.borderWidth.hairline}px solid ${t.colors.border};
   transition: padding-left 320ms ease-out;
@@ -145,10 +145,10 @@ const PaddingDot = styled.View`
 const MultiPropCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
-  background-color: ${p => (p.$on ? t.colors.pass : t.colors.fail)};
-  border-radius: ${p => (p.$on ? 12 : 0)}px;
-  opacity: ${p => (p.$on ? 1 : 0.4)};
-  transform: rotate(${p => (p.$on ? 90 : 0)}deg);
+  background-color: ${p => { throw new Error("STUB"); }};
+  border-radius: ${p => { throw new Error("STUB"); }}px;
+  opacity: ${p => { throw new Error("STUB"); }};
+  transform: rotate(${p => { throw new Error("STUB"); }}deg);
   transition:
     background-color 320ms ease-in-out,
     border-radius 320ms ease-in-out,
@@ -157,9 +157,9 @@ const MultiPropCell = styled.View<{ $on: boolean }>`
 `;
 
 const AllPropCell = styled.View<{ $on: boolean }>`
-  width: ${p => (p.$on ? 56 : 24)}px;
+  width: ${p => { throw new Error("STUB"); }}px;
   height: 24px;
-  background-color: ${p => (p.$on ? t.colors.pass : t.colors.fail)};
+  background-color: ${p => { throw new Error("STUB"); }};
   transition: all 320ms ease-out;
 `;
 
@@ -167,7 +167,7 @@ const SteppedCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${t.colors.ink};
-  transform: rotate(${p => (p.$on ? 90 : 0)}deg);
+  transform: rotate(${p => { throw new Error("STUB"); }}deg);
   transition: transform 600ms steps(4, jump-end);
 `;
 
@@ -175,7 +175,7 @@ const LinearStopsCell = styled.View<{ $on: boolean }>`
   width: 24px;
   height: 24px;
   background-color: ${t.colors.ink};
-  transform: translateX(${p => (p.$on ? 56 : 0)}px);
+  transform: translateX(${p => { throw new Error("STUB"); }}px);
   transition: transform 600ms linear(0, 0.3 25%, 0.7 75%, 1);
 `;
 
@@ -187,89 +187,9 @@ interface RowProps {
 }
 
 function Row({ label, on, onToggle, children }: RowProps) {
-  return (
-    <RowFrame onPress={onToggle} accessibilityRole="button" aria-pressed={on}>
-      <RowLabel>{label}</RowLabel>
-      {children}
-    </RowFrame>
-  );
+    throw new Error("STUB");
 }
 
 export function TransitionGallery() {
-  // Single shared boolean - every row reads `$on` from the same flag so
-  // the matrix beats in sync. Tap any row to flip the flag immediately;
-  // the auto-rotation picks up from the new state on the next tick.
-  const [on, setOn] = useState(false);
-  const env = useMediaEnv();
-
-  useEffect(() => {
-    if (env.reduceMotion) return;
-    const id = setInterval(() => setOn(prev => !prev), HOLD_MS + TRANSITION_MS);
-    return () => clearInterval(id);
-  }, [env.reduceMotion]);
-
-  const toggle = (_k: string) => setOn(prev => !prev);
-
-  return (
-    <Stack>
-      <Row label="opacity" on={on} onToggle={() => toggle('opacity')}>
-        <OpacityCell $on={on} />
-      </Row>
-      <Row label="background-color" on={on} onToggle={() => toggle('bg')}>
-        <BackgroundCell $on={on} />
-      </Row>
-      <Row label="color" on={on} onToggle={() => toggle('color')}>
-        <ColorCell $on={on}>AaBb</ColorCell>
-      </Row>
-      <Row label="border-color" on={on} onToggle={() => toggle('borderColor')}>
-        <BorderColorCell $on={on} />
-      </Row>
-      <Row label="border-radius" on={on} onToggle={() => toggle('radius')}>
-        <RadiusCell $on={on} />
-      </Row>
-      <Row label="transform · scale (overshoot)" on={on} onToggle={() => toggle('scale')}>
-        <TransformScaleCell $on={on} />
-      </Row>
-      <Row label="transform · rotate" on={on} onToggle={() => toggle('rotate')}>
-        <TransformRotateCell $on={on} />
-      </Row>
-      <Row label="transform · translateX" on={on} onToggle={() => toggle('translate')}>
-        <TransformTranslateCell $on={on} />
-      </Row>
-      <Row label="transform · compound (matched kinds)" on={on} onToggle={() => toggle('compound')}>
-        <TransformCompoundCell $on={on} />
-      </Row>
-      <Row
-        label="transform · disjoint kinds (translate ↔ rotate+scale)"
-        on={on}
-        onToggle={() => toggle('disjoint')}
-      >
-        <TransformDisjointCell $on={on} />
-      </Row>
-      <Row label="width" on={on} onToggle={() => toggle('width')}>
-        <WidthCell $on={on} />
-      </Row>
-      <Row label="padding-left" on={on} onToggle={() => toggle('padding')}>
-        <PaddingCell $on={on}>
-          <PaddingDot />
-        </PaddingCell>
-      </Row>
-      <Row label="multi-prop · same duration" on={on} onToggle={() => toggle('multi')}>
-        <MultiPropCell $on={on} />
-      </Row>
-      <Row label="transition: all" on={on} onToggle={() => toggle('all')}>
-        <AllPropCell $on={on} />
-      </Row>
-      <Row label="easing · steps(4, jump-end)" on={on} onToggle={() => toggle('stepped')}>
-        <SteppedCell $on={on} />
-      </Row>
-      <Row
-        label="easing · linear(0, 0.3 25%, 0.7 75%, 1)"
-        on={on}
-        onToggle={() => toggle('linearStops')}
-      >
-        <LinearStopsCell $on={on} />
-      </Row>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

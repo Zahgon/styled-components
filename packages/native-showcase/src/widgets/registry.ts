@@ -573,7 +573,7 @@ export const fidgets: ReadonlyArray<FidgetEntry> = [
 ];
 
 export function getFidget(slug: string): FidgetEntry | undefined {
-  return fidgets.find(f => f.slug === slug);
+    throw new Error("STUB");
 }
 
 const CATEGORY_ORDER: FidgetCategory[] = [
@@ -589,14 +589,5 @@ const CATEGORY_ORDER: FidgetCategory[] = [
 ];
 
 export function fidgetsByCategory(): Array<{ category: FidgetCategory; entries: FidgetEntry[] }> {
-  const groups = new Map<FidgetCategory, FidgetEntry[]>();
-  for (const f of fidgets) {
-    const list = groups.get(f.category);
-    if (list) list.push(f);
-    else groups.set(f.category, [f]);
-  }
-  return CATEGORY_ORDER.filter(c => groups.has(c)).map(category => ({
-    category,
-    entries: groups.get(category)!,
-  }));
+    throw new Error("STUB");
 }

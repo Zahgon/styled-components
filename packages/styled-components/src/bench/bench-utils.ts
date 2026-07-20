@@ -8,11 +8,7 @@ const gc = typeof globalThis.gc === 'function' ? globalThis.gc : null;
  * use 20% of the nominal count (minimum 1). Default 1.
  */
 const BENCH_ITER_SCALE: number = (() => {
-  const raw = process.env.SC_BENCH_ITER_SCALE;
-  if (raw == null || raw === '') return 1;
-  const n = Number(raw);
-  if (!Number.isFinite(n) || n <= 0) return 1;
-  return n;
+    throw new Error("STUB");
 })();
 
 /**
@@ -20,11 +16,7 @@ const BENCH_ITER_SCALE: number = (() => {
  * Example: `SC_BENCH_RUNS=3` with `SC_BENCH_ITER_SCALE=0.25` for fast suites.
  */
 const BENCH_RUNS_OVERRIDE: number | null = (() => {
-  const raw = process.env.SC_BENCH_RUNS;
-  if (raw == null || raw === '') return null;
-  const n = parseInt(raw, 10);
-  if (!Number.isFinite(n) || n < 1) return null;
-  return n;
+    throw new Error("STUB");
 })();
 
 function scaleIterations(iterations: number): number {
@@ -45,7 +37,7 @@ function madPercent(sortedSamples: number[], median: number): number {
   if (n === 0 || median === 0) return 0;
   const deviations = new Array<number>(n);
   for (let i = 0; i < n; i++) deviations[i] = Math.abs(sortedSamples[i] - median);
-  deviations.sort((a, b) => a - b);
+  deviations.sort((a, b) => { throw new Error("STUB"); });
   const mad = deviations[Math.floor(n / 2)];
   return (mad * 1.4826 * 100) / median;
 }
@@ -89,7 +81,7 @@ export function bench(
     samples.push(performance.now() - t0);
   }
 
-  samples.sort((a, b) => a - b);
+  samples.sort((a, b) => { throw new Error("STUB"); });
   const median = samples[Math.floor(runs / 2)];
   const ops = (nIter / median) * 1000;
   const opsStr =
@@ -133,61 +125,7 @@ export function compareBench(
   b: { name: string; fn: (i: number) => void },
   options: Omit<CompareBenchOptions, 'iterations'> = {}
 ): { aMedian: number; bMedian: number } {
-  let { runs = 9, nameWidth = 50, precision = 2, warmupMax = 5000, label } = options;
-  if (BENCH_RUNS_OVERRIDE !== null) {
-    runs = BENCH_RUNS_OVERRIDE;
-  }
-
-  const nIter = scaleIterations(iterations);
-
-  // Shared warmup;both functions run the same number of warmup iterations
-  // so V8 transitions to the same tier for both before measurement.
-  const warmup = Math.min(Math.max(nIter / 10, 100), warmupMax);
-  if (gc) gc();
-  for (let i = 0; i < warmup; i++) a.fn(i);
-  if (gc) gc();
-  for (let i = 0; i < warmup; i++) b.fn(i);
-
-  const aSamples: number[] = [];
-  const bSamples: number[] = [];
-
-  for (let run = 0; run < runs; run++) {
-    if (gc) gc();
-    const tA = performance.now();
-    for (let i = 0; i < nIter; i++) a.fn(i);
-    aSamples.push(performance.now() - tA);
-
-    if (gc) gc();
-    const tB = performance.now();
-    for (let i = 0; i < nIter; i++) b.fn(i);
-    bSamples.push(performance.now() - tB);
-  }
-
-  aSamples.sort((x, y) => x - y);
-  bSamples.sort((x, y) => x - y);
-  const aMedian = aSamples[Math.floor(runs / 2)];
-  const bMedian = bSamples[Math.floor(runs / 2)];
-  const aOps = (nIter / aMedian) * 1000;
-  const bOps = (nIter / bMedian) * 1000;
-  const fmtOps = (ops: number) =>
-    ops >= 1e6
-      ? (ops / 1e6).toFixed(1) + 'M/s'
-      : ops >= 1e3
-        ? (ops / 1e3).toFixed(1) + 'K/s'
-        : ops.toFixed(0) + '/s';
-  const aSpread = madPercent(aSamples, aMedian).toFixed(0);
-  const bSpread = madPercent(bSamples, bMedian).toFixed(0);
-  const pct = (((bMedian - aMedian) / aMedian) * 100).toFixed(1);
-
-  if (label) console.log(`\n${label}`);
-  console.log(
-    `  ${a.name.padEnd(nameWidth)} ${aMedian.toFixed(precision).padStart(6 + precision)}ms  ${fmtOps(aOps).padStart(10)}  ±${aSpread}%`
-  );
-  console.log(
-    `  ${b.name.padEnd(nameWidth)} ${bMedian.toFixed(precision).padStart(6 + precision)}ms  ${fmtOps(bOps).padStart(10)}  ±${bSpread}%  (${pct.startsWith('-') ? '' : '+'}${pct}%)`
-  );
-
-  return { aMedian, bMedian };
+    throw new Error("STUB");
 }
 
 export const COLORS = [

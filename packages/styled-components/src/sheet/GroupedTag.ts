@@ -79,21 +79,7 @@ const DefaultGroupedTag = class DefaultGroupedTag implements GroupedTag {
   }
 
   clearGroup(group: number) {
-    if (group < this.length) {
-      const length = this.groupSizes[group];
-      const startIndex = this.indexOfGroup(group);
-      const endIndex = startIndex + length;
-
-      this.groupSizes[group] = 0;
-
-      for (let i = startIndex; i < endIndex; i++) {
-        this.tag.deleteRule(startIndex);
-      }
-
-      if (length > 0 && this._cGroup > group) {
-        this._cIndex -= length;
-      }
-    }
+      throw new Error("STUB");
   }
 
   getGroup(group: number) {

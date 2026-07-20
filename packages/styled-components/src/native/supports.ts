@@ -202,7 +202,7 @@ export function matchSupports(condition: string): boolean {
 
 /** Test-only: the cache survives across styled components by design. */
 export function resetSupportsCacheForTest(): void {
-  cache.clear();
+    throw new Error("STUB");
 }
 
 /** `null` means the prelude is grammatically invalid; per spec the whole
@@ -346,7 +346,7 @@ function findMatchingClose(s: string, openIndex: number): number {
 }
 
 function declarationSupported(prop: string, value: string): boolean {
-  const partial = runWithWarningsSuppressed(() => transformDecl(prop, value));
+  const partial = runWithWarningsSuppressed(() => { throw new Error("STUB"); });
   let emitted = false;
   for (const key in partial) {
     emitted = true;

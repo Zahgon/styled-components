@@ -17,7 +17,7 @@ import css from './css';
 declare const __SERVER__: boolean;
 
 /** Per-render dedup for RSC global style tags (same pattern as StyledComponent). */
-const getEmittedGlobalCSS = createRSCCache(() => new Set<string>());
+const getEmittedGlobalCSS = createRSCCache(() => { throw new Error("STUB"); });
 
 /**
  * Create a component that injects global CSS when mounted. Supports theming and dynamic props.
@@ -38,114 +38,14 @@ export default function createGlobalStyle<Props extends object>(
   const globalStyle = new WebGlobalStyle<Props>(rules, styledComponentId);
 
   const hasImport =
-    __DEV__ && rules.some(rule => typeof rule === 'string' && rule.indexOf('@import') !== -1);
+    __DEV__ && rules.some(rule => { throw new Error("STUB"); });
 
   if (__DEV__) {
     checkDynamicCreation(styledComponentId);
   }
 
   const GlobalStyleComponent: React.ComponentType<ExecutionProps & Props> = props => {
-    const ssc = useStyleSheetContext();
-    const theme = !IS_RSC ? React.useContext(ThemeContext) : undefined;
-    const instance = React.useId();
-
-    if (__DEV__ && React.Children.count((props as { children?: React.ReactNode }).children)) {
-      warnOnce(
-        'gs-children',
-        `the global style component ${styledComponentId} was given child JSX. createGlobalStyle does not render children.`,
-        styledComponentId
-      );
-    }
-
-    if (hasImport) {
-      warnOnce(
-        'gs-import',
-        `please do not use @import CSS syntax in createGlobalStyle at this time, as the CSSOM APIs we use in production do not handle it well. Instead, we recommend using a library such as react-helmet to inject a typical <link> meta tag to the stylesheet, or simply embedding it manually in your index.html <head> section for a simpler app.`,
-        styledComponentId
-      );
-    }
-
-    // Gate on IS_RSC or `styleSheet.server` rather than `__SERVER__`: the
-    // server build elides useLayoutEffect, so rendering here without cleanup
-    // produced an O(n²) jsdom regression. Turbopack also picks the browser
-    // entry for SSR, where the runtime flag is the only signal.
-    if (IS_RSC || ssc.styleSheet.server) {
-      renderStyles(instance, props, ssc.styleSheet, theme, ssc.compiler);
-    }
-
-    if (!__SERVER__ && !IS_RSC) {
-      // Two effects: cleanup (removeStyles → rebuildGroup) only fires on
-      // unmount/sheet/globalStyle swap, not every render; dynamic globals
-      // would otherwise rebuild twice per render (issue #5730). Including
-      // globalStyle in deps lets HMR-replaced instances trigger re-injection.
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      const renderDeps = globalStyle.isStatic
-        ? [instance, ssc.styleSheet, globalStyle]
-        : [instance, props, ssc.styleSheet, theme, ssc.compiler, globalStyle];
-
-      const prevGlobalStyleRef = React.useRef(globalStyle);
-
-      React.useLayoutEffect(() => {
-        if (!ssc.styleSheet.server) {
-          // HMR creates a new globalStyle instance but the componentId stays stable
-          // (SWC plugin assigns by file location), so stale hasNameForId hits skip injection.
-          if (prevGlobalStyleRef.current !== globalStyle) {
-            ssc.styleSheet.clearRules(styledComponentId);
-            prevGlobalStyleRef.current = globalStyle;
-          }
-
-          renderStyles(instance, props, ssc.styleSheet, theme, ssc.compiler);
-        }
-      }, renderDeps);
-
-      // Cleanup-only effect: fires on unmount, sheet swap, or HMR globalStyle swap.
-      // Closure captures the specific globalStyle/sheet that owned this instance's
-      // rules so HMR cleanup targets the prior module's state.
-      React.useLayoutEffect(() => {
-        return () => {
-          if (!ssc.styleSheet.server) {
-            globalStyle.removeStyles(instance, ssc.styleSheet);
-          }
-        };
-      }, [instance, ssc.styleSheet, globalStyle]);
-    }
-
-    // RSC mode: output style tag.
-    // Unlike regular styled components, global styles must NOT use React 19's
-    // `precedence` attribute because it makes style tags persist as permanent
-    // resources even after unmount. Global styles need lifecycle-based cleanup
-    // for conditional rendering (e.g. body lock on modal open/close).
-    if (IS_RSC) {
-      const entry = !IS_BROWSER ? globalStyle.instanceRules.get(instance) : undefined;
-      const css = entry ? joinRules(entry.rules) : '';
-
-      if (css) {
-        globalStyle.instanceRules.delete(instance);
-
-        // Dedup: static by componentId + compiler hash, dynamic by CSS string.
-        // Compiler hash ensures different SSM configs emit separate variants.
-        const emitted = getEmittedGlobalCSS ? getEmittedGlobalCSS() : null;
-        if (emitted) {
-          const key = globalStyle.isStatic ? styledComponentId + ssc.compiler.hash : css;
-          if (emitted.has(key)) return null;
-          emitted.add(key);
-        }
-
-        return React.createElement('style', {
-          key: styledComponentId + '-' + instance,
-          'data-styled-global': styledComponentId,
-          children: stripSplitter(css),
-        });
-      }
-    }
-
-    // Clean up server instance cache; no useLayoutEffect cleanup runs on the
-    // server, so instanceRules would grow unboundedly across SSR requests.
-    if (__SERVER__ || ssc.styleSheet.server) {
-      globalStyle.instanceRules.delete(instance);
-    }
-
-    return null;
+      throw new Error("STUB");
   };
 
   function renderStyles(

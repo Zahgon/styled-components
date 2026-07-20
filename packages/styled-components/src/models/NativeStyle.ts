@@ -49,47 +49,7 @@ export default function makeNativeStyleClass<Props extends object>(styleSheet: S
     usesAnchorFunctions = false;
 
     constructor(rules: RuleSet<Props>) {
-      this.rules = rules;
-      synthesizeSourceForRuleSet(rules);
-      this.staticCSS = isAllStaticStrings(rules) ? joinStringRules(rules) : null;
-      // Gates the anchor-registry subscription in the dynamic render
-      // path; lifetime-constant so the hook branch is stable. Function
-      // interpolations are opaque at construction time and may return an
-      // anchor() value, so they conservatively enable the subscription;
-      // otherwise such a component would never re-resolve when an anchor
-      // rect moves.
-      if (
-        !__NATIVE_WEB__ &&
-        (ANCHOR_FN_RE.test(joinStringRules(rules, '\n')) || hasFunctionInterpolation(rules))
-      ) {
-        this.usesAnchorFunctions = true;
-      }
-      if (this.staticCSS !== null) {
-        const compiled = toNativeStyles(this.staticCSS, styleSheet);
-        this.staticCompiled = compiled;
-        // Static rendering is hookless, so cascade publishers and live outputs
-        // must stay on the dynamic path. Custom property declarations and
-        // var() references publish / consume cascade values, so they also
-        // disqualify a component from the hookless static fast path.
-        this.staticEligible =
-          !hasResponsiveOutput(compiled) &&
-          compiled.startingStyle === undefined &&
-          compiled.animations === undefined &&
-          compiled.transitions === undefined &&
-          compiled.customProperties === undefined &&
-          compiled.varDeferred === undefined &&
-          compiled.important === undefined &&
-          compiled.importantResolvers === undefined &&
-          // The anchor rect publisher needs the dynamic path's hooks.
-          compiled.anchorName === undefined &&
-          // Sticky elements translate via a hook-built Animated node.
-          compiled.sticky === undefined &&
-          // Grid containers publish a measured cascade entry and grid
-          // items read it; both require the dynamic path's hooks.
-          compiled.gridInfo === undefined &&
-          compiled.gridSpan === undefined &&
-          !hasCascadeKey(compiled.base);
-      }
+        throw new Error("STUB");
     }
 
     compile(executionContext: ExecutionContext & Props): NativeStyles {

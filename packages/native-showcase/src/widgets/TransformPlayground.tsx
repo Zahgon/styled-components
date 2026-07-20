@@ -13,9 +13,9 @@ const Stage = styled.View`
 const Tile = styled.View<{ $rule: string; $bg: string }>`
   width: 88px;
   height: 88px;
-  background-color: ${p => p.$bg};
+  background-color: ${p => { throw new Error("STUB"); }};
   border: ${t.borderWidth.heavy}px solid ${t.colors.border};
-  transform: ${p => p.$rule};
+  transform: ${p => { throw new Error("STUB"); }};
   transition:
     transform 280ms ease-out,
     background-color 280ms ease-out;
@@ -82,43 +82,5 @@ const MODES: Mode[] = [
 ];
 
 export function TransformPlayground() {
-  const [modeId, setModeId] = useState('translate');
-  const [userPicked, setUserPicked] = useState(false);
-  const active = MODES.find(m => m.id === modeId)!;
-
-  useEffect(() => {
-    if (userPicked) return;
-    const id = setInterval(() => {
-      setModeId(current => {
-        const idx = MODES.findIndex(m => m.id === current);
-        return MODES[(idx + 1) % MODES.length].id;
-      });
-    }, 3000);
-    return () => clearInterval(id);
-  }, [userPicked]);
-
-  const onSelect = (id: string) => {
-    setUserPicked(true);
-    setModeId(id);
-  };
-
-  return (
-    <>
-      <Toolbar>
-        {MODES.map(m => (
-          <Toggle
-            key={m.id}
-            aria-pressed={modeId === m.id}
-            onPress={() => onSelect(m.id)}
-            accessibilityRole="button"
-          >
-            <ToggleLabel aria-pressed={modeId === m.id}>{m.label}</ToggleLabel>
-          </Toggle>
-        ))}
-      </Toolbar>
-      <Stage>
-        <Tile $rule={active.rule} $bg={active.bg} />
-      </Stage>
-    </>
-  );
+    throw new Error("STUB");
 }

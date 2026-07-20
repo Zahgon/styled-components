@@ -7,30 +7,14 @@ import type { CSSVarTheme, ThemeContract } from './createTheme.types';
 
 function buildVarNames<T extends Record<string, any>>(obj: T, varPrefix: string): CSSVarTheme<T> {
   const result: Record<string, any> = {};
-  walkTheme(obj, '-', result, fullPath => '--' + varPrefix + fullPath);
+  walkTheme(obj, '-', result, fullPath => { throw new Error("STUB"); });
   return result as CSSVarTheme<T>;
 }
 
 function buildVarRefs<T extends Record<string, any>>(obj: T, varPrefix: string): CSSVarTheme<T> {
   const result: Record<string, any> = {};
   walkTheme(obj, '-', result, (fullPath, val) => {
-    if (__DEV__) {
-      const str = String(val);
-      let depth = 0;
-      for (let i = 0; i < str.length; i++) {
-        if (str.charCodeAt(i) === $.OPEN_PAREN) depth++;
-        else if (str.charCodeAt(i) === $.CLOSE_PAREN) depth--;
-        if (depth < 0) break;
-      }
-      if (depth !== 0) {
-        warnOnce(
-          'theme-unbalanced',
-          `value "${str}" at "${fullPath}" contains unbalanced parentheses and may break the var() fallback`,
-          fullPath
-        );
-      }
-    }
-    return 'var(--' + varPrefix + fullPath + ', ' + val + ')';
+      throw new Error("STUB");
   });
   return result as CSSVarTheme<T>;
 }
@@ -42,8 +26,7 @@ function resolveVars<T extends Record<string, any>>(
 ): T {
   const result: Record<string, any> = {};
   walkTheme(obj, '-', result, (fullPath, val) => {
-    const resolved = styles.getPropertyValue('--' + varPrefix + fullPath).trim();
-    return resolved || val;
+      throw new Error("STUB");
   });
   return result as T;
 }
@@ -136,7 +119,7 @@ export default function createTheme<T extends Record<string, any>>(
 
   const GlobalStyle = createGlobalStyle`
     ${sel} {
-      ${(p: { theme: Record<string, any> }) => emitVarDeclarations(defaultTheme, p.theme, pfx)}
+      ${(p: { theme: Record<string, any> }) => { throw new Error("STUB"); }}
     }
   `;
 

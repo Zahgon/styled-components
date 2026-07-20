@@ -91,8 +91,7 @@ import { DefaultTheme, ThemeContext } from './ThemeProvider';
 
 let _View: any;
 function get3dIsolationView(): any {
-  if (!_View) _View = require('react-native').View;
-  return _View;
+    throw new Error("STUB");
 }
 
 const hasOwn = Object.prototype.hasOwnProperty;
@@ -111,38 +110,11 @@ function resolveContext<Props extends object>(
   props: Props,
   attrs: Attrs<Props>[]
 ): ExecutionContext & Props {
-  const context: ExecutionContext & Props = { ...props, theme };
-
-  for (let i = 0; i < attrs.length; i++) {
-    const attr = attrs[i];
-    // Arity-2 function attrs run after compile in `applyPostAttrs` so they can
-    // pop/peek the compiled style. Skip them in the pre-compile phase.
-    if (isFunction(attr) && (attr as Function).length >= 2) continue;
-    const resolvedAttrDef = isFunction(attr)
-      ? (attr as unknown as (p: ExecutionContext & Props) => ExecutionProps & Partial<Props>)({
-          ...context,
-        })
-      : attr;
-
-    for (const key in resolvedAttrDef) {
-      // Mirrors the web behavior (PR #5683): an explicit `undefined` prop
-      // wins over an attrs-provided value so users can opt out of an attrs
-      // default by passing `undefined`.
-      if (key in props && (props as Dict<unknown>)[key] === undefined) continue;
-      // attrs intentionally add arbitrary keys; cast at the assignment site.
-      (context as unknown as Dict<unknown>)[key] = (resolvedAttrDef as Dict<unknown>)[key];
-    }
-  }
-
-  return context;
+    throw new Error("STUB");
 }
 
 function hasPostAttrsNative<Props extends object>(attrs: Attrs<Props>[]): boolean {
-  for (let i = 0; i < attrs.length; i++) {
-    const a = attrs[i];
-    if (typeof a === 'function' && (a as Function).length >= 2) return true;
-  }
-  return false;
+    throw new Error("STUB");
 }
 
 /**
@@ -155,13 +127,7 @@ function buildPostAttrsPlans<Props extends object>(
   attrs: Attrs<Props>[],
   rules: RuleSet<Props>
 ): ReadonlyArray<PostAttrsPlan | null> {
-  const plans: (PostAttrsPlan | null)[] = [];
-  for (let i = 0; i < attrs.length; i++) {
-    const a = attrs[i];
-    if (typeof a !== 'function' || (a as Function).length < 2) continue;
-    plans.push(tracePostAttr(a as (p: any, ast: CompiledAst) => any, rules));
-  }
-  return plans;
+    throw new Error("STUB");
 }
 
 /** Merge an arity-2 attr's result bag (plan output OR runtime return) into context. */
@@ -170,10 +136,7 @@ function mergePostAttrsResult<Props extends object>(
   props: Props,
   resolved: Dict<unknown>
 ): void {
-  for (const key in resolved) {
-    if (key in props && (props as Dict<unknown>)[key] === undefined) continue;
-    (context as unknown as Dict<unknown>)[key] = resolved[key];
-  }
+    throw new Error("STUB");
 }
 
 /**
@@ -191,60 +154,7 @@ function applyPostAttrs<Props extends object>(
   plans: ReadonlyArray<PostAttrsPlan | null> | undefined,
   effectiveBase: Dict<any>
 ): void {
-  let ast: CompiledAst | null = null;
-  let planIdx = 0;
-  for (let i = 0; i < attrs.length; i++) {
-    const attr = attrs[i];
-    if (!isFunction(attr) || (attr as Function).length < 2) continue;
-    const plan = plans !== undefined ? plans[planIdx] : null;
-    planIdx++;
-
-    if (plan !== null && plan !== undefined) {
-      mergePostAttrsResult(context, props, plan.output);
-      if (plan.popped !== null) {
-        plan.popped.forEach(key => {
-          delete effectiveBase[key];
-        });
-      }
-      continue;
-    }
-
-    if (ast === null) {
-      const theme = (context as { theme?: unknown }).theme;
-      // Per-render lookup cache: same key resolved once. Theme-path walks
-      // and effectiveBase reads alike skip on a cache hit. Pop's destructive
-      // intent is preserved because the cached value is returned even after
-      // the source slot is removed; the cache also makes pop idempotent
-      // when called more than once with the same key in one render.
-      const cache = new Map<string, unknown>();
-      const lookup = (keyOrPath: string): unknown => {
-        let v: unknown = cache.get(keyOrPath);
-        if (v !== undefined || cache.has(keyOrPath)) return v;
-        if (keyOrPath.indexOf('.') !== -1) {
-          v = themeValue(theme, keyOrPath);
-        } else {
-          v = effectiveBase[keyOrPath];
-        }
-        cache.set(keyOrPath, v);
-        return v;
-      };
-      ast = {
-        pop(keyOrPath: string, fallback?: unknown): unknown {
-          const v = lookup(keyOrPath);
-          if (keyOrPath.indexOf('.') === -1) delete effectiveBase[keyOrPath];
-          return v !== undefined ? v : fallback;
-        },
-        peek(keyOrPath: string, fallback?: unknown): unknown {
-          const v = lookup(keyOrPath);
-          return v !== undefined ? v : fallback;
-        },
-      } as CompiledAst;
-    }
-    const resolvedAttrDef = (
-      attr as (p: ExecutionContext & Props, a: CompiledAst) => ExecutionProps & Partial<Props>
-    )({ ...context }, ast);
-    mergePostAttrsResult(context, props, resolvedAttrDef as Dict<unknown>);
-  }
+    throw new Error("STUB");
 }
 
 interface StyledComponentImplProps extends ExecutionProps {
@@ -256,16 +166,7 @@ function buildPropsForElement(
   elementToBeCreated: NativeTarget,
   shouldForwardProp: ((prop: string, el: NativeTarget) => boolean) | undefined
 ): Dict<any> {
-  const out: Dict<any> = {};
-  for (const key in context) {
-    if (key[0] === '$' || key === 'as' || key === 'theme' || key === 'ref') continue;
-    else if (key === 'forwardedAs') {
-      out.as = context[key];
-    } else if (!shouldForwardProp || shouldForwardProp(key, elementToBeCreated)) {
-      out[key] = context[key];
-    }
-  }
-  return out;
+    throw new Error("STUB");
 }
 
 /**
@@ -282,11 +183,7 @@ type LeafTarget = string | { displayName?: string; name?: string } | null | unde
  * has wrapped Text once or twice with `styled(Text)\`...\``.
  */
 function resolveLeafTarget(target: unknown): LeafTarget {
-  let cur: unknown = target;
-  while (cur && isStyledComponent(cur)) {
-    cur = (cur as unknown as IStyledStatics<'native', BaseObject>).target;
-  }
-  return cur as LeafTarget;
+    throw new Error("STUB");
 }
 
 /** `Animated.createAnimatedComponent` (and reanimated's equivalent) name
@@ -295,24 +192,11 @@ function resolveLeafTarget(target: unknown): LeafTarget {
 const ANIMATED_WRAPPER_NAME_RE = /^(?:Animated|AnimatedComponent|Reanimated)\((.+)\)$/;
 
 function leafName(leaf: LeafTarget): string | undefined {
-  if (typeof leaf === 'string') return leaf;
-  if (leaf == null) return undefined;
-  // RN core components are functions (typeof === 'function'), user wrappers
-  // can be classes (typeof === 'object' or 'function'). Both expose
-  // `displayName` / `name` as enumerable on the constructor.
-  const name = leaf.displayName || leaf.name;
-  if (name !== undefined && name.charCodeAt(name.length - 1) === 41 /* ) */) {
-    const m = ANIMATED_WRAPPER_NAME_RE.exec(name);
-    if (m !== null) return m[1];
-  }
-  return name;
+    throw new Error("STUB");
 }
 
 function targetMatchesValidOn(target: unknown, validOn: ReadonlyArray<string>): boolean {
-  const name = leafName(resolveLeafTarget(target));
-  if (name === undefined) return false;
-  for (let i = 0; i < validOn.length; i++) if (name === validOn[i]) return true;
-  return false;
+    throw new Error("STUB");
 }
 
 const specialCaseWarned = new WeakSet<object>();
@@ -332,11 +216,7 @@ function finalizeElementProps(
   forwardedRef: Ref<any> | undefined,
   forwardedComponent: IStyledComponent<'native', any>
 ): Dict<any> {
-  const elementProps = buildPropsForElement(source, elementToBeCreated, shouldForwardProp);
-  elementProps.style = style;
-  applySpecialCases(elementProps, specialCases, elementToBeCreated, forwardedComponent);
-  if (forwardedRef) elementProps.ref = forwardedRef;
-  return elementProps;
+    throw new Error("STUB");
 }
 
 /**
@@ -351,32 +231,7 @@ function applySpecialCases(
   effectiveTarget: unknown,
   warningKey: object
 ): void {
-  if (!specialCases) return;
-  for (const k in specialCases) {
-    const meta = SPECIAL_CASE_PROPS[k];
-    const targetValid = meta === undefined || targetMatchesValidOn(effectiveTarget, meta.validOn);
-    if (targetValid) {
-      const priority = meta !== undefined && meta.priority !== undefined ? meta.priority : 0;
-      if (priority > 0) {
-        // Priority keys (e.g. `interactivity: inert`) overwrite the user value so
-        // hit-testing, a11y, focus, selection and editability all reflect the inert state.
-        elementProps[k] = specialCases[k];
-      } else if (!(k in elementProps)) {
-        elementProps[k] = specialCases[k];
-      }
-    } else if (__DEV__ && meta) {
-      if (!specialCaseWarned.has(warningKey)) {
-        specialCaseWarned.add(warningKey);
-        const name = leafName(resolveLeafTarget(effectiveTarget)) ?? 'this component';
-        const validList = meta.validOn.map(n => `<${n}>`).join(' or ');
-        warnOnce(
-          'native-special-case-target',
-          `\`${meta.source}\` only works on ${validList} in React Native, but it's being applied to <${name}>. \`${meta.source}\` maps to React Native's \`${k}\` prop, which ${validList} reads;other components will ignore it.`,
-          meta.source + ':' + name
-        );
-      }
-    }
-  }
+    throw new Error("STUB");
 }
 
 const EMPTY_INSETS = Object.freeze({ top: 0, right: 0, bottom: 0, left: 0 });
@@ -434,36 +289,7 @@ function computePublishedCascade(
   inherited: NativeCascadeValues,
   resolvedStyle: any
 ): NativeCascadeValues {
-  // Per-call allocation. A module-level scratch tuple measured the same on
-  // V8 (escape analysis) and only marginal on Hermes, not worth the
-  // single-threaded-JS invariant it would lock in against any future
-  // parallel-render API.
-  const slots: [unknown, unknown, unknown] = [undefined, undefined, undefined];
-  collectCascadeSlots(resolvedStyle, slots);
-  const [fs, lh, dir] = slots;
-  if (fs === undefined && lh === undefined && dir === undefined) return inherited;
-  const fontSize = typeof fs === 'number' ? fs : inherited.fontSize;
-  const lineHeight = typeof lh === 'number' ? lh : inherited.lineHeight;
-  const direction: 'ltr' | 'rtl' = dir === 'rtl' || dir === 'ltr' ? dir : inherited.direction;
-  if (
-    fontSize === inherited.fontSize &&
-    lineHeight === inherited.lineHeight &&
-    direction === inherited.direction
-  ) {
-    return inherited;
-  }
-  const next: NativeCascadeValues = {
-    fontSize,
-    lineHeight,
-    rootFontSize: inherited.rootFontSize,
-    direction,
-  };
-  if (inherited.customProperties !== undefined) next.customProperties = inherited.customProperties;
-  // Grid items size against the nearest grid container's published entry;
-  // carry it through any cascade rebuild so a child that also changes
-  // font-size / direction still sees its grid owner.
-  if (inherited.grid !== undefined) next.grid = inherited.grid;
-  return next;
+    throw new Error("STUB");
 }
 
 type MergedCascadeCache = {
@@ -482,37 +308,11 @@ function mergeCustomPropertiesIntoCascade(
   inherited: NativeCascadeValues,
   own: ReadonlyMap<string, string> | undefined
 ): NativeCascadeValues {
-  if (own === undefined || own.size === 0) return inherited;
-  const inheritedMap = inherited.customProperties;
-  const merged = new Map<string, string>();
-  if (inheritedMap !== undefined) {
-    inheritedMap.forEach((v, k) => merged.set(k, v));
-  }
-  own.forEach((v, k) => merged.set(k, v));
-  const next: NativeCascadeValues = {
-    fontSize: inherited.fontSize,
-    lineHeight: inherited.lineHeight,
-    rootFontSize: inherited.rootFontSize,
-    direction: inherited.direction,
-    customProperties: merged,
-  };
-  if (inherited.grid !== undefined) next.grid = inherited.grid;
-  return next;
+    throw new Error("STUB");
 }
 
 function collectCascadeSlots(style: any, slots: [unknown, unknown, unknown]): boolean {
-  if (style === null || style === undefined) return false;
-  if (Array.isArray(style)) {
-    for (let i = style.length - 1; i >= 0; i--) {
-      if (collectCascadeSlots(style[i], slots)) return true;
-    }
-    return false;
-  }
-  if (typeof style !== 'object') return false;
-  if (slots[0] === undefined && 'fontSize' in style) slots[0] = style.fontSize;
-  if (slots[1] === undefined && 'lineHeight' in style) slots[1] = style.lineHeight;
-  if (slots[2] === undefined && 'direction' in style) slots[2] = style.direction;
-  return slots[0] !== undefined && slots[1] !== undefined && slots[2] !== undefined;
+    throw new Error("STUB");
 }
 
 // Mutable scratch env reused across container-query evaluations.
@@ -691,16 +491,7 @@ function walkForHas(
 ): boolean {
   let found = false;
   React.Children.forEach(children, child => {
-    if (found) return;
-    if (!React.isValidElement(child)) return;
-    if (matchesHasInner(child, inner)) {
-      found = true;
-      return;
-    }
-    const grand = (child.props as { children?: React.ReactNode }).children;
-    if (grand !== undefined && grand !== null && walkForHas(grand, inner)) {
-      found = true;
-    }
+      throw new Error("STUB");
   });
   return found;
 }
@@ -959,8 +750,7 @@ const STATELESS_STYLE_TARGETS = new Set([
 
 /** Leaf target name when it cannot receive a function style; null otherwise. */
 function inertStateStyleTargetName(target: unknown): string | null {
-  const name = leafName(resolveLeafTarget(target));
-  return name !== undefined && STATELESS_STYLE_TARGETS.has(name) ? name : null;
+    throw new Error("STUB");
 }
 
 const PSEUDO_TO_SELECTOR: Record<PseudoState, string> = {
@@ -1109,14 +899,7 @@ type RenderCache = [
  * side's shape statically). Keep these specialized.
  */
 export function composeBase(base: object, userStyle: any): any {
-  if (userStyle === undefined || userStyle === null) return base;
-  if (isFunction(userStyle)) {
-    return (state: any) => {
-      const u = userStyle(state);
-      return Array.isArray(u) ? [base].concat(u) : [base, u];
-    };
-  }
-  return Array.isArray(userStyle) ? [base as object].concat(userStyle) : [base, userStyle];
+    throw new Error("STUB");
 }
 
 /**
@@ -1134,20 +917,12 @@ function resolveContainerName(
   info: NativeStyles['containerInfo'] | undefined,
   styledComponentId: string
 ): string | undefined {
-  if (!info) return undefined;
-  return info.explicitName ?? styledComponentId;
+    throw new Error("STUB");
 }
 
 /** Append an `extra` style object onto a composed style, preserving its function-or-array shape. */
 function appendStyle(composed: any, extra: object): any {
-  if (composed === undefined || composed === null) return extra;
-  if (isFunction(composed)) {
-    return (state: any) => {
-      const u = composed(state);
-      return Array.isArray(u) ? [...u, extra] : [u, extra];
-    };
-  }
-  return Array.isArray(composed) ? [...composed, extra] : [composed, extra];
+    throw new Error("STUB");
 }
 
 /**
@@ -1164,8 +939,7 @@ function injectAutoContainerName(
   info: NativeStyles['containerInfo'] | undefined,
   styledComponentId: string
 ): any {
-  if (!info || info.explicitName !== undefined) return composed;
-  return appendStyle(composed, { containerName: styledComponentId });
+    throw new Error("STUB");
 }
 
 function composeStaticStyle(
@@ -1173,8 +947,7 @@ function composeStaticStyle(
   userStyle: any,
   styledComponentId: string
 ): any {
-  const composed = composeBase(compiled.base, userStyle);
-  return injectAutoContainerName(composed, compiled.containerInfo, styledComponentId);
+    throw new Error("STUB");
 }
 
 function createFastElement(
@@ -1182,14 +955,7 @@ function createFastElement(
   elementProps: Dict<any>,
   containerName: string | undefined
 ): React.ReactElement {
-  if (containerName) {
-    return createElement(StaticContainerPublisherDispatch, {
-      name: containerName,
-      elementType: elementToBeCreated,
-      elementProps,
-    });
-  }
-  return createElement(elementToBeCreated, elementProps);
+    throw new Error("STUB");
 }
 
 interface StaticContainerPublisherDispatchProps {
@@ -1209,14 +975,7 @@ function StaticContainerPublisherDispatch({
   elementType,
   elementProps,
 }: StaticContainerPublisherDispatchProps): React.ReactElement {
-  const parent = React.useContext(NativeStyleContext);
-  return createElement(ContainerPublisher, {
-    name,
-    parent,
-    cascadeOverride: null,
-    elementType,
-    elementProps,
-  } as ContainerPublisherProps);
+    throw new Error("STUB");
 }
 
 // Eligibility is frozen at construction (INativeStyle.staticEligible) so hook
@@ -1230,96 +989,7 @@ function useStaticImpl<Props extends StyledComponentImplProps>(
   props: Props,
   forwardedRef: Ref<any> | undefined
 ): React.ReactElement {
-  const { nativeStyle, target, styledComponentId } = forwardedComponent;
-  const compiled = nativeStyle.staticCompiled!;
-  const elementToBeCreated: NativeTarget = (props.as as NativeTarget) || target;
-  const containerName = resolveContainerName(compiled.containerInfo, styledComponentId);
-  if (IS_RSC) {
-    const elementProps = finalizeElementProps(
-      props,
-      elementToBeCreated,
-      undefined,
-      composeStaticStyle(compiled, props.style, styledComponentId),
-      compiled.specialCases,
-      forwardedRef,
-      forwardedComponent
-    );
-    return createFastElement(
-      elementToBeCreated,
-      applyStylePolyfills(elementProps as Record<string, unknown>) as Dict<any>,
-      containerName
-    );
-  }
-  // A static-eligible component can still be a grid item: an empty or
-  // purely-static child placed inside a `display: grid` container. The
-  // parent decides this at runtime, so the static path reads the cascade
-  // and applies the computed width when this component is a direct child
-  // of the grid that published the entry.
-  const nativeStyleCtx = React.useContext(NativeStyleContext);
-  const parentCtx = React.useContext(ParentContext);
-  let composedStyle = composeStaticStyle(compiled, props.style, styledComponentId);
-  const grid = nativeStyleCtx.cascade.grid;
-  if (grid !== undefined && parentCtx.parentId === grid.ownerId) {
-    // A `grid-column: span N` item is never static-eligible (the
-    // eligibility gate excludes `gridSpan`), so a static grid item always
-    // spans one column.
-    composedStyle = appendStyle(composedStyle, { width: computeGridItemWidth(grid, 1) });
-  }
-  const elementProps = finalizeElementProps(
-    props,
-    elementToBeCreated,
-    undefined,
-    composedStyle,
-    compiled.specialCases,
-    forwardedRef,
-    forwardedComponent
-  );
-  const publishCacheRef = React.useRef<ParentPublishCache | null>(null);
-  if (publishCacheRef.current === null) publishCacheRef.current = createParentPublishCache();
-  // Index sibling positions BEFORE running polyfills + createFastElement
-  // so per-child Providers attach to user JSX even when a container
-  // wrap is in the way (createFastElement would otherwise hand the
-  // host construction to StaticContainerPublisherDispatch, hiding the
-  // children).
-  const publishedValue = buildPublishedParentValue(
-    publishCacheRef.current,
-    parentCtx,
-    styledComponentId,
-    elementToBeCreated
-  );
-  let effectiveProps =
-    publishedValue !== null
-      ? withIndexedChildren(
-          elementProps,
-          indexStyledChildren(publishCacheRef.current, elementProps.children, publishedValue)
-        )
-      : elementProps;
-  // Static-eligible scroll containers still publish their timeline so
-  // descendants' `animation-timeline: scroll()` resolves, and lift
-  // sticky children onto stickyHeaderIndices.
-  const isScroller = isScrollableTargetName(leafName(resolveLeafTarget(elementToBeCreated)));
-  const [scrollProps, wrapScrollTimeline, timelineEntry] = useScrollTimelinePublisher(
-    isScroller || compiled.scrollTimeline !== undefined,
-    compiled.scrollTimeline,
-    effectiveProps
-  );
-  effectiveProps = useScrollerSnapProps(
-    isScroller,
-    compiled,
-    compiled.snapTarget,
-    timelineEntry,
-    scrollProps
-  );
-  const inner = wrapScrollTimeline(
-    createFastElement(
-      elementToBeCreated,
-      applyStylePolyfills(effectiveProps as Record<string, unknown>) as Dict<any>,
-      containerName
-    )
-  );
-  return publishedValue !== null
-    ? createElement(ParentContext.Provider, { value: publishedValue }, inner)
-    : inner;
+    throw new Error("STUB");
 }
 
 /**
@@ -1355,387 +1025,7 @@ function useDynamicImpl<Props extends StyledComponentImplProps>(
   props: Props,
   forwardedRef: Ref<any> | undefined
 ) {
-  const { attrs: componentAttrs, nativeStyle, shouldForwardProp, target } = forwardedComponent;
-
-  const contextTheme = !IS_RSC ? React.useContext(ThemeContext) : undefined;
-  const theme = determineTheme(props, contextTheme) || EMPTY_OBJECT;
-
-  const env = useMediaEnv();
-  // Consolidated native render state: container + cascade live behind a
-  // single provider so a parent's font-size / line-height / direction
-  // changes invalidate the cache cleanly. Tier 2 selectors (`>`, `+`,
-  // `~`, `:nth-child`, `:has`) read sibling / ancestor info from
-  // ParentContext.
-  const nativeStyleCtx = !IS_RSC ? React.useContext(NativeStyleContext) : DEFAULT_NATIVE_STYLE;
-  const containerCtx = nativeStyleCtx.container;
-  const parentCtx = !IS_RSC ? React.useContext(ParentContext) : DEFAULT_PARENT_CONTEXT;
-  // Anchor-rect reactivity: components whose CSS uses anchor() /
-  // anchor-size() re-render (and re-key their cache) when any anchor's
-  // rect changes. The gate is lifetime-constant per component, so the
-  // hook branch is stable.
-  const anchorVersion =
-    !IS_RSC && nativeStyle.usesAnchorFunctions
-      ? React.useSyncExternalStore(subscribeAnchors, getAnchorVersion)
-      : 0;
-
-  const renderCacheRef = (!IS_RSC ? React.useRef<RenderCache | null>(null) : { current: null }) as {
-    current: RenderCache | null;
-  };
-  const prev = renderCacheRef.current;
-  const publishCacheRef = (
-    !IS_RSC ? React.useRef<ParentPublishCache | null>(null) : { current: null }
-  ) as { current: ParentPublishCache | null };
-  if (!IS_RSC && publishCacheRef.current === null) {
-    publishCacheRef.current = createParentPublishCache();
-  }
-  // Single-slot identity cache for the merged custom-property cascade.
-  // The same merged Map drives buildResolveEnv (own var() resolution +
-  // conditional bucket resolvers) AND descendant publishing, so cache
-  // it once per render and reuse when both inputs reference-match.
-  // Stable-input renders thus avoid a Map allocation + descendant
-  // re-renders triggered by a spurious cascade identity change.
-  const mergedCascadeCacheRef = (
-    !IS_RSC ? React.useRef<MergedCascadeCache>(null) : { current: null }
-  ) as { current: MergedCascadeCache };
-
-  let context: ExecutionContext & Props;
-  let compiled: NativeStyles;
-  let composedStyle: any;
-  let elementToBeCreated: NativeTarget;
-  let resolveEnv: ResolveEnv;
-  let effectiveBase: Dict<any>;
-  let renderCascade: NativeCascadeValues;
-  let propsKeyCount = prev !== null ? prev[2] : 0;
-
-  const propsMatch = prev !== null && prev[1] === theme && shallowEqual(prev[0], props, prev[2]);
-  // parentCtx participates because position-dependent output (nth-child /
-  // combinator matches, sibling-index() resolvers) is baked into the
-  // cached composedStyle. perChildValue identity is stable unless the
-  // parent's sibling shape actually changed, so this only invalidates
-  // when a re-resolve is genuinely required.
-  const fullHit =
-    propsMatch &&
-    prev![5] === env &&
-    prev![6] === nativeStyleCtx &&
-    prev![12] === parentCtx &&
-    prev![13] === anchorVersion;
-
-  if (fullHit) {
-    context = prev![3] as typeof context;
-    compiled = prev![4];
-    composedStyle = prev![7];
-    elementToBeCreated = prev![8];
-    resolveEnv = prev![10];
-    effectiveBase = prev![11];
-    // Full-hit implies (nativeStyleCtx, compiled) reference-equal to the
-    // previous render, so the prior merge result is still authoritative.
-    renderCascade = mergedCascadeCacheRef.current!.merged;
-  } else {
-    if (propsMatch) {
-      context = prev![3] as typeof context;
-      compiled = prev![4];
-      elementToBeCreated = prev![8];
-      // post-attrs effects depend only on props/theme/context+compiled, all
-      // stable on a partial hit, so the cached effectiveBase is reusable.
-      effectiveBase = prev![11];
-    } else {
-      context = resolveContext<Props>(theme, props, componentAttrs);
-      compiled = nativeStyle.compile(context) as NativeStyles;
-      // resolveContext spreads props before applying attrs, so context.as already
-      // covers props.as; no separate fallback needed.
-      elementToBeCreated = (context.as as NativeTarget | undefined) || target;
-      propsKeyCount = 0;
-      for (const key in props) {
-        if (hasOwn.call(props, key)) propsKeyCount++;
-      }
-      // Post-compile attrs phase: clone `compiled.base` (canonical, must stay
-      // intact for cache reuse) and run arity-2 attrs in order. Each attr
-      // either applies a static plan (folded at construction) or invokes
-      // its callback at runtime via the `ast` accessor. Skipped entirely
-      // when no arity-2 attrs are present (zero overhead for the common case).
-      if (forwardedComponent.hasPostAttrs === true) {
-        effectiveBase = { ...compiled.base };
-        applyPostAttrs<Props>(
-          context,
-          props,
-          componentAttrs,
-          forwardedComponent.postAttrsPlans,
-          effectiveBase
-        );
-      } else {
-        effectiveBase = compiled.base;
-      }
-    }
-    const ownCustomProps = compiled.customProperties;
-    const cached = mergedCascadeCacheRef.current;
-    if (
-      cached !== null &&
-      cached.inherited === nativeStyleCtx.cascade &&
-      cached.own === ownCustomProps
-    ) {
-      renderCascade = cached.merged;
-    } else {
-      renderCascade = mergeCustomPropertiesIntoCascade(nativeStyleCtx.cascade, ownCustomProps);
-      mergedCascadeCacheRef.current = {
-        inherited: nativeStyleCtx.cascade,
-        own: ownCustomProps,
-        merged: renderCascade,
-      };
-    }
-    resolveEnv = buildResolveEnv(
-      env,
-      containerCtx,
-      theme as Record<string, any>,
-      renderCascade,
-      parentCtx,
-      props as Record<string, unknown>,
-      compiled.positionAnchor
-    );
-    let varImportant: Dict<any> | undefined;
-    if (compiled.varDeferred !== undefined) {
-      const varOut = applyVarDeferred(
-        compiled.varDeferred,
-        renderCascade.customProperties ?? null,
-        compiled.customProperties ?? null,
-        resolveEnv
-      );
-      if (varOut.normal !== null) {
-        if (effectiveBase === compiled.base) {
-          effectiveBase = { ...compiled.base, ...varOut.normal };
-        } else {
-          Object.assign(effectiveBase, varOut.normal);
-        }
-      }
-      if (varOut.important !== null) varImportant = varOut.important;
-    }
-    const baseOverride = effectiveBase !== compiled.base ? effectiveBase : undefined;
-    const baseComposed = hasResponsiveOutput(compiled)
-      ? assembleFinalStyle(
-          compiled,
-          env,
-          containerCtx,
-          theme,
-          props.style,
-          // Generic Props can't structurally satisfy `Record<string, unknown>`
-          // (TS lacks unsealed-object covariance); normalize at the boundary.
-          props as Record<string, unknown>,
-          baseOverride,
-          renderCascade,
-          parentCtx,
-          varImportant,
-          compiled.hasPseudo ? inertStateStyleTargetName(elementToBeCreated) : null
-        )
-      : composeBase(effectiveBase, props.style);
-    composedStyle = injectAutoContainerName(
-      baseComposed,
-      compiled.containerInfo,
-      forwardedComponent.styledComponentId
-    );
-    // Grid item sizing: a direct child of a `display: grid` container
-    // reads the published grid entry and applies a computed width. The
-    // owner check (`parentId === grid.ownerId`) enforces the spec's
-    // direct-children rule; grandchildren do not become grid items.
-    // contentWidth changes flow through `nativeStyleCtx` identity (part
-    // of the fullHit cache key), so the width recomputes on re-layout.
-    const grid = renderCascade.grid;
-    if (grid !== undefined && parentCtx.parentId === grid.ownerId) {
-      composedStyle = appendStyle(composedStyle, {
-        width: computeGridItemWidth(grid, compiled.gridSpan ?? 1),
-      });
-    }
-  }
-
-  const animationAdapter = getAnimationAdapter() ?? NOOP_ADAPTER;
-  const userProps = props as Props & {
-    onAnimationEnd?: AnimatedStyleInput['onAnimationEnd'];
-    onTransitionEnd?: AnimatedStyleInput['onTransitionEnd'];
-  };
-  // View progress subjects capture their layout before the adapter runs
-  // so the timeline can place them within the scroller; the composed
-  // onLayout lands on the element props below. Hook order is
-  // unconditional inside.
-  const isViewSubject = !IS_RSC && animationsUseViewTimeline(compiled.animations);
-  const [viewSubjectLayout, withViewSubjectLayout] = useViewTimelineSubject(isViewSubject);
-  const sticky = useStickyPosition(!IS_RSC && compiled.sticky === true);
-  const animInput: AnimatedStyleInput = {
-    compiled,
-    resolved: composedStyle,
-    target: elementToBeCreated,
-    env: resolveEnv,
-  };
-  if (isViewSubject) animInput.viewSubject = viewSubjectLayout;
-  if (userProps.onAnimationEnd !== undefined) animInput.onAnimationEnd = userProps.onAnimationEnd;
-  if (userProps.onTransitionEnd !== undefined)
-    animInput.onTransitionEnd = userProps.onTransitionEnd;
-  const animOut = animationAdapter.useAnimatedStyle(animInput);
-
-  // Sticky elements append the crossover fade-out and need an
-  // Animated-capable host to consume the UI-thread opacity node. The
-  // pre-fade style is what the overlay twin replicates.
-  let renderStyle = animOut.style;
-  let renderType = animOut.elementType;
-  const stickyTwinStyle = animOut.style;
-  if (sticky.layer !== null) {
-    renderStyle = appendStyle(renderStyle, sticky.layer);
-    renderType = getAnimatedComponentCached(renderType) ?? renderType;
-  }
-
-  let elementProps: Dict<any>;
-  // Adapters with off-React state machinery (allow-discrete 50% flip,
-  // for example) signal `invalidateCache` to force an elementProps
-  // rebuild when their internal state changed despite stable inputs.
-  if (fullHit && !animOut.invalidateCache && !sticky.changed) {
-    elementProps = prev![9];
-  } else {
-    elementProps = applyStylePolyfills(
-      finalizeElementProps(
-        context,
-        renderType,
-        shouldForwardProp,
-        renderStyle,
-        compiled.specialCases,
-        forwardedRef,
-        forwardedComponent
-      ) as Record<string, unknown>
-    ) as Dict<any>;
-    renderCacheRef.current = [
-      props,
-      theme,
-      propsKeyCount,
-      context,
-      compiled,
-      env,
-      nativeStyleCtx,
-      composedStyle,
-      elementToBeCreated,
-      elementProps,
-      resolveEnv,
-      effectiveBase,
-      parentCtx,
-      anchorVersion,
-    ];
-  }
-
-  // `field-sizing: content` dev guard. The polyfill lifts `multiline:
-  // true` via SPECIAL_CASE_PROPS, and RN's Yoga measure callback for a
-  // multiline TextInput grows the view to its text size on its own. If
-  // the user passed `multiline={false}`, the lift is voided and the
-  // input renders single-line; warn so the missing autosize is
-  // visible.
-  if (__DEV__ && compiled.fieldSizing === 'content' && elementProps.multiline === false) {
-    warnOnce(
-      'native-field-sizing-needs-multiline',
-      '`field-sizing: content` requires `multiline={true}` so React Native renders the input as a multiline TextInput that can grow with its content. The component received `multiline={false}` and will render at a fixed single-line height instead. Drop the explicit `multiline` prop or remove the `field-sizing: content` declaration.'
-    );
-  }
-
-  const containerName = resolveContainerName(
-    compiled.containerInfo,
-    forwardedComponent.styledComponentId
-  );
-  // Skip the walk entirely when the compile-time scan said no cascade
-  // key is published AND no user style prop supplied one. The gate
-  // stays at the call site to keep computePublishedCascade monomorphic
-  // on its two-arg signature; a boolean third arg regressed the
-  // must-walk path by ~25% in a prior version.
-  const publishedCascade =
-    compiled.publishesCascade || props.style != null
-      ? computePublishedCascade(renderCascade, composedStyle)
-      : renderCascade;
-  const cascadeChanged = publishedCascade !== nativeStyleCtx.cascade;
-
-  // Publish this component's identity to descendants so Tier 2
-  // combinator selectors (`${Foo} &`, `${Foo} > &`) can match. Index
-  // child sibling position BEFORE layering any cascade / container /
-  // isolate-3d Provider wrap, otherwise the per-child Providers would
-  // attach to the wrapper rather than the host's user JSX.
-  const publishCache = !IS_RSC ? publishCacheRef.current! : createParentPublishCache();
-  const publishedValue = buildPublishedParentValue(
-    publishCache,
-    parentCtx,
-    forwardedComponent.styledComponentId,
-    animOut.elementType
-  );
-  let effectiveProps =
-    publishedValue !== null
-      ? withIndexedChildren(
-          elementProps,
-          indexStyledChildren(publishCache, elementProps.children, publishedValue)
-        )
-      : elementProps;
-
-  // Scroll progress timelines: styled scroll containers publish their
-  // offset/extent so descendants' `animation-timeline: scroll()` /
-  // named references resolve. Hook order is unconditional inside.
-  const isScroller =
-    !IS_RSC && isScrollableTargetName(leafName(resolveLeafTarget(elementToBeCreated)));
-  const [scrollProps, wrapScrollTimeline, timelineEntry] = useScrollTimelinePublisher(
-    isScroller || (!IS_RSC && compiled.scrollTimeline !== undefined),
-    compiled.scrollTimeline,
-    effectiveProps
-  );
-  effectiveProps = useScrollerSnapProps(
-    isScroller,
-    compiled,
-    !IS_RSC ? compiled.snapTarget : undefined,
-    timelineEntry,
-    scrollProps
-  );
-  // anchor-name publishers report their parent-relative rect for
-  // anchor() / anchor-size() consumers.
-  effectiveProps = useAnchorNamePublisher(
-    !IS_RSC ? compiled.anchorName : undefined,
-    effectiveProps
-  );
-  effectiveProps = withViewSubjectLayout(effectiveProps);
-  effectiveProps = sticky.compose(effectiveProps);
-  sticky.register(renderType, effectiveProps, stickyTwinStyle);
-
-  let inner: React.ReactElement;
-  if (compiled.gridInfo !== undefined) {
-    // `display: grid` container: measure the content-box width and
-    // publish a grid entry so direct children size themselves. The
-    // gutters come from the resolved base (`gap` shorthand or split
-    // `rowGap` / `columnGap`).
-    const gutters = readGridGutters(composedStyle);
-    inner = createElement(GridPublisher, {
-      ownerId: forwardedComponent.styledComponentId,
-      columns: compiled.gridInfo.columns,
-      columnGap: gutters.columnGap,
-      rowGap: gutters.rowGap,
-      containerName,
-      parent: nativeStyleCtx,
-      cascadeOverride: cascadeChanged ? publishedCascade : null,
-      elementType: renderType,
-      elementProps: effectiveProps,
-    } as GridPublisherProps);
-  } else if (containerName !== undefined) {
-    inner = createElement(ContainerPublisher, {
-      name: containerName,
-      parent: nativeStyleCtx,
-      cascadeOverride: cascadeChanged ? publishedCascade : null,
-      elementType: renderType,
-      elementProps: effectiveProps,
-    } as ContainerPublisherProps);
-  } else {
-    inner = createElement(renderType, effectiveProps);
-    if (animOut.isolate3d) {
-      inner = createElement(get3dIsolationView(), { collapsable: false }, inner);
-    }
-    if (cascadeChanged) {
-      inner = createElement(
-        NativeStyleContext.Provider,
-        { value: { container: nativeStyleCtx.container, cascade: publishedCascade } },
-        inner
-      );
-    }
-  }
-
-  inner = wrapScrollTimeline(inner);
-
-  return publishedValue !== null
-    ? createElement(ParentContext.Provider, { value: publishedValue }, inner)
-    : inner;
+    throw new Error("STUB");
 }
 
 /**
@@ -1762,41 +1052,7 @@ function buildPublishedParentValue(
   styledComponentId: string,
   elementType: NativeTarget
 ): ParentContextValue | null {
-  if (cache.publishedKeyParentCtx === parent && cache.publishedKeyElementType === elementType) {
-    return cache.publishedValue;
-  }
-  let value: ParentContextValue | null;
-  if (parent.parentId === styledComponentId) {
-    value = null;
-  } else {
-    const ancestors =
-      parent.parentId === null
-        ? parent.ancestors
-        : parent.ancestors.length === 0
-          ? [parent.parentId]
-          : parent.ancestors.concat(parent.parentId);
-    value = {
-      parentId: styledComponentId,
-      parentTarget: elementType,
-      ancestors,
-      siblingIndex: -1,
-      totalSiblings: 0,
-      prevSiblingId: null,
-      prevSiblingTarget: null,
-      prevSiblings: EMPTY_PREV_SIBLINGS,
-      prevSiblingsCount: 0,
-      siblingIndexOfType: -1,
-      totalSiblingsOfType: 0,
-      siblings: EMPTY_SIBLINGS,
-    };
-  }
-  cache.publishedKeyParentCtx = parent;
-  cache.publishedKeyElementType = elementType;
-  cache.publishedValue = value;
-  // Per-child cache entries reference the prior published value via
-  // `parentValue`; let `indexStyledChildren` invalidate them lazily
-  // when its entry-by-entry compare mismatches.
-  return value;
+    throw new Error("STUB");
 }
 
 interface PerChildCacheEntry {
@@ -1824,13 +1080,7 @@ interface ParentPublishCache {
 }
 
 function createParentPublishCache(): ParentPublishCache {
-  return {
-    publishedKeyParentCtx: null,
-    publishedKeyElementType: null,
-    publishedValue: null,
-    perChild: [],
-    siblingsList: null,
-  };
+    throw new Error("STUB");
 }
 
 const EMPTY_PREV_SIBLINGS: ReadonlyArray<string> = Object.freeze([]);
@@ -1864,148 +1114,7 @@ function indexStyledChildren(
   children: React.ReactNode,
   parentValue: ParentContextValue
 ): React.ReactNode {
-  if (children === undefined || children === null) return children;
-  if (typeof children === 'string' || typeof children === 'number') return children;
-
-  const arr = React.Children.toArray(children);
-  if (arr.length === 0) return children;
-
-  // First pass: identify styled children, total per target, and collect
-  // the `SiblingInfo` array used by `:nth-child(<formula> of <selector>)`
-  // matchers. Skipping non-styled entries keeps the array aligned with
-  // the parent walk's view of "styled children" used elsewhere.
-  const total = arr.length;
-  const childIds: Array<string | null> = new Array(total);
-  const childTargets: Array<NativeTarget | null> = new Array(total);
-  const totalsByTarget = new Map<NativeTarget, number>();
-  const siblingsMut: SiblingInfo[] = [];
-  let hasAnyStyled = false;
-  for (let i = 0; i < total; i++) {
-    const c = arr[i];
-    if (React.isValidElement(c)) {
-      const tp = c.type as { styledComponentId?: string; target?: NativeTarget } | string;
-      if (typeof tp !== 'string' && tp.styledComponentId !== undefined) {
-        const id = tp.styledComponentId;
-        childIds[i] = id;
-        const target = tp.target ?? null;
-        childTargets[i] = target;
-        hasAnyStyled = true;
-        if (target !== null) {
-          totalsByTarget.set(target, (totalsByTarget.get(target) ?? 0) + 1);
-        }
-        siblingsMut.push({
-          id,
-          target,
-          props: c.props as Readonly<Record<string, unknown>>,
-          index: i,
-        });
-        continue;
-      }
-    }
-    childIds[i] = null;
-    childTargets[i] = null;
-  }
-  if (!hasAnyStyled) return children;
-  // Reuse the cache's SiblingsList wrapper across renders; just swap
-  // `.entries`. This keeps perChildValue identity stable when sibling
-  // shape is unchanged while still giving of-selector matchers a fresh
-  // array reference (so their entry-keyed plan caches invalidate).
-  let siblings = cache.siblingsList;
-  if (siblings === null) {
-    siblings = { entries: siblingsMut };
-    cache.siblingsList = siblings;
-  } else {
-    siblings.entries = siblingsMut;
-  }
-
-  const prevSiblingsRunning: string[] = [];
-  // Running NUL-joined fingerprint of `prevSiblingsRunning`. Maintained
-  // incrementally so each iteration appends one id (O(1) amortized) instead
-  // of re-joining the whole array (O(i) per iteration, O(n²) total). For a
-  // parent with N styled children this drops the total work from quadratic
-  // to linear.
-  let prevSiblingsKeyRunning = '';
-  const sameTypeCount = new Map<NativeTarget, number>();
-  const nextChildren: React.ReactNode[] = new Array(total);
-  const perChildCache = cache.perChild;
-  if (perChildCache.length !== total) perChildCache.length = total;
-  for (let i = 0; i < total; i++) {
-    const child = arr[i];
-    const id = childIds[i];
-    if (id === null) {
-      nextChildren[i] = child;
-      perChildCache[i] = null;
-      continue;
-    }
-    const target = childTargets[i];
-    const prevId = i > 0 ? childIds[i - 1] : null;
-    const prevTarget = i > 0 ? childTargets[i - 1] : null;
-    const idxOfType = target !== null ? (sameTypeCount.get(target) ?? 0) : -1;
-    const totalOfType = target !== null ? (totalsByTarget.get(target) ?? 0) : 0;
-    const prevSiblingsKey = prevSiblingsKeyRunning;
-    const cached = perChildCache[i];
-    let perChildValue: ParentContextValue;
-    if (
-      cached !== null &&
-      cached !== undefined &&
-      cached.id === id &&
-      cached.target === target &&
-      cached.total === total &&
-      cached.prevId === prevId &&
-      cached.prevTarget === prevTarget &&
-      cached.prevSiblingsKey === prevSiblingsKey &&
-      cached.idxOfType === idxOfType &&
-      cached.totalOfType === totalOfType &&
-      cached.parentValue === parentValue &&
-      cached.siblings === siblings
-    ) {
-      perChildValue = cached.perChildValue;
-    } else {
-      // Publish the shared running array directly. Each child's
-      // `prevSiblingsCount` caps the valid prefix; later siblings will
-      // append to the same backing array as the parent walk continues,
-      // but consumers (e.g. general-sibling combinator matcher) iterate
-      // up to the count, not the array's length. Avoids the O(N²) slice
-      // cost of per-child copies on first parent render.
-      perChildValue = {
-        parentId: parentValue.parentId,
-        parentTarget: parentValue.parentTarget,
-        ancestors: parentValue.ancestors,
-        siblingIndex: i,
-        totalSiblings: total,
-        prevSiblingId: prevId,
-        prevSiblingTarget: prevTarget,
-        prevSiblings: prevSiblingsRunning.length === 0 ? EMPTY_PREV_SIBLINGS : prevSiblingsRunning,
-        prevSiblingsCount: prevSiblingsRunning.length,
-        siblingIndexOfType: idxOfType,
-        totalSiblingsOfType: totalOfType,
-        siblings,
-      };
-      perChildCache[i] = {
-        id,
-        target,
-        total,
-        prevId,
-        prevTarget,
-        prevSiblingsKey,
-        idxOfType,
-        totalOfType,
-        parentValue,
-        siblings,
-        perChildValue,
-      };
-    }
-    nextChildren[i] = createElement(
-      ParentContext.Provider,
-      { value: perChildValue, key: (child as React.ReactElement).key ?? `__sc_sib_${i}` },
-      child
-    );
-    prevSiblingsRunning.push(id);
-    prevSiblingsKeyRunning =
-      prevSiblingsKeyRunning === '' ? id : prevSiblingsKeyRunning + '\0' + id;
-    if (target !== null) sameTypeCount.set(target, idxOfType + 1);
-  }
-  return nextChildren;
+    throw new Error("STUB");
 }
 
 /**
@@ -2014,8 +1123,7 @@ function indexStyledChildren(
  * the original object is returned so the render-cache identity is preserved.
  */
 function withIndexedChildren(elementProps: Dict<any>, indexedChildren: React.ReactNode): Dict<any> {
-  if (indexedChildren === elementProps.children) return elementProps;
-  return { ...elementProps, children: indexedChildren };
+    throw new Error("STUB");
 }
 
 /** Prepended below the composed style: anything in props.style beats
@@ -2045,13 +1153,7 @@ function withScrollerDefaults(
   pinGrow: boolean,
   elementProps: Dict<any>
 ): Dict<any> {
-  if (!isScroller) return elementProps;
-  const needsNested = elementProps.nestedScrollEnabled === undefined;
-  if (!needsNested && !pinGrow) return elementProps;
-  const out = { ...elementProps };
-  if (needsNested) out.nestedScrollEnabled = true;
-  if (pinGrow) out.style = [SCROLLER_FLEX_PIN, elementProps.style];
-  return out;
+    throw new Error("STUB");
 }
 
 /**
@@ -2069,16 +1171,7 @@ function useScrollerSnapProps(
   timelineEntry: ScrollTimelineEntry | null,
   elementProps: Dict<any>
 ): Dict<any> {
-  let out = withScrollerDefaults(isScroller, compiled.scrollerFlexPin === true, elementProps);
-  out = useSnapTargetRegistration(snapTarget, out);
-  out = useSnapOffsets(isScroller, timelineEntry, out);
-  return useSnapSettle(
-    isScroller &&
-      compiled.specialCases !== undefined &&
-      compiled.specialCases.pagingEnabled === true,
-    timelineEntry,
-    out
-  );
+    throw new Error("STUB");
 }
 
 interface ContainerPublisherProps {
@@ -2108,34 +1201,11 @@ interface ContainerPublisherProps {
  * resolve against.
  */
 function getContentBoxInsets(style: any): { horizontal: number; vertical: number } {
-  const m: Record<string, any> = {};
-  mergeStyle(style, m);
-  const pa = m.padding;
-  const ph = m.paddingHorizontal;
-  const pv = m.paddingVertical;
-  const pl = m.paddingLeft ?? m.paddingStart ?? ph ?? pa;
-  const pr = m.paddingRight ?? m.paddingEnd ?? ph ?? pa;
-  const pt = m.paddingTop ?? pv ?? pa;
-  const pb = m.paddingBottom ?? pv ?? pa;
-  const ba = m.borderWidth;
-  const bl = m.borderLeftWidth ?? m.borderStartWidth ?? ba;
-  const br = m.borderRightWidth ?? m.borderEndWidth ?? ba;
-  const bt = m.borderTopWidth ?? ba;
-  const bb = m.borderBottomWidth ?? ba;
-  return {
-    horizontal: numOrZero(pl) + numOrZero(pr) + numOrZero(bl) + numOrZero(br),
-    vertical: numOrZero(pt) + numOrZero(pb) + numOrZero(bt) + numOrZero(bb),
-  };
+    throw new Error("STUB");
 }
 
 function mergeStyle(style: any, out: Record<string, any>): void {
-  if (style == null) return;
-  if (Array.isArray(style)) {
-    for (let i = 0; i < style.length; i++) mergeStyle(style[i], out);
-    return;
-  }
-  if (typeof style !== 'object') return;
-  for (const k in style) out[k] = style[k];
+    throw new Error("STUB");
 }
 
 /**
@@ -2156,15 +1226,7 @@ function computeGridItemWidth(
   grid: NonNullable<NativeCascadeValues['grid']>,
   span: number
 ): number | string {
-  const columns = grid.columns;
-  // A span can't exceed the column count; clamp so it never overflows.
-  const s = span > columns ? columns : span;
-  if (grid.contentWidth > 0) {
-    const single = (grid.contentWidth - (columns - 1) * grid.columnGap) / columns;
-    const width = single * s + (s - 1) * grid.columnGap;
-    return Math.round(width * 100) / 100;
-  }
-  return `${(100 * s) / columns}%`;
+    throw new Error("STUB");
 }
 
 /**
@@ -2173,16 +1235,11 @@ function computeGridItemWidth(
  * compile-time data, so the answer is stable per compiled style.
  */
 function animationsUseViewTimeline(animations: NativeStyles['animations'] | undefined): boolean {
-  if (animations === undefined) return false;
-  for (let i = 0; i < animations.length; i++) {
-    const tl = animations[i].timeline;
-    if (tl !== undefined && tl.kind === 'view') return true;
-  }
-  return false;
+    throw new Error("STUB");
 }
 
 function numOrZero(v: unknown): number {
-  return typeof v === 'number' ? v : 0;
+    throw new Error("STUB");
 }
 
 /**
@@ -2199,87 +1256,7 @@ function ContainerPublisher({
   elementType,
   elementProps,
 }: ContainerPublisherProps): React.ReactElement {
-  const [entry, setEntry] = React.useState<ContainerEntry | null>(null);
-  const lastRef = React.useRef<ContainerEntry | null>(null);
-
-  // The published width/height drives both `cq*` units and the calc(%)
-  // polyfill for descendants. Per spec, child %s and cq-units resolve
-  // against the container's CONTENT-box, but RN's `onLayout.width` is
-  // the border-box (includes padding + border). Stash the latest style
-  // in a ref so the layout handler can subtract horizontal/vertical
-  // insets without re-creating the handler each render.
-  const styleRef = React.useRef<any>(elementProps.style);
-  styleRef.current = elementProps.style;
-
-  const onLayout = React.useMemo(
-    () => (e: any) => {
-      const { width, height } = e.nativeEvent.layout;
-      const insets = getContentBoxInsets(styleRef.current);
-      // Floor to the device pixel grid Yoga snaps to internally.
-      // Without this, fractional dp widths (Android densities like
-      // 2.625) make descendant `%` resolve to a width Yoga's snapped
-      // slot can't fit, which trips flex-wrap even though the spec
-      // math is exact.
-      const ratio = getRN().PixelRatio?.get?.() ?? 1;
-      const snap = (v: number) => (ratio > 1 ? Math.floor(v * ratio) / ratio : v);
-      const w = width > insets.horizontal ? snap(width - insets.horizontal) : 0;
-      const h = height > insets.vertical ? snap(height - insets.vertical) : 0;
-      const last = lastRef.current;
-      if (last && last.width === w && last.height === h && last.name === name) return;
-      const next: ContainerEntry = { name, width: w, height: h };
-      lastRef.current = next;
-      setEntry(next);
-    },
-    [name]
-  );
-
-  const value = React.useMemo<NativeStyleContextValue>(() => {
-    // Pre-measurement we publish a width=0 "pending" entry so the
-    // calc(%) resolver can distinguish "no container ancestor"
-    // (top-level; fall back to viewport) from "ancestor pending
-    // measurement" (defer one frame). Inheriting `parent` here
-    // over-sized descendants and Android Yoga didn't always reflow
-    // on the second render.
-    const parentContainer = parent.container;
-    let container: ContainerContextValue;
-    if (!entry) {
-      const pending: ContainerEntry = { name, width: 0, height: 0 };
-      const named = name
-        ? Object.freeze({ ...parentContainer.named, [name]: pending })
-        : parentContainer.named;
-      container = { nearest: pending, named };
-    } else {
-      const named = Object.freeze({ ...parentContainer.named, [name]: entry });
-      container = { nearest: entry, named };
-    }
-    // Cascade fields pass through unchanged except when this
-    // component declares a cascade-significant override
-    // (font-size / line-height / direction); useDynamicImpl computes
-    // the override and forwards it via `cascadeOverride`.
-    return { container, cascade: cascadeOverride ?? parent.cascade };
-  }, [entry, name, parent, cascadeOverride]);
-
-  const existingOnLayout = elementProps.onLayout;
-  const composedOnLayout = React.useMemo(
-    () =>
-      existingOnLayout
-        ? (e: any) => {
-            onLayout(e);
-            existingOnLayout(e);
-          }
-        : onLayout,
-    [onLayout, existingOnLayout]
-  );
-  // Render cache reuses the same `elementProps` across cache-hit renders, so
-  // mutating it would feed the composed handler back in as `existingOnLayout`
-  // next render and grow the call chain by one wrapper each time.
-  const finalProps = { ...elementProps, onLayout: composedOnLayout };
-
-  return createElement(
-    NativeStyleContext.Provider,
-    { value },
-    createElement(elementType, finalProps)
-  );
+    throw new Error("STUB");
 }
 
 interface GridPublisherProps {
@@ -2308,13 +1285,7 @@ interface GridPublisherProps {
  * Longhand `column-gap` / `row-gap` win over the shorthand.
  */
 function readGridGutters(style: any): { columnGap: number; rowGap: number } {
-  const m: Record<string, any> = {};
-  mergeStyle(style, m);
-  const gap = numOrZero(m.gap);
-  return {
-    columnGap: numOrZero(m.columnGap ?? gap),
-    rowGap: numOrZero(m.rowGap ?? gap),
-  };
+    throw new Error("STUB");
 }
 
 const EMPTY_BOX = { width: 0, height: 0 };
@@ -2337,73 +1308,7 @@ function GridPublisher({
   elementType,
   elementProps,
 }: GridPublisherProps): React.ReactElement {
-  const [contentBox, setContentBox] = React.useState<{ width: number; height: number }>(EMPTY_BOX);
-  const lastRef = React.useRef(EMPTY_BOX);
-
-  const styleRef = React.useRef<any>(elementProps.style);
-  styleRef.current = elementProps.style;
-
-  const onLayout = React.useMemo(
-    () => (e: any) => {
-      const { width, height } = e.nativeEvent.layout;
-      const insets = getContentBoxInsets(styleRef.current);
-      // Floor to the device pixel grid Yoga snaps to internally so child
-      // widths summed back up never exceed the snapped container slot
-      // (which would trip an extra flex-wrap line).
-      const ratio = getRN().PixelRatio?.get?.() ?? 1;
-      const snap = (v: number) => (ratio > 1 ? Math.floor(v * ratio) / ratio : v);
-      const w = width > insets.horizontal ? snap(width - insets.horizontal) : 0;
-      const h = height > insets.vertical ? snap(height - insets.vertical) : 0;
-      const last = lastRef.current;
-      if (last.width === w && last.height === h) return;
-      const next = { width: w, height: h };
-      lastRef.current = next;
-      setContentBox(next);
-    },
-    []
-  );
-
-  const value = React.useMemo<NativeStyleContextValue>(() => {
-    const baseCascade = cascadeOverride ?? parent.cascade;
-    const cascade: NativeCascadeValues = {
-      ...baseCascade,
-      grid: { ownerId, columns, columnGap, rowGap, contentWidth: contentBox.width },
-    };
-    // A `container-type` declaration on the grid container makes it a
-    // query container too; publish its box the same way ContainerPublisher
-    // does (width-0 "pending" entry pre-measurement, see that component
-    // for the rationale).
-    let container = parent.container;
-    if (containerName !== undefined) {
-      const entry: ContainerEntry = {
-        name: containerName,
-        width: contentBox.width,
-        height: contentBox.height,
-      };
-      const named = Object.freeze({ ...parent.container.named, [containerName]: entry });
-      container = { nearest: entry, named };
-    }
-    return { container, cascade };
-  }, [parent, cascadeOverride, ownerId, columns, columnGap, rowGap, contentBox, containerName]);
-
-  const existingOnLayout = elementProps.onLayout;
-  const composedOnLayout = React.useMemo(
-    () =>
-      existingOnLayout
-        ? (e: any) => {
-            onLayout(e);
-            existingOnLayout(e);
-          }
-        : onLayout,
-    [onLayout, existingOnLayout]
-  );
-  const finalProps = { ...elementProps, onLayout: composedOnLayout };
-
-  return createElement(
-    NativeStyleContext.Provider,
-    { value },
-    createElement(elementType, finalProps)
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -2517,14 +1422,7 @@ export function assembleFinalStyle(
     const preStateStyles: object[] =
       activeConditional.length > 0 ? [base as object].concat(activeConditional) : [base as object];
     return (state: any) => {
-      const out: any[] = preStateStyles.concat(userStyle(state));
-      if (baseImportantLayer !== null) out.push(baseImportantLayer);
-      if (activeMatched.important !== null) {
-        for (let i = 0; i < activeMatched.important.length; i++) {
-          out.push(activeMatched.important[i]);
-        }
-      }
-      return out;
+        throw new Error("STUB");
     };
   }
   const importantTail: ReadonlyArray<object> =
@@ -2581,138 +1479,5 @@ function buildBaseImportantLayer(
 }
 
 export default (NativeStyle: INativeStyleConstructor<any>) => {
-  const createStyledNativeComponent = <
-    Target extends NativeTarget,
-    OuterProps extends ExecutionProps,
-    Statics extends object = BaseObject,
-  >(
-    target: Target,
-    options: StyledOptions<'native', OuterProps>,
-    rules: RuleSet<OuterProps>
-  ): ReturnType<IStyledComponentFactory<'native', Target, OuterProps, Statics>> => {
-    const isTargetStyledComp = isStyledComponent(target);
-    const styledComponentTarget = target as IStyledComponent<'native', OuterProps>;
-
-    const { displayName = generateDisplayName(target), attrs = EMPTY_ARRAY } = options;
-    const componentId =
-      options.componentId || generateComponentId(displayName + (options.parentComponentId || ''));
-    const styledComponentId = options.displayName
-      ? escape(options.displayName) + '-' + componentId
-      : componentId;
-
-    const finalAttrs =
-      isTargetStyledComp && styledComponentTarget.attrs
-        ? styledComponentTarget.attrs.concat(attrs).filter(Boolean)
-        : (attrs as Attrs<OuterProps>[]);
-
-    let shouldForwardProp = options.shouldForwardProp;
-
-    if (isTargetStyledComp && styledComponentTarget.shouldForwardProp) {
-      const shouldForwardPropFn = styledComponentTarget.shouldForwardProp;
-
-      if (options.shouldForwardProp) {
-        const passedShouldForwardPropFn = options.shouldForwardProp;
-
-        shouldForwardProp = (prop, elementToBeCreated) =>
-          shouldForwardPropFn(prop, elementToBeCreated) &&
-          passedShouldForwardPropFn(prop, elementToBeCreated);
-      } else {
-        shouldForwardProp = shouldForwardPropFn;
-      }
-    }
-
-    const finalRules = isTargetStyledComp
-      ? concatSourceInputs(
-          styledComponentTarget.nativeStyle.rules.concat(rules),
-          styledComponentTarget.nativeStyle.rules,
-          rules
-        )
-      : rules;
-    const nativeStyleInstance = new NativeStyle(finalRules) as InstanceType<
-      INativeStyleConstructor<OuterProps>
-    >;
-
-    // Pick the render impl once, frozen at construction. Hook ordering stays stable
-    // per component for the lifetime of the WrappedStyledComponent. The static path
-    // requires empty attrs + no shouldForwardProp + provably-static CSS with no
-    // runtime work (no responsive features, no animations); everything else uses the
-    // dynamic path.
-    // staticEligible is set only when staticCompiled is non-null, so the latter check
-    // is implicit.
-    const canUseStatic =
-      finalAttrs.length === 0 &&
-      shouldForwardProp === undefined &&
-      nativeStyleInstance.staticEligible;
-    const impl = canUseStatic ? useStaticImpl : useDynamicImpl;
-
-    // React 19 ref-as-prop; no forwardRef wrapper. Wrapping in `React.memo`
-    // means the parent's re-render skips this component entirely when its
-    // props are shallow-equal to the previous render, eliminating the hook
-    // calls, our render-cache check, and React's reconciliation work for the
-    // child subtree. The internal render-cache in `useDynamicImpl` remains as
-    // a layered fallback for the harder cases (different prop references with
-    // same values, env or container-context shifts) that memo doesn't catch.
-    const RenderInner: {
-      (props: ExecutionProps & OuterProps & { ref?: React.Ref<any> }): React.JSX.Element;
-      displayName?: string;
-    } = props => impl<OuterProps>(WrappedStyledComponent, props, props.ref);
-    RenderInner.displayName = displayName;
-    const MemoizedRenderInner = React.memo(RenderInner);
-    // displayName must live on the memo wrapper, not the inner: React DevTools
-    // and Hermes inspector read it off the wrapper.
-    (MemoizedRenderInner as { displayName?: string }).displayName = displayName;
-
-    // In dev, wrap the memoized inner with an injector that adds the current
-    // `nativeStyle` reference into props as a `$$`-prefixed sentinel.
-    // React.memo's default shallow comparator then naturally invalidates when
-    // the reference changes (which it does on HMR, since module re-eval
-    // produces a fresh `NativeStyle` instance). The leading `$` keeps
-    // `buildPropsForElement` from forwarding it onto the underlying element
-    // (transient prop convention). The `else` branch tree-shakes out of the
-    // production bundle so prod has zero residue.
-    let RenderStyledComponent: typeof RenderInner;
-    if (__DEV__) {
-      const RenderInjector: typeof RenderInner = props =>
-        // `$$nativeStyle` is a sentinel transient prop, not part of the public
-        // RenderInner props; cast at the createElement boundary.
-        React.createElement(MemoizedRenderInner, {
-          ...props,
-          $$nativeStyle: WrappedStyledComponent.nativeStyle,
-        } as any);
-      RenderInjector.displayName = displayName;
-      RenderStyledComponent = RenderInjector;
-    } else {
-      RenderStyledComponent = MemoizedRenderInner as unknown as typeof RenderInner;
-    }
-    RenderStyledComponent.displayName = displayName;
-
-    let WrappedStyledComponent = RenderStyledComponent as unknown as IStyledComponent<
-      'native',
-      any
-    > &
-      Statics;
-
-    WrappedStyledComponent.attrs = finalAttrs;
-    WrappedStyledComponent.nativeStyle = nativeStyleInstance;
-    WrappedStyledComponent.displayName = displayName;
-    WrappedStyledComponent.shouldForwardProp = shouldForwardProp;
-    WrappedStyledComponent.hasPostAttrs = hasPostAttrsNative(finalAttrs);
-    WrappedStyledComponent.postAttrsPlans = WrappedStyledComponent.hasPostAttrs
-      ? buildPostAttrsPlans(finalAttrs, finalRules)
-      : undefined;
-
-    WrappedStyledComponent.styledComponentId = styledComponentId;
-
-    WrappedStyledComponent.target = isTargetStyledComp ? styledComponentTarget.target : target;
-
-    hoist<typeof WrappedStyledComponent, typeof target>(
-      WrappedStyledComponent,
-      target,
-      HOIST_EXCLUDE as { [key in keyof OmitNever<IStyledStatics<'native', Target>>]: true }
-    );
-
-    return WrappedStyledComponent;
-  };
-
-  return createStyledNativeComponent;
+    throw new Error("STUB");
 };

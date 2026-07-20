@@ -25,22 +25,7 @@ const LayoutGlobalStyle = createGlobalStyle`
 `;
 
 export default function GlobalStyleTestLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <LayoutGlobalStyle />
-      <Wrapper>
-        <PageTitle>Global Style Lifecycle Tests</PageTitle>
-        <Desc>
-          The colorful gradient background comes from a <code>createGlobalStyle</code> in this
-          shared layout.
-        </Desc>
-        <GlobalStyleChecks />
-        <NavClient />
-        <AutopilotClient />
-        {children}
-      </Wrapper>
-    </>
-  );
+    throw new Error("STUB");
 }
 
 const Wrapper = styled.div`

@@ -22,7 +22,7 @@ interface ThemeToggleContextValue {
 const ThemeToggleContext = createContext<ThemeToggleContextValue | null>(null);
 
 export function useThemeToggle() {
-  return useContext(ThemeToggleContext);
+    throw new Error("STUB");
 }
 
 const BaseStyle = createGlobalStyle<{ $enableTransition: boolean }>`
@@ -58,70 +58,18 @@ const BaseStyle = createGlobalStyle<{ $enableTransition: boolean }>`
     background-color: var(--sc-colors-background);
     font-family: system-ui, -apple-system, sans-serif;
     color: var(--sc-colors-text);
-    ${p => (p.$enableTransition ? 'transition: background-color 0.3s ease, color 0.3s ease;' : '')}
+    ${p => { throw new Error("STUB"); }}
   }
 `;
 
 function getSystemTheme(): ThemePreset {
-  if (typeof window === 'undefined') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    throw new Error("STUB");
 }
 
 function getStoredTheme(): ThemePreset | null {
-  try {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light') return stored;
-  } catch {}
-  return null;
+    throw new Error("STUB");
 }
 
 export function CustomThemeProvider({ children }: { children: React.ReactNode }) {
-  const [override, setOverride] = useState<ThemePreset | null>(null);
-  const [hydrated, setHydrated] = useState(false);
-  const overrideRef = useRef(override);
-  overrideRef.current = override;
-
-  useEffect(() => {
-    setOverride(getStoredTheme());
-    setHydrated(true);
-
-    const mql = window.matchMedia('(prefers-color-scheme: dark)');
-    const onchange = () => {
-      if (overrideRef.current === null) {
-        document.documentElement.classList.remove('dark', 'light');
-      }
-    };
-    mql.addEventListener('change', onchange);
-    return () => mql.removeEventListener('change', onchange);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    const root = document.documentElement.classList;
-    root.remove('dark', 'light');
-    if (override) {
-      root.add(override);
-      localStorage.setItem('theme', override);
-    } else {
-      localStorage.removeItem('theme');
-    }
-  }, [override, hydrated]);
-
-  const toggleTheme = useCallback(() => {
-    setOverride(prev => {
-      if (prev === null) return getSystemTheme() === 'light' ? 'dark' : 'light';
-      if (prev === 'dark') return 'light';
-      return null;
-    });
-  }, []);
-
-  const label = override ? `${override === 'light' ? 'Light' : 'Dark'} mode` : 'Auto';
-  const toggleValue = useMemo(() => ({ toggle: toggleTheme, label }), [toggleTheme, label]);
-
-  return (
-    <ThemeProvider theme={themeContract}>
-      <BaseStyle $enableTransition={hydrated} />
-      <ThemeToggleContext.Provider value={toggleValue}>{children}</ThemeToggleContext.Provider>
-    </ThemeProvider>
-  );
+    throw new Error("STUB");
 }

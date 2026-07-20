@@ -21,10 +21,7 @@ export const CSSOMTag = class CSSOMTag implements Tag {
   length: number;
 
   constructor(target?: InsertionTarget | undefined, nonce?: string | undefined) {
-    this.element = makeStyleTag(target, nonce);
-    this.element.appendChild(document.createTextNode(''));
-    this.sheet = getSheet(this.element);
-    this.length = 0;
+      throw new Error("STUB");
   }
 
   insertRule(index: number, rule: string): boolean {

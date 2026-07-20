@@ -68,38 +68,5 @@ const FixedInput = styled.TextInput`
 `;
 
 export function FieldSizingBoard() {
-  const [autosize, setAutosize] = useState(
-    'Start typing and watch this field grow taller line by line.\n\n`field-sizing: content` declares it.'
-  );
-  const [fixed, setFixed] = useState(
-    'This field stays the same height even when content overflows; scroll to see the rest.'
-  );
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`The autosize field grows in height as more lines wrap in. The fixed field holds its declared 44px even with long content - same baseline styles, single CSS difference.`}
-      </InlineMarkdown>
-      <SplitWrap>
-        <Row>
-          <Tag>field-sizing: content</Tag>
-          <AutosizeInput
-            value={autosize}
-            onChangeText={setAutosize}
-            placeholder="Type as much as you want…"
-            placeholderTextColor={t.colors.fgFaint}
-          />
-        </Row>
-        <Row>
-          <Tag>field-sizing: fixed · default</Tag>
-          <FixedInput
-            value={fixed}
-            onChangeText={setFixed}
-            multiline
-            placeholder="Holds its 44px height"
-            placeholderTextColor={t.colors.fgFaint}
-          />
-        </Row>
-      </SplitWrap>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

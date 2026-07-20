@@ -54,18 +54,18 @@ const FreeScroller = styled.ScrollView``;
 // value is none). The browser needs this declaration to snap at all; on
 // iOS/Android the paging approximation snaps from the scroller side.
 const Card = styled.View<{ $bg: string; $fg: string; $w: number }>`
-  width: ${p => p.$w}px;
+  width: ${p => { throw new Error("STUB"); }}px;
   height: 160px;
   align-items: center;
   justify-content: center;
-  background-color: ${p => p.$bg};
+  background-color: ${p => { throw new Error("STUB"); }};
   scroll-snap-align: start;
 `;
 
 const CardLabel = styled.Text<{ $fg: string }>`
   font-family: ${t.fontFamily.heading};
   font-size: ${t.fontSize.display}px;
-  color: ${p => p.$fg};
+  color: ${p => { throw new Error("STUB"); }};
 `;
 
 const CardSub = styled.Text<{ $fg: string }>`
@@ -73,7 +73,7 @@ const CardSub = styled.Text<{ $fg: string }>`
   font-size: ${t.fontSize.monoSm}px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: ${p => p.$fg};
+  color: ${p => { throw new Error("STUB"); }};
   opacity: 0.8;
 `;
 
@@ -91,46 +91,9 @@ const CARDS = [
 // snaps in full-scrollport steps, so any card/scrollport mismatch shows up
 // as an accumulating sliver of the previous card at the left edge.
 function Carousel({ Scroller }: { Scroller: typeof SnapScroller }) {
-  const [width, setWidth] = useState(0);
-  return (
-    <Scroller
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      onLayout={e => setWidth(e.nativeEvent.layout.width)}
-    >
-      {width > 0
-        ? CARDS.map(card => (
-            <Card key={card.label} $bg={card.bg} $fg="#f5f3ee" $w={width}>
-              <CardLabel $fg="#f5f3ee">{card.label}</CardLabel>
-              <CardSub $fg="#f5f3ee">flick me</CardSub>
-            </Card>
-          ))
-        : null}
-    </Scroller>
-  );
+    throw new Error("STUB");
 }
 
 export function SnapCarousel() {
-  return (
-    <Stack>
-      <InlineMarkdown variant="brief">
-        {`Flick each carousel sideways. The top one declares \`scroll-snap-type: x mandatory\` and lands crisply on a whole card; the bottom one has no declaration and drifts to rest anywhere.`}
-      </InlineMarkdown>
-      <Section>
-        <SectionLabel>scroll-snap-type: x mandatory</SectionLabel>
-        <Frame>
-          <Carousel Scroller={SnapScroller} />
-        </Frame>
-      </Section>
-      <Section>
-        <SectionLabel>no scroll-snap (free drift)</SectionLabel>
-        <Frame>
-          <Carousel Scroller={FreeScroller} />
-        </Frame>
-      </Section>
-      <Markdown variant="hint">
-        {`The cards declare \`scroll-snap-align: start\`, so the scroller measures them and snaps to real card positions on iOS and Android, with a settle guarantee that \`mandatory\` always rests on a card. Passing \`snapToInterval\` or \`snapToOffsets\` yourself still wins. On web the browser handles all of it natively.`}
-      </Markdown>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

@@ -38,22 +38,7 @@ function buildCatalog(): {
   categories: CategoryRef[];
   jumpList: JumpGroup[];
 } {
-  const groups = fidgetsByCategory();
-  const rows: CatalogRow[] = [];
-  const anchorIndex = new Map<string, number>();
-  const categories: CategoryRef[] = [];
-  const jumpList: JumpGroup[] = [];
-  for (const { category, entries } of groups) {
-    categories.push({ label: category, index: rows.length });
-    rows.push({ kind: 'category', category });
-    const items = entries.map(entry => ({ slug: entry.slug, title: entry.title }));
-    jumpList.push({ label: category, items });
-    for (const entry of entries) {
-      anchorIndex.set(entry.slug, rows.length);
-      rows.push({ kind: 'fidget', entry });
-    }
-  }
-  return { rows, anchorIndex, categories, jumpList };
+    throw new Error("STUB");
 }
 
 // Each cell is memoized on its stable row identity (the rows array is
@@ -63,48 +48,19 @@ function buildCatalog(): {
 // underneath, which is what trips VirtualizedList's slow-update warning
 // since the widgets run real timers and Animated loops.
 const CategoryCell = React.memo(function CategoryCell({ category }: { category: FidgetCategory }) {
-  return (
-    <CategoryBlock>
-      <CategoryHeading>{category}</CategoryHeading>
-      <CategoryRule />
-    </CategoryBlock>
-  );
+    throw new Error("STUB");
 });
 
 const FidgetCell = React.memo(function FidgetCell({ entry }: { entry: FidgetEntry }) {
-  return (
-    <WidgetCase slug={entry.slug} title={entry.title} brief={entry.summary} feature={entry.feature}>
-      <entry.Widget />
-    </WidgetCase>
-  );
+    throw new Error("STUB");
 });
 
 const renderRow: ListRenderItem<CatalogRow> = ({ item }) =>
-  item.kind === 'category' ? (
-    <CategoryCell category={item.category} />
-  ) : (
-    <FidgetCell entry={item.entry} />
-  );
+  { throw new Error("STUB"); };
 
 const keyExtractor = (item: CatalogRow): string =>
-  item.kind === 'category' ? `cat:${item.category}` : `fid:${item.entry.slug}`;
+  { throw new Error("STUB"); };
 
 export default function Catalog() {
-  // Catalog is fully static; build once.
-  const { rows, anchorIndex, categories, jumpList } = React.useMemo(() => buildCatalog(), []);
-  const params = useLocalSearchParams<{ focus?: string }>();
-  return (
-    <ScreenScaffold
-      title="styled-components"
-      summary="A visual showcase for CSS functionality. Run all simulators (web, iOS, Android) simultaneously and compare, they should match or warn appropriately."
-      hero={<PlatonicLogo />}
-      focusSlug={params.focus}
-      data={rows}
-      renderItem={renderRow}
-      keyExtractor={keyExtractor}
-      anchorIndex={anchorIndex}
-      categories={categories}
-      jumpList={jumpList}
-    />
-  );
+    throw new Error("STUB");
 }

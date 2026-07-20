@@ -37,36 +37,7 @@ export const getRehydrationContainer = (
 };
 
 export const outputSheet = (sheet: Sheet) => {
-  const tag = sheet.getTag();
-  const { length, groupSizes } = tag;
-
-  let css = '';
-  for (let group = 0; group < length; group++) {
-    if (groupSizes[group] === 0) continue;
-
-    const id = idForGroup(group);
-    if (id === undefined) continue;
-
-    const names = sheet.names.get(id);
-    if (names === undefined || !names.size) continue;
-
-    const rules = tag.getGroup(group);
-    if (rules.length === 0) continue;
-
-    const selector = SC_ATTR + '.g' + group + '[id="' + id + '"]';
-
-    let content = '';
-    for (const name of names) {
-      if (name.length > 0) {
-        content += name + ',';
-      }
-    }
-
-    // The marker follows the rules so rehydration can collect them first.
-    css += rules + selector + '{content:"' + content + '"}' + SPLITTER;
-  }
-
-  return css;
+    throw new Error("STUB");
 };
 
 const rehydrateNamesFromContent = (sheet: Sheet, id: string, content: string) => {

@@ -207,36 +207,5 @@ const Footnote = styled.Text`
 `;
 
 export function ScrollStory() {
-  return (
-    <Stack>
-      <Caption>animation-timeline: scroll() / view() + animation-range</Caption>
-      <Stage>
-        <StickyHeader>
-          <StickyLabel>position: sticky (stays while the story scrolls)</StickyLabel>
-        </StickyHeader>
-        <Content>
-          <ProgressBar />
-          <HueDial />
-          <BandEarly />
-          <Balloon />
-          <BandMid />
-          <Spacer />
-          <BandLate />
-          <Footnote>release mid-scroll: the scene freezes with your finger</Footnote>
-        </Content>
-        <ViewCard>
-          <ViewCardLabel>view() · slides in as it enters</ViewCardLabel>
-        </ViewCard>
-        <ViewCard>
-          <ViewCardLabel>each card tracks its own visibility</ViewCardLabel>
-        </ViewCard>
-        <ViewCard>
-          <ViewCardLabel>animation-range: entry</ViewCardLabel>
-        </ViewCard>
-        <Content>
-          <Spacer />
-        </Content>
-      </Stage>
-    </Stack>
-  );
+    throw new Error("STUB");
 }

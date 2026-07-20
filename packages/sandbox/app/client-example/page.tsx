@@ -2,11 +2,7 @@ import { ClientTestingHarness } from './testing-harness';
 import styled from 'styled-components';
 
 export default function ClientExamplePage() {
-  return (
-    <PageWrapper>
-      <ClientTestingHarness />
-    </PageWrapper>
-  );
+    throw new Error("STUB");
 }
 
 const PageWrapper = styled.div`

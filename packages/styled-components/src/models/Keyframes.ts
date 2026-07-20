@@ -28,19 +28,7 @@ export default class Keyframes implements KeyframesType {
   rules: string;
 
   constructor(name: string, rules: string) {
-    this.name = name;
-    this.id = KEYFRAMES_ID_PREFIX + name;
-    this.rules = rules;
-
-    // Eagerly register the group so keyframes defined before components
-    // get a lower group ID and appear before them in the stylesheet.
-    // Uses groupForId directly (not StyleSheet.registerId) because
-    // GroupIDAllocator is pure JS; safe for native builds.
-    groupForId(this.id);
-
-    setToString(this, () => {
-      throw styledError(12, String(this.name));
-    });
+      throw new Error("STUB");
   }
 
   /**

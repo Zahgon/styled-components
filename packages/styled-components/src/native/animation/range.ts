@@ -16,43 +16,11 @@ const TIMELINE_RANGE_NAMES: ReadonlySet<string> = new Set([
 ]);
 
 function offsetFromToken(rangeName: TimelineRangeName | null, t: Token): RangeOffset | null {
-  if (t.kind === TokenKind.Percent) {
-    return { rangeName, value: t.value!, unit: '%', calcRaw: null };
-  }
-  if (t.kind === TokenKind.Length) {
-    const ratio = ABSOLUTE_LENGTH_PX_PER_UNIT[t.unit!];
-    if (ratio === undefined) return null;
-    return { rangeName, value: t.value! * ratio, unit: 'px', calcRaw: null };
-  }
-  if (t.kind === TokenKind.Number && t.value === 0) {
-    return { rangeName, value: 0, unit: 'px', calcRaw: null };
-  }
-  if (t.kind === TokenKind.Function) {
-    const folded = resolveStaticMathFunction(t);
-    if (folded !== null) {
-      if (folded.unit === '%') return { rangeName, value: folded.value, unit: '%', calcRaw: null };
-      const ratio = ABSOLUTE_LENGTH_PX_PER_UNIT[folded.unit];
-      if (ratio !== undefined) {
-        return { rangeName, value: folded.value * ratio, unit: 'px', calcRaw: null };
-      }
-      return null;
-    }
-    // Mixed-unit math (the spec's own examples use percent+length calc)
-    // needs the timeline extent; carry the raw source for resolve time.
-    if (t.name === 'calc' || t.name === 'min' || t.name === 'max' || t.name === 'clamp') {
-      return { rangeName, value: 0, unit: '%', calcRaw: t.raw };
-    }
-  }
-  return null;
+    throw new Error("STUB");
 }
 
 function isOffsetToken(t: Token): boolean {
-  return (
-    t.kind === TokenKind.Percent ||
-    t.kind === TokenKind.Length ||
-    t.kind === TokenKind.Function ||
-    (t.kind === TokenKind.Number && t.value === 0)
-  );
+    throw new Error("STUB");
 }
 
 /**
@@ -67,27 +35,7 @@ export function parseRangeBoundary(
   i: number,
   isStart: boolean
 ): [RangeBoundary, number] | null {
-  const t = tokens[i];
-  if (t === undefined) return null;
-  if (t.kind === TokenKind.Ident) {
-    const name = t.name!;
-    if (name === 'normal') return ['normal', i + 1];
-    if (!TIMELINE_RANGE_NAMES.has(name)) return null;
-    const rangeName = name as TimelineRangeName;
-    const next = tokens[i + 1];
-    if (next !== undefined && isOffsetToken(next)) {
-      const offset = offsetFromToken(rangeName, next);
-      if (offset === null) return null;
-      return [offset, i + 2];
-    }
-    return [{ rangeName, value: isStart ? 0 : 100, unit: '%', calcRaw: null }, i + 1];
-  }
-  if (isOffsetToken(t)) {
-    const offset = offsetFromToken(null, t);
-    if (offset === null) return null;
-    return [offset, i + 1];
-  }
-  return null;
+    throw new Error("STUB");
 }
 
 export interface NamedRangeRect {
@@ -130,7 +78,7 @@ export function resolveRangeBoundary(
     const seg = segLenPx;
     const substituted = boundary.calcRaw.replace(
       PERCENT_IN_CALC_RE,
-      (_, n: string) => `${(parseFloat(n) / 100) * seg}px`
+      (_, n: string) => { throw new Error("STUB"); }
     );
     const tok = tokenize(substituted)[0];
     const folded = tok === undefined ? null : resolveStaticMathFunction(tok);
